@@ -1,0 +1,22 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Servicio TwiStreapy{% endblock %}
+
+{% block content %}
+<h2 class="sub-header">{{svcpath}}</h2>
+<div>
+    <p>Estado de ejecución:
+    {% if running %}
+        {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
+    </p>
+        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" name="stoppr" %}
+        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startpr" %}
+    {% else %}
+        {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
+    </p>
+        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stoppr" %}
+        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" name="startpr" %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% block bootstrap3_extra_head %}
+    <script src="{% static 'corecontrol/js/config.js' %}"></script>
+    <link href="{% static 'corecontrol/css/bootstrap-tagsinput.css' %}" rel="stylesheet">
+    <script src="{% static 'corecontrol/js/bootstrap-tagsinput.js' %}"></script>
+{% endblock %}
+
+{% block title %}Archivo {{inifile}}{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type='success' %}
+{% endif %}
+<form action="{% url 'saveconfig' %}" method="post">
+    <h2 class="sub-header">Configuración API Twitter</h2>
+        <div class="form-group">
+            <label for="API.consumer_key">consumer_key</label>
+            <input type="text" class="form-control" id="API.consumer_key" name="API.consumer_key" value="{{ API.consumer_key }}">
+        </div>
+        <div class="form-group">
+            <label for="API.consumer_secret">consumer_secret</label>
+            <input type="text" class="form-control" id="API.consumer_secret" name="API.consumer_secret" value="{{ API.consumer_secret }}">
+        </div>
+        <div class="form-group">
+            <label for="API.access_token">access_token</label>
+            <input type="text" class="form-control" id="API.access_token" name="API.access_token"value="{{ API.access_token }}">
+        </div>
+        <div class="form-group">
+            <label for="API.access_token_secret">access_token_secret</label>
+            <input type="text" class="form-control" id="API.access_token_secret" name="API.access_token_secret" value="{{ API.access_token_secret }}">
+        </div>
+        <div class="checkbox">
+            <label for="stream">
+                <input type="checkbox" id="stream" {% if API.stream == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));"><a href="#" data-toggle="tooltip" title="Servicio de Stream Twitter API">Stream Twitter API</a>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label for="poploop">
+                <input type="checkbox" id="poploop" {% if API.poploop == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));"><a href="#" data-toggle="tooltip" title="Normaliza la cola REDIS en la Base de Datos configurada">Tweet Push DB</a>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label for="friends_sentinel">
+                <input type="checkbox" id="friends_sentinel"{% if API.friends_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Followers Sentinel
+            </label>
+        </div>
+        <div class="checkbox">
+            <label for="follower_sentinel">
+                <input type="checkbox" id="follower_sentinel"{% if API.follower_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Friends Sentinel
+            </label>
+        </div>
+        <div class="checkbox">
+            <label for="likes_sentinel">
+                <input type="checkbox" id="likes_sentinel"{% if API.friends_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Likes Sentinel
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="API.keywords">Hashtags Menciones Keywords</label>
+            <input type="text" class="form-control" id="API.keywords" name="API.keywords" data-role="tagsinput" value="{{ API.keywords }}">
+            <span id="helpBlock" class="help-block">Use #Numeral para hastags, @Arroba para menciones de usuarios y retweets, y ningun caracter especial para expresiones o palabras clave.</span>
+        </div>
+        <div class="form-group">
+            <label for="API.user_ids">ID's de Usuario</label>
+            <input type="text" class="form-control form-control-2" id="API.user_ids" name="API.user_ids" data-role="tagsinput" value="{{ API.user_ids }}">
+            <span id="helpBlock" class="help-block">Los usuarios @ a monitorear deben ser configurados por ID de usuario. Afecta a Stream y Sentinels. Para insertar un nuevo usuario, solo ingrese el nombre con @, antes de guardar se obtendra el id de usuario automaticamente.</span>
+        </div>
+    <h2 class="subheader">Configuración de Base de Datos</h2>
+        <div class="checkbox">
+            <label for="use">
+                <input type="checkbox" id="use"{% if DATABASE.use == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('DATABASE',$(this));"><a href="#" data-toggle="tooltip" title="Activa/Desactiva la conexión a la Base de Datos. Desactivarlo inhabilita los servicios Push DB">Activar DB</a>
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.engine">Motor</label>
+            <select class="form-control" name="DATABASE.engine" id="DATABASE.engine">
+                <option value="mysql">MySQL</option>
+                <option value="postgresql"{% if DATABASE.engine == 'postgresql' %} selected="selected" {% endif %}>PostgreSQL</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.host">Hostname / IP</label>
+            <input type="text" class="form-control" id="DATABASE.host" name="DATABASE.host" value="{{ DATABASE.host }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.user">Username</label>
+            <input type="text" class="form-control" id="DATABASE.user" name="DATABASE.user" value="{{ DATABASE.user }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.pass">Password</label>
+            <input type="password" class="form-control" id="DATABASE.pass" name="DATABASE.pass" value="{{ DATABASE.pass }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.name">Base de Datos</label>
+            <input type="text" class="form-control" id="DATABASE.name" name="DATABASE.name" value="{{ DATABASE.name }}">
+        </div>
+    <hr />
+        <div class="form-group">
+            {% csrf_token %}
+            <input id="API.stream" type="hidden" name="API.stream" value="{% if API.stream == 'on' %}on{% else %}off{% endif %}" />
+            <input id="API.poploop" type="hidden" name="API.poploop" value="{% if API.poploop == 'on' %}on{% else %}off{% endif %}" />
+            <input id="API.friends_sentinel" type="hidden" name="API.friends_sentinel" value="{% if API.friends_sentinel == 'on' %}on{% else %}off{% endif %}" />
+            <input id="API.followers_sentinel" type="hidden" name="API.followers_sentinel" value="{% if API.followers_sentinel == 'on' %}on{% else %}off{% endif %}" />
+            <input id="API.likes_sentinel" type="hidden" name="API.likes_sentinel" value="{% if API.likes_sentinel == 'on' %}on{% else %}off{% endif %}" />
+            <input id="DATABASE.use" type="hidden" name="DATABASE.use" value="{% if DATABASE.use == 'on' %}on{% else %}off{% endif %}" />
+            <button type="submit" class="btn btn-primary" name="action" value="save">Guardar</button>
+            <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar</button>
+        </div>
+</form>
+{% endblock %}
