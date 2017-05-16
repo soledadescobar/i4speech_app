@@ -7,13 +7,13 @@ import requests
 from .utils import *
 
 
-ini = r'/home/gabriel/pst/twistreapy/src/config.ini'
+ini = r'/home/abottiggi/twistreapy/src/config.ini'
 pid = r'/tmp/twistreapy.pid'
 pipe = r'/tmp/twistreapy.pip'
-svc = r'/home/gabriel/pst/twistreapy/src/'
-lgf = r'/home/gabriel/pst/twistreapy/src/output.log'
+svc = r'/home/abottiggi/twistreapy/src/'
+lgf = r'/home/abottiggi/twistreapy/src/output.log'
 redis = {'host': 'localhost', 'port': 6379, 'decode_responses': True}
-sv = 'http://localhost:5000'
+sv = 'http://10.128.0.6:5000'
 
 
 # Create your views here.
@@ -129,4 +129,4 @@ def make_request(request, host, url, ret='json'):
     elif ret == 'content':
         return rq.content
     else:
-        return rq.text
+        return rq.json()
