@@ -1,0 +1,49 @@
+{% extends 'corecontrol/bootstrap.html' %}
+
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% block bootstrap3_extra_head %}
+    <link href="{% static 'corecontrol/css/dashboard.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+    <script src="{% static 'dashboard/js/global.js' %}"></script>
+    <link href="{% static 'corecontrol/css/bootstrap-tagsinput.css' %}" rel="stylesheet">
+    <script src="{% static 'corecontrol/js/bootstrap-tagsinput.js' %}"></script>
+{% endblock %}
+{% block bootstrap3_content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Manage Center</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'index' %}">Inicio</a></li>
+        <li><a href="{% url 'corecontrol' %}">Configuración</a></li>
+        <li><a href="#">Estadisticas</a></li>
+        <li><a href="#">Ayuda</a></li>
+      </ul>
+    </div>
+</div>
+</nav>
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="{% url 'index' %}">Inicio</a><li>
+                <li><a href="{% url 'index' %}/api">WordClouds</a><li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">{% block title %}(no title){% endblock %}</h1>
+                {% block content %}(no content){% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

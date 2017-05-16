@@ -1,0 +1,58 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Servicio TwiStreapy{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<h2 class="sub-header">{{svcpath}}</h2>
+<form action="{% if running %}{% url 'stopproc' %}{% else %}{% url 'startproc' %}{% endif %}" method="post">
+{% csrf_token %}
+<div class="form-group">
+    <p>Estado de ejecución:
+    {% if running %}
+        {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
+    </p>
+        <button type="submit" class="btn btn-danger">Detener</button>
+        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startpr" %}
+    {% else %}
+        {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
+    </p>
+        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stoppr" %}
+        <button type="submit" class="btn btn-success">Iniciar</button>
+    {% endif %}
+</div>
+{% if running %}
+<div class="bg-box">
+    <p class="bg-success">Servicio ejecutandose desde: {{ since }}</p>
+</div>
+{% endif %}
+{% if rderrors %}
+<h3>Alertas</h3>
+{% for item in rderrors %}
+<div class="bg-box">
+    <p class="bg-danger">{{ item }}</p>
+</div>
+{% endfor %}
+{% endif %}
+</form>
+<form action="{% url 'startrd' %}" method="post">
+{% csrf_token %}
+<div class="form-group">
+    <p>Estado del Servidor Redis:
+    {% if redis %}
+        {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
+        </p>
+        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stopredis" %}
+        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startredis" %}
+    {% else %}
+        {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
+        </p>
+        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stopredis" %}
+        <button type="submit" class="btn btn-success">Iniciar</button>
+    {% endif %}
+</div>
+</form>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}Archivo {{inifile}}{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<form action="{% url 'config' %}/database/save" method="post">
+    <h2 class="subheader">Configuración de Base de Datos</h2>
+        <div class="checkbox">
+            <label for="use">
+                <input type="checkbox" id="use"{% if DATABASE.use == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('DATABASE',$(this));"><a href="#" data-toggle="tooltip" title="Activa/Desactiva la conexión a la Base de Datos. Desactivarlo inhabilita los servicios Push DB">Activar DB</a>
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.engine">Motor</label>
+            <select class="form-control" name="DATABASE.engine" id="DATABASE.engine">
+                <option value="mysql">MySQL</option>
+                <option value="postgresql"{% if DATABASE.engine == 'postgresql' %} selected="selected" {% endif %}>PostgreSQL</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.host">Hostname / IP</label>
+            <input type="text" class="form-control" id="DATABASE.host" name="DATABASE.host" value="{{ DATABASE.host }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.user">Username</label>
+            <input type="text" class="form-control" id="DATABASE.user" name="DATABASE.user" value="{{ DATABASE.user }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.pass">Password</label>
+            <input type="password" class="form-control" id="DATABASE.pass" name="DATABASE.pass" value="{{ DATABASE.pass }}">
+        </div>
+        <div class="form-group">
+            <label for="DATABASE.name">Base de Datos</label>
+            <input type="text" class="form-control" id="DATABASE.name" name="DATABASE.name" value="{{ DATABASE.name }}">
+        </div>
+    <hr />
+        <div class="form-group">
+            {% csrf_token %}
+            <input id="DATABASE.use" type="hidden" name="DATABASE.use" value="{% if DATABASE.use == 'on' %}on{% else %}off{% endif %}" />
+            <button type="submit" class="btn btn-primary" name="action" value="save">Guardar</button>
+            <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar</button>
+        </div>
+</form>
+{% endblock %}

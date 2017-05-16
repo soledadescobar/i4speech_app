@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Servicio TwiStreapy{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+WELCOME
+{% endblock %}

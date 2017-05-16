@@ -35,30 +35,15 @@ function doing_ajax(start) {
     else {$.LoadingOverlay("hide");}
 }
 
+function checkboxChange(key, checkbox) {
+    $("input[name='" + key + '.' + checkbox.attr('id') + "']").val($(checkbox).is(':checked') ? 'on' : 'off');
+};
+
 
 $(function() { // DOM Ready
-    // Bind boton startpr
-    $("[name=startpr]").bind("click", function() {
-        startproc()
-    });
-    $("[name=stoppr]").bind("click", function() {
-        stopproc()
+    $('form').submit(function() {
+       $.LoadingOverlay("show");
+       return true;
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-
-function startproc() {
-    $.ajax({ url: "/corecontrol/startproc" })
-    .done(function( data ) {
-        alert(data['message']);
-     });
-    //location.reload()
-}
-
-function stopproc() {
-    $.ajax({ url: "/corecontrol/stopproc" })
-    .done(function( data ) {
-        alert(data['message']);
-     });
-    //location.reload()
-}

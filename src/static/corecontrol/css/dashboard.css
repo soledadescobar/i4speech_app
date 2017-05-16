@@ -73,3 +73,7 @@ body {
 .color-red {
     color: red;
 }
+
+.bg-box p {
+    padding: 15px;
+}
