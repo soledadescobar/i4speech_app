@@ -1,0 +1,13 @@
+appdirs==1.4.3
+configparser==3.5.0
+Django==1.11
+django-bootstrap3==8.2.2
+libtmux==0.7.1
+packaging==16.8
+psutil==5.2.2
+psycopg2==2.7.1
+pyparsing==2.2.0
+pytz==2017.2
+redis==2.10.5
+requests==2.13.0
+six==1.10.0
