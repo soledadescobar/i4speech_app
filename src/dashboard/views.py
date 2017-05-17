@@ -7,6 +7,7 @@ from corecontrol.views import make_request
 
 
 sv = 'http://10.128.0.6:5000'
+#sv = 'http://localhost:5000'
 
 
 # Create your views here.

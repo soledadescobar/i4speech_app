@@ -14,6 +14,7 @@ svc = r'/home/abottiggi/twistreapy/src/'
 lgf = r'/home/abottiggi/twistreapy/src/output.log'
 redis = {'host': 'localhost', 'port': 6379, 'decode_responses': True}
 sv = 'http://10.128.0.6:5000'
+#sv = 'http://localhost:5000'
 
 
 # Create your views here.
