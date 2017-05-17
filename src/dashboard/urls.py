@@ -6,5 +6,6 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
+    url(r'^(?P<query>[a-zA-Z_-]+).tsv$', views.getTsv, name='tsv'),
     url(r'^$', views.index, name='index'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
