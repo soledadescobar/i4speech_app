@@ -141,7 +141,9 @@
         .attr("type", "button")
         .attr("class", "dataset-button")
         .on("click", function(d) {
+          $("#chart").LoadingOverlay("show");
           heatmapChart(d);
+          $("#chart").LoadingOverlay("hide");
         });
     </script>
 {% endblock %}
