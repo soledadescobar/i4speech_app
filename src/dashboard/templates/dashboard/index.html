@@ -28,7 +28,7 @@
 <div class="placeholder">
     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" class="img-responsive" alt="Generic placeholder thumbnail" width="200" height="200">
 </div>
-<div>
+<div id="chart-container">
     <div id="chart"></div>
     <div id="dataset-picker">
     </div>
@@ -73,7 +73,7 @@
             .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
 
       var heatmapChart = function(tsvFile) {
-        $("#chart").LoadingOverlay("show");
+        $("#chart-container").LoadingOverlay("show");
         d3.tsv(tsvFile,
         function(d) {
           return {
@@ -131,7 +131,7 @@
           legend.exit().remove();
 
         });
-        $("#chart").LoadingOverlay("hide");
+        $("#chart-container").LoadingOverlay("hide");
       };
 
       heatmapChart(datasets[0]);
