@@ -71,6 +71,7 @@
             .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
 
       var heatmapChart = function(tsvFile) {
+        $("#chart").LoadingOverlay("show");
         d3.tsv(tsvFile,
         function(d) {
           return {
@@ -128,6 +129,7 @@
           legend.exit().remove();
 
         });
+        $("#chart").LoadingOverlay("hide");
       };
 
       heatmapChart(datasets[0]);
@@ -141,9 +143,7 @@
         .attr("type", "button")
         .attr("class", "dataset-button")
         .on("click", function(d) {
-          $("#chart").LoadingOverlay("show");
           heatmapChart(d);
-          $("#chart").LoadingOverlay("hide");
         });
     </script>
 {% endblock %}
