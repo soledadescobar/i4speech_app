@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
-import time
+import json
 import requests
 from .utils import *
 
@@ -127,6 +127,8 @@ def make_request(request, host, url, ret='json'):
         return render(request, 'corecontrol/connection-error.html')
     if ret == 'json':
         return rq.json()
+    if ret == 'json_load':
+        return json.loads(rq.json())
     elif ret == 'content':
         return rq.content
     elif ret == 'text':

@@ -2,14 +2,12 @@
 {% load bootstrap3 %}
 {% load staticfiles %}
 
-{% block title %}Servicio TwiStreapy{% endblock %}
+{% block title %}Estadisticas{% endblock %}
 
 {% block content %}
-    <style>
-      rect.bordered {
-        stroke: #E6E6E6;
-        stroke-width:2px;
-      }
+<script src="{% static 'dashboard/js/liquidFillGauge.js' %}" language="JavaScript"></script>
+   <style>
+   .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
       text.mono {
         font-size: 9pt;
         font-family: Consolas, courier;
@@ -26,14 +24,35 @@
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
 <div class="placeholder">
-    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" class="img-responsive" alt="Generic placeholder thumbnail" width="200" height="200">
+<h2>Conteo de Tweets <small></small></h2>
+    <svg id="tweetscount" width="19%" height="250" onclick=""></svg>
 </div>
 <div id="chart-container">
+<h2>Mapa de Calor Horario <small>Cantidad de Tweets por Hora</small></h2>
     <div id="chart"></div>
     <div id="dataset-picker">
     </div>
 </div>
+<div>
 <script type="text/javascript">
+var config5 = liquidFillGaugeDefaultSettings();
+config5.circleThickness = 0.4;
+config5.circleColor = "#6DA398";
+config5.textColor = "#0E5144";
+config5.waveTextColor = "#6DA398";
+config5.waveColor = "#246D5F";
+config5.textVertPosition = 0.52;
+config5.waveAnimateTime = 5000;
+config5.waveHeight = 0;
+config5.waveAnimate = false;
+config5.waveCount = 2;
+config5.waveOffset = 0.25;
+config5.textSize = 1.2;
+config5.minValue = 0;
+config5.maxValue = {{ count }}
+config5.displayPercent = false;
+var gauge6 = loadLiquidFillGauge("tweetscount", {{ count }}, config5);
+
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
           width = 960 - margin.left - margin.right,
           height = 430 - margin.top - margin.bottom,

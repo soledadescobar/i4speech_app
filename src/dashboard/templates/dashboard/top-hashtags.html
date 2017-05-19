@@ -1,0 +1,128 @@
+{% extends 'dashboard/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}TOP Hashtags{% endblock %}
+
+{% block content %}
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,200italic,600italic&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+  <script src="http://phuonghuynh.github.io/js/bower_components/d3-transform/src/d3-transform.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/extarray.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/misc.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/cafej/src/micro-observer.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/microplugin/src/microplugin.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/bubble-chart.js"></script>
+  <script src="http://phuonghuynh.github.io/js/bower_components/bubble-chart/src/plugins/lines/lines.js"></script>
+    <style>
+        .bubbleChart {
+          min-width: 100px;
+          max-width: 700px;
+          height: 700px;
+          margin: 0 0;
+        }
+        .bubbleChart svg{
+
+        }
+      rect.bordered {
+        stroke: #E6E6E6;
+        stroke-width:2px;
+      }
+    </style>
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h2>Top 20</h2>
+    <div class="bubbleChart"/>
+</div>
+
+{% if top100 %}
+<div>
+    <h2>Top 100<h2>
+    <table class="table">
+        <tr>
+            <th>Hashtags</th>
+            <th>Cantidad de Tweets</th>
+        </tr>
+        {% for row in top100 %}
+        <tr>
+            <td>{{ row.text }}</td>
+            <td>{{ row.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+  var bubbleChart = new d3.svg.BubbleChart({
+    supportResponsive: true,
+    //container: => use @default
+    size: 600,
+    //viewBoxSize: => use @default
+    innerRadius: 600 / 3.5,
+    //outerRadius: => use @default
+    radiusMin: 50,
+    //radiusMax: use @default
+    //intersectDelta: use @default
+    //intersectInc: use @default
+    //circleColor: use @default
+    data: {
+      items: {{ top10|safe }},
+      eval: function (item) {return item.count;},
+      classed: function (item) {return item.text.split(" ").join("");}
+    },
+    plugins: [
+      {
+        name: "lines",
+        options: {
+          format: [
+            {// Line #0
+              textField: "count",
+              classed: {count: true},
+              style: {
+                "font-size": "28px",
+                "font-family": "Source Sans Pro, sans-serif",
+                "text-anchor": "middle",
+                fill: "black"
+              },
+              attr: {
+                dy: "0px",
+                x: function (d) {return d.cx;},
+                y: function (d) {return d.cy;}
+              }
+            },
+            {// Line #1
+              textField: "text",
+              classed: {text: true},
+              style: {
+                "font-size": "14px",
+                "font-family": "Source Sans Pro, sans-serif",
+                "text-anchor": "middle",
+                fill: "black"
+              },
+              attr: {
+                dy: "20px",
+                x: function (d) {return d.cx;},
+                y: function (d) {return d.cy;}
+              }
+            }
+          ],
+          centralFormat: [
+            {// Line #0
+              style: {"font-size": "50px"},
+              attr: {}
+            },
+            {// Line #1
+              style: {"font-size": "30px"},
+              attr: {dy: "40px"}
+            }
+          ]
+        }
+      }]
+  });
+});
+</script>
+{% endblock %}

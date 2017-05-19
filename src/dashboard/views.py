@@ -13,11 +13,16 @@ sv = 'http://10.128.0.6:5000'
 # Create your views here.
 def index(request):
     ret = {}
-    ret['tweets'] = make_request(request, sv, 'get/query/tweet-count')
-    ret['tweetsday'] = make_request(request, sv, 'get/tsv/tweet-count-day',
-        'content')
-    ret['hashtags'] = make_request(request, sv, 'get/query/hashtag-count')
+    ret.update(make_request(request, sv, 'get/query/tweet-count'))
     return render(request, 'dashboard/index.html', ret)
+
+
+def top_hashtags(request):
+    ret = {}
+    ret['top10'] = make_request(request, sv, 'get/json/hashtag-top-20')
+    ret['top100'] = make_request(request, sv, 'get/json/hashtag-top-100',
+        'json_load')
+    return render(request, 'dashboard/top-hashtags.html', ret)
 
 
 def getTsv(request, query):

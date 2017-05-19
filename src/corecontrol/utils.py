@@ -178,7 +178,8 @@ def convertUsers(uids, rt='ids'):
         rq = requests.post('%s/get/user_ids' % sv, data=json.dumps({
             'screen_names': names, 'user_ids': ids})).json()
         for key, val in list(rq.items()):
-            KnownUsers(user_id=key, screen_name=val).save()
+            if not KnownUsers.objects.filter(user_id=key):
+                KnownUsers(user_id=key, screen_name=val).save()
             ret.append(dict(user_id=key, screen_name=val))
     if rt == 'ids':
         return returnUsersIds(ret)
