@@ -7,20 +7,27 @@
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
-<h2 class="sub-header">output.log</h2>
-<form action="{% url 'clearlog' %}" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="clearlog">Archivar el LOG actual y comenzar con uno en blanco</label><br>
-        <button type="submit" class="btn btn-primary" name="clearlog" id="clearlog">Ejecutar Archivar y Vaciar</button>
-    </div>
-    <div class="form-group">
-        <a href="{% url 'logdl' %}" class="btn btn-primary" role="button" download="output.log">Descargar</a>
-        <button type="button" class="btn btn-primary disabled">Ver Archivados</button>
-    </div>
-    <div class="form-group">
-        <label for="output">Salida del archivo</label>
-        <textarea class="form-control" id="output" name="output"rows="20">{{ output }}</textarea>
-    </div>
-</form>
+<div id="instances">
+    <ul>
+    {% for i in instances %}
+        <li><a href="#instances-{{ i.id }}">{{ i.name }} <small>en: {{ i.ip }}</small></a></li>
+    {% endfor %}
+    </ul>
+    {% for i in instances %}
+        <h2 class="sub-header">output.log</h2>
+        <form action="{% url 'clearlog' %}/instance-{{ i.id }}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="clearlog">Archivar el LOG actual y comenzar con uno en blanco</label><br>
+                <button type="submit" class="btn btn-primary" name="clearlog" id="clearlog">Ejecutar Archivar y Vaciar</button>
+            </div>
+            <div class="form-group">
+                <a href="{% url 'logdl' %}/instance-{{ i.id }}" class="btn btn-primary" role="button" download="output.log">Descargar</a>
+                <button type="button" class="btn btn-primary disabled">Ver Archivados</button>
+            </div>
+            <div class="form-group">
+                <label for="{{ i.id }}.output">Salida del archivo</label>
+                <textarea class="form-control" id="{{ i.id }}.output" name="{{ i.id }}.output"rows="20">{{ i.output }}</textarea>
+            </div>
+        </form>
 {% endblock %}

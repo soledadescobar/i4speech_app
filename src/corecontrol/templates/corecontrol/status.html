@@ -7,52 +7,58 @@
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
-<h2 class="sub-header">{{svcpath}}</h2>
-<form action="{% if running %}{% url 'stopproc' %}{% else %}{% url 'startproc' %}{% endif %}" method="post">
-{% csrf_token %}
-<div class="form-group">
-    <p>Estado de ejecución:
-    {% if running %}
-        {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
-    </p>
-        <button type="submit" class="btn btn-danger">Detener</button>
-        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startpr" %}
-    {% else %}
-        {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
-    </p>
-        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stoppr" %}
-        <button type="submit" class="btn btn-success">Iniciar</button>
-    {% endif %}
-</div>
-{% if running %}
-<div class="bg-box">
-    <p class="bg-success">Servicio ejecutandose desde: {{ since }}</p>
-</div>
-{% endif %}
-{% if rderrors %}
-<h3>Alertas</h3>
-{% for item in rderrors %}
-<div class="bg-box">
-    <p class="bg-danger">{{ item }}</p>
-</div>
+{% for i in instances %}
+    <h2 class="sub-header">Instancia {{ i.name }}</h2>
+    <form action="{% if running %}{% url 'stopproc' %}{% else %}{% url 'startproc' %}{% endif %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="instance" value="{{ i.id }}" />
+        <div class="form-group">
+            <p>Estado de ejecución:
+            {% if i.running %}
+                {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
+            </p>
+                <button type="submit" class="btn btn-danger">Detener</button>
+                {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startpr" %}
+            {% else %}
+                {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
+            </p>
+                {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stoppr" %}
+                <button type="submit" class="btn btn-success">Iniciar</button>
+            {% endif %}
+        </div>
+        {% if i.running %}
+        <div class="bg-box">
+            <p class="bg-success">Servicio ejecutandose desde: {{ i.since }}</p>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <p>Estado del Servidor Redis:
+                {% if i.redis %}
+                    {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
+                {% else %}
+                    {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
+                {% endif %}
+            </p>
+        </div>
+        {% if i.output.timeout %}
+            <div class="alert alert-danger" role="alert">
+                  <p><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  El Conector Bridge de Instancia {{ i.name }} No Responde (Timeout)</p>
+                  <div>
+                      <button type="button" class="btn btn-primary" name="action" value="save">Ejecutar Reinicio Bridge</button>
+                      <button type="button" class="btn btn-danger" name="action" value="remove">Remover Instancia {{ i.name }}</button>
+                  </div>
+            </div>
+        {% endif %}
+        {% if i.rderrors %}
+            <h3>Alertas</h3>
+            {% for item in i.rderrors %}
+            <div class="bg-box">
+                <p class="bg-danger">{{ item }}</p>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </form>
 {% endfor %}
-{% endif %}
-</form>
-<form action="{% url 'startrd' %}" method="post">
-{% csrf_token %}
-<div class="form-group">
-    <p>Estado del Servidor Redis:
-    {% if redis %}
-        {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
-        </p>
-        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stopredis" %}
-        {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startredis" %}
-    {% else %}
-        {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
-        </p>
-        {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stopredis" %}
-        <button type="submit" class="btn btn-success">Iniciar</button>
-    {% endif %}
-</div>
-</form>
 {% endblock %}

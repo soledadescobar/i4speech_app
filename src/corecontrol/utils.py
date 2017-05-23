@@ -2,84 +2,8 @@
 import libtmux
 from time import gmtime, strftime
 import json
-from .models import KnownUsers
+from .models import KnownUsers, Instances, InstanceTypes
 import requests
-
-
-'''# pid = ruta a archivo PID
-def prstatus(pid):
-    if os.path.exists(pid):
-        with open(pid, 'r') as p:
-            ppid = int(p.readline())
-        if psutil.pid_exists(ppid):
-            p = psutil.Process(ppid)
-            return datetime.datetime.fromtimestamp(p.create_time()).strftime(
-                "%d-%m-%Y %H:%M:%S")
-        else:
-            return False
-    else:
-        return False
-'''
-
-
-sv = 'http://localhost:5000'
-
-
-# inicia el proceso "path" en una nueva session tmux
-def startpr(path):
-    stoppr(path)
-    tmux = libtmux.Server()
-    tmux.remove_environment('PATH')
-    tmux.remove_environment('VIRTUAL_ENV')
-    session = tmux.new_session('twistreapy', True, False, path)
-    pane = session.attached_pane
-    pane.send_keys('source ../venv/bin/activate')
-    pane.send_keys('python __main__.py start')
-    return True
-
-
-def stoppr(path):
-    tmux = libtmux.Server()
-    if tmux.has_session('twistreapy'):
-        tmux.kill_session('twistreapy')
-        return True
-    return False
-'''
-
-# ini = ruta a archivo config.ini
-def getconfig(ini):
-    cp = configparser.ConfigParser()
-    cp.read(ini)
-    apicfg = cp['API']
-    dbcfg = cp['DATABASE']
-    ret = {'API': {}, 'DATABASE': {}}
-    for t in list(apicfg.items()):
-        # Fix: Convierte a listas los campos especificos separados por coma
-        if t[0] == 'keywords' or t[0] == 'user_ids' or t[0] == 'entities':
-            ret['API'][t[0]] = ",".join(t[1].split(','))
-        else:
-            ret['API'][t[0]] = t[1]
-    for t in list(dbcfg.items()):
-        ret['DATABASE'][t[0]] = t[1]
-    return ret'''
-'''
-def savecfg(ini, POST):
-    ## Remove action y token del post
-    if 'csrfmiddlewaretoken' in POST:
-        del POST['csrfmiddlewaretoken']
-    if 'action' in POST:
-        del POST['action']
-    cp = configparser.ConfigParser()
-    cp.read(ini)
-    for t, c in list(POST.items()):
-        y = dict(c)
-        for k, v in list(y.items()):
-            cp.set(t, k, v)
-    with open(ini, 'wb') as cfile:
-        cp.write(cfile)
-    #TODO: Tratar excepciones
-    return True
-'''
 
 
 # Recibe un DICT y convierte las keys de KEY.subkey a [KEY][SUBKEY]
@@ -90,36 +14,12 @@ def convertFormArray(POST, js=False):
         if len(x) > 1:
             if x[0] not in ret:
                 ret[x[0]] = {}
-            ret[x[0]][x[1]] = POST[k]
-        else:
-            ret[k] = POST[k]
+            ret[x[0]][x[1]] = POST[k][-1]
+        #else:
+            #ret[k] = POST[k]
     if js is True:
         return json.dumps(ret)
     return ret
-
-
-def readLog(log):
-    with open(log, 'r') as lf:
-        return lf.read()
-
-
-def clearLog(log):
-    logfile = readLog(log)
-    with open(r'/home/gabriel/pst/managecenter/src/logs/%s.log' %
-    strftime("%d-%m-%y", gmtime()), 'w') as f:
-        f.write(logfile)
-    with open(log, 'w'):
-        pass
-    return True
-'''
-def getErrors(redis, instance='twistreapy'):
-    try:
-        queue = Bridge(redis, instance)
-        ret = queue.getErrors()
-    except Exception as e:
-        ret = ['%s' % e]
-    return ret
-'''
 
 
 def userLookup(uid=None, scn=None):
@@ -147,15 +47,20 @@ def usersLookup(users):
             userLookup(uid=uid)['screen_name']})
 
 
-def SaveConfigPost(PST):
+def SaveConfigPost(PST, inst, host):
     POST = PST.copy()
-    if 'API.user_ids' in POST:
-        POST['API.user_ids'] = convertUsers(POST['API.user_ids'].split(','),
+    if '%s.API.user_ids' % str(inst) in POST:
+        POST['%s.API.user_ids' % str(inst)] = convertUsers(
+            POST['%s.API.user_ids' % str(inst)].split(','),
+            '%s' % host,
             'ids')
+    for k in list(POST.keys()):
+        if k.startswith('%s.' % inst):
+            POST['%s' % k.strip("%s." % inst)] = POST.pop(k)
     return convertFormArray(POST, True)
 
 
-def convertUsers(uids, rt='ids'):
+def convertUsers(uids, sv, rt='ids'):
     ret = []
     names = []
     ids = []
@@ -176,7 +81,7 @@ def convertUsers(uids, rt='ids'):
                 ids.append(uid)
     if len(names) > 0 or len(ids) > 0:
         rq = requests.post('%s/get/user_ids' % sv, data=json.dumps({
-            'screen_names': names, 'user_ids': ids})).json()
+            'screen_names': names, 'user_ids': ids}), timeout=5).json()
         for key, val in list(rq.items()):
             if not KnownUsers.objects.filter(user_id=key):
                 KnownUsers(user_id=key, screen_name=val).save()
@@ -202,3 +107,11 @@ def returnUsersNames(users):
         ret.append('@%s' % str(user['screen_name']))
     ret.sort()
     return ",".join(ret)
+
+
+def getInstances():
+    return list(Instances.objects.filter(it_id=1).values())
+
+
+def getInactives():
+    return list(Instances.objects.filter(it_id=2).values())

@@ -3,12 +3,14 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% block bootstrap3_extra_head %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="{% static 'corecontrol/css/dashboard.css' %}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
     <script src="{% static 'corecontrol/js/global.js' %}"></script>
     <script src="{% static 'corecontrol/js/config.js' %}"></script>
     <link href="{% static 'corecontrol/css/bootstrap-tagsinput.css' %}" rel="stylesheet">
     <script src="{% static 'corecontrol/js/bootstrap-tagsinput.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}
 {% block bootstrap3_content %}
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -40,7 +42,6 @@
                 <li><a href="{% url 'status' %}">Estado del Servicio</a><li>
                 <li><a href="{% url 'config' %}/api">Parametros API</a><li>
                 <li><a href="{% url 'config' %}/database">Base de Datos</a><li>
-                <li><a href="{% url 'config' %}">Memcache</a><li>
                 <li><a href="{% url 'log' %}">LOG</a><li>
             </ul>
         </div>

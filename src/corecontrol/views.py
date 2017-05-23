@@ -7,67 +7,68 @@ import requests
 from .utils import *
 
 
-ini = r'/home/abottiggi/twistreapy/src/config.ini'
-pid = r'/tmp/twistreapy.pid'
-pipe = r'/tmp/twistreapy.pip'
-svc = r'/home/abottiggi/twistreapy/src/'
-lgf = r'/home/abottiggi/twistreapy/src/output.log'
-redis = {'host': 'localhost', 'port': 6379, 'decode_responses': True}
-sv = 'http://10.128.0.6:5000'
-#sv = 'http://localhost:5000'
+instances = getInstances()
 
 
 # Create your views here.
 def status(request, ret={}):
     # Consultar Status
-    #ret.update(requests.get('%s/get/status' % sv).json())
-    ret.update(make_request(request, sv, 'get/status'))
-    ret['pidfile'] = pid
-    ret['inifile'] = ini
-    ret['svcpath'] = svc
-    #ret['rderrors'] = getErrors(redis)
+    ret['instances'] = []
+    for i in instances:
+        ret['instances'].append(
+            {"id": i['id'],
+            "output": make_request(request, '%s' % i['ip'], 'get/status')})
+        ret['instances'][-1].update(i)
     return render(request, 'corecontrol/status.html', ret)
 
 
-def config(request, ret={}, view='api'):
-    #cfg = getconfig(ini)
-    cfg = make_request(request, sv, 'get/config.ini')
+def config(request, ret={}, view='api', inst=False):
+    ret['instances'] = instances
     ret['view'] = view
-    ret[view.upper()] = cfg[view.upper()]
-    if view == 'api':
-        kws = ret['API']['keywords'].split(',')
+    for i, val in enumerate(ret['instances']):
+        ret['instances'][i].update(
+            make_request(
+                request,
+                '%s' % val['ip'],
+                'get/config.ini'))
+        if ret['instances'][i].get('timeout', False):
+            continue
+        kws = ret['instances'][i]['API']['keywords'].split(',')
         kws.sort()
-        ret['API']['keywords'] = ",".join(kws)
-        ret['API']['user_ids'] = convertUsers(ret['API']['user_ids'].split(','),
-             'names')
-    ret['inifile'] = ini
-    return render(request, 'corecontrol/config-%s.html' % view, ret)
+        ret['instances'][i]['API']['keywords'] = ",".join(kws)
+        ret['instances'][i]['API']['user_ids'] = convertUsers(
+            ret['instances'][i]['API']['user_ids'].split(','), 'names')
+    if inst:
+        ret['anchor'] = 'instances-%s' % inst
+    return render(request, 'corecontrol/config.html', ret)
 
 
-def configdb(request, ret={}):
-    cfg = make_request(request, sv, 'get/config.ini')
-    ret['API'] = cfg['API']
-    ret['DATABASE'] = cfg['DATABASE']
-    ret['inifile'] = ini
-    return render(request, 'corecontrol/config-database.html', ret)
-
-
-def saveconfig(request, view='api'):
-    dat = SaveConfigPost(request.POST)
-    rq = requests.post('%s/save/config.ini' % sv,
+def saveconfig(request, inst, view='api', ret={}):
+    item = None
+    for i in instances:
+        if int(i.get('id', False)) == int(inst):
+            item = i
+    #instance = next((item for item in instances if item['id'] == inst))
+    #instance =
+    #[item for item in instances if str(item['id']) == str(inst)]
+    #[item['id'] for item in instances if item['id'] == inst]
+    dat = SaveConfigPost(request.POST, inst, item['ip'])
+    rq = requests.post('%s/save/config.ini' % item['ip'],
         data=dat).json()
     # savecfg(ini, convertFormArray(request.POST))
-    if(request.POST['action'] == 'saverestart'):
-        make_request(request, sv, 'service/twistreapy/start')
+    if(request.POST.get('action', False) == 'saverestart'):
+        make_request(request, item['ip'], 'service/twistreapy/start')
     return config(request,
         ret=rq,
-        view=view
+        view=view,
+        inst=inst
     )
 
 
-def startproc(request, ret={}):
-    make_request(request, sv, 'service/twistreapy/start')
-    ret.update(make_request(request, sv, 'get/status'))
+def startproc(request, inst, ret={}):
+    instance = [item for item in instances if item['id'] == inst]
+    make_request(request, instance['ip'], 'service/twistreapy/start')
+    ret.update(make_request(request, inst['ip'], 'get/status'))
     if ret['running']:
         ret['message_type'] = 'success'
         ret['message'] = 'Servicio Iniciado Exitosamente'
@@ -77,31 +78,43 @@ def startproc(request, ret={}):
     return status(request, ret)
 
 
-def stopproc(request, ret={}):
-    make_request(request, sv, 'service/twistreapy/stop')
-    ret.update(make_request(request, sv, 'get/status'))
+def stopproc(request, inst, ret={}):
+    instance = [item for item in instances if item['id'] == inst]
+    make_request(request, instance['ip'], 'service/twistreapy/stop')
+    ret.update(make_request(request, inst['ip'], 'get/status'))
     ret['message_type'] = 'info'
     ret['message'] = 'Servicio Detenido'
     return status(request, ret)
 
 
-def logfile(request, ret={}, raw=False):
-    ret['output'] = make_request(request, sv, 'get/log', 'content')
+def logfile(request, inst=False, ret={}, raw=False):
+    ret['instances'] = []
+    for i in instances:
+        ret['instances'].append(
+            make_request(
+                request,
+                instance['ip'],
+                'get/log',
+                'content'))
     if raw:
-        return HttpResponse(ret['output'], content_type='text/plain')
+        return HttpResponse(ret, content_type='text/plain')
     else:
+        if inst:
+            ret['anchor'] = 'instances-%s' % inst
         return render(request, 'corecontrol/log.html', ret)
 
 
-def clearlog(request, ret={}):
-    make_request(request, sv, 'clear/log')
+def clearlog(request, inst, ret={}):
+    instance = [item for item in instances if item['id'] == inst]
+    make_request(request, instance['ip'], 'clear/log')
     ret['message'] = 'LOG Archivado y Limpiado Exitosamente'
     ret['message_type'] = 'success'
     return logfile(request, ret)
 
 
 def startrd(request, ret={}):
-    make_request(request, sv, 'service/redis/start')
+    instance = [item for item in instances if item['id'] == inst]
+    make_request(request, instance['ip'], 'service/redis/start')
     ret.update(make_request(request, sv, 'get/status'))
     if ret['redis']:
         ret['message_type'] = 'success'
@@ -122,9 +135,9 @@ def services(request):
 
 def make_request(request, host, url, ret='json'):
     try:
-        rq = requests.get('%s/%s' % (host, url))
+        rq = requests.get('%s/%s' % (host, url), timeout=5)
     except:
-        return render(request, 'corecontrol/connection-error.html')
+        return {'timeout': True}
     if ret == 'json':
         return rq.json()
     if ret == 'json_load':

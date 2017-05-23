@@ -43,6 +43,7 @@
             {% csrf_token %}
             <input id="DATABASE.use" type="hidden" name="DATABASE.use" value="{% if DATABASE.use == 'on' %}on{% else %}off{% endif %}" />
             <button type="submit" class="btn btn-primary" name="action" value="save">Guardar</button>
+            <button type="submit" class="btn btn-primary" name="action" value="save">Guardar en Todas las Instancias</button>
             <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar</button>
         </div>
 </form>

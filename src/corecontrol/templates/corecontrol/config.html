@@ -17,6 +17,18 @@
     {% if view == 'api' %}
         {% for i in instances %}
         <div id="instances-{{ i.id }}">
+        {% if i.timeout %}
+            <div class="alert alert-danger" role="alert">
+                 <p><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  El Conector Bridge de Instancia {{ i.name }} No Responde (Timeout)</p>
+                  <div>
+                      <button type="button" class="btn btn-primary" name="action" value="save">Ejecutar Reinicio Bridge</button>
+                      <button type="button" class="btn btn-danger" name="action" value="remove">Remover Instancia {{ i.name }}</button>
+                  </div>
+            </div>
+</div>
+        {% else %}
             <form action="{% url 'config' %}/api/save/instance-{{ i.id }}" method="post">
                 <h2 class="sub-header">Configuración API Twitter</h2>
                     <div class="form-group">
@@ -77,11 +89,12 @@
                         <input id="{{ i.id }}.API.friends_sentinel" type="hidden" name="{{ i.id }}.API.friends_sentinel" value="{% if i.API.friends_sentinel == 'on' %}on{% else %}off{% endif %}" />
                         <input id="{{ i.id }}.API.followers_sentinel" type="hidden" name="{{ i.id }}.API.followers_sentinel" value="{% if i.API.followers_sentinel == 'on' %}on{% else %}off{% endif %}" />
                         <input id="{{ i.id }}.API.likes_sentinel" type="hidden" name="{{ i.id }}.API.likes_sentinel" value="{% if i.API.likes_sentinel == 'on' %}on{% else %}off{% endif %}" />
-                        <button type="submit" class="btn btn-primary" name="action" value="save">Guardar</button>
-                        <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar</button>
+                        <button type="submit" class="btn btn-primary" name="{{ i.id }}.action" value="save">Guardar</button>
+                        <button type="submit" class="btn btn-success" name="{{ i.id }}.action" value="saverestart">Guardar y Reiniciar</button>
                     </div>
             </form>
         </div>
+        {% endif %}
         {% endfor %}
         {% elif view == 'database' %}
         {% for i in instances %}
@@ -133,6 +146,9 @@
   $( function() {
     $( "#instances" ).tabs();
   } );
+{% if anchor %}
+    window.location = '#{{ anchor }}'
+{% endif %}
 </script>
 
 

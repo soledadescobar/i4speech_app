@@ -23,36 +23,13 @@
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
-<div class="placeholder">
-<h2>Conteo de Tweets <small></small></h2>
-    <svg id="tweetscount" width="19%" height="250" onclick=""></svg>
-</div>
 <div id="chart-container">
 <h2>Mapa de Calor Horario <small>Cantidad de Tweets por Hora</small></h2>
     <div id="chart"></div>
     <div id="dataset-picker">
     </div>
 </div>
-<div>
 <script type="text/javascript">
-var config5 = liquidFillGaugeDefaultSettings();
-config5.circleThickness = 0.4;
-config5.circleColor = "#6DA398";
-config5.textColor = "#0E5144";
-config5.waveTextColor = "#6DA398";
-config5.waveColor = "#246D5F";
-config5.textVertPosition = 0.52;
-config5.waveAnimateTime = 5000;
-config5.waveHeight = 0;
-config5.waveAnimate = false;
-config5.waveCount = 2;
-config5.waveOffset = 0.25;
-config5.textSize = 1.2;
-config5.minValue = 0;
-config5.maxValue = {{ count }}
-config5.displayPercent = false;
-var gauge6 = loadLiquidFillGauge("tweetscount", {{ count }}, config5);
-
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
           width = 960 - margin.left - margin.right,
           height = 430 - margin.top - margin.bottom,
@@ -60,7 +37,7 @@ var gauge6 = loadLiquidFillGauge("tweetscount", {{ count }}, config5);
           legendElementWidth = gridSize*2,
           buckets = 9,
           colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
-          days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+          days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"],
           times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
           datasets = ["tweet-count-day-7.tsv", "tweet-count-day-14.tsv", "tweet-count-day-month.tsv"];
           datanames = {"tweet-count-day-7.tsv": "Ultimos 7 Dias", "tweet-count-day-14.tsv": "7 Dias Anteriores", "tweet-count-day-month.tsv": "Mes Anterior"}
