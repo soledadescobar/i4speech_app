@@ -67,8 +67,9 @@ def saveconfig(request, inst, view='api', ret={}):
 
 def startproc(request, inst, ret={}):
     instance = [item for item in instances if item['id'] == inst]
-    make_request(request, instance['ip'], 'service/twistreapy/start')
-    ret.update(make_request(request, inst['ip'], 'get/status'))
+    sv = instance.pop()
+    make_request(request, sv['ip'], 'service/twistreapy/start')
+    ret.update(make_request(request, sv['ip'], 'get/status'))
     if ret['running']:
         ret['message_type'] = 'success'
         ret['message'] = 'Servicio Iniciado Exitosamente'
@@ -80,8 +81,9 @@ def startproc(request, inst, ret={}):
 
 def stopproc(request, inst, ret={}):
     instance = [item for item in instances if item['id'] == inst]
-    make_request(request, instance['ip'], 'service/twistreapy/stop')
-    ret.update(make_request(request, inst['ip'], 'get/status'))
+    sv = instance.pop()
+    make_request(request, sv['ip'], 'service/twistreapy/stop')
+    ret.update(make_request(request, sv['ip'], 'get/status'))
     ret['message_type'] = 'info'
     ret['message'] = 'Servicio Detenido'
     return status(request, ret)

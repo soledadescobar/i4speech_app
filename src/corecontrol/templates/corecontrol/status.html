@@ -9,7 +9,7 @@
 {% endif %}
 {% for i in instances %}
     <h2 class="sub-header">Instancia {{ i.name }}</h2>
-    <form action="{% if running %}{% url 'stopproc' %}{% else %}{% url 'startproc' %}{% endif %}" method="post">
+    <form action="{% if running %}{% url 'stopproc' %}/instance-{{ inst }}{% else %}{% url 'startproc' %}/instance-{{ inst }}{% endif %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="instance" value="{{ i.id }}" />
         <div class="form-group">

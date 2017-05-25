@@ -28,7 +28,7 @@ def top_hashtags(request, inst=1):
         instance.append(instances[0])
     sv = instance.pop()
     ret['top10'] = make_request(
-        request, sv['ip'], 'get/json/hashtag-top-20')
+        request, sv['ip'], 'get/json/hashtag-top-10')
     ret['top100'] = make_request(
         request, sv['ip'], 'get/json/hashtag-top-100',
         'json_load')
