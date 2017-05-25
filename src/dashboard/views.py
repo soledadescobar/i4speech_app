@@ -7,8 +7,6 @@ from corecontrol.views import make_request
 from corecontrol.utils import getInstances
 
 
-#sv = 'http://10.128.0.6:5000'
-#sv = 'http://localhost:5000'
 instances = getInstances()
 
 
@@ -24,11 +22,15 @@ def index(request, inst=1):
 
 def top_hashtags(request, inst=1):
     ret = {}
+    ret['inst'] = inst
     instance = [item for item in instances if item['id'] == inst]
+    if not len(instance):
+        instance.append(instances[0])
+    sv = instance.pop()
     ret['top10'] = make_request(
-        request, instance['ip'], 'get/json/hashtag-top-20')
+        request, sv['ip'], 'get/json/hashtag-top-20')
     ret['top100'] = make_request(
-        request, instance['ip'], 'get/json/hashtag-top-100',
+        request, sv['ip'], 'get/json/hashtag-top-100',
         'json_load')
     return render(request, 'dashboard/top-hashtags.html', ret)
 
