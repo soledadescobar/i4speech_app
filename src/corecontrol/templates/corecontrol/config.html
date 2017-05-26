@@ -83,8 +83,8 @@
                         <input id="{{ i.id }}.API.poploop" type="hidden" name="{{ i.id }}.API.poploop" value="{% if i.API.poploop == 'on' %}on{% else %}off{% endif %}" />
                         <input id="{{ i.id }}.API.ffs_sentinel" type="hidden" name="{{ i.id }}.API.ffs_sentinel" value="{% if i.API.ffs_sentinel == 'on' %}on{% else %}off{% endif %}" />
                         <input id="{{ i.id }}.API.users_lookup" type="hidden" name="{{ i.id }}.API.users_lookup" value="{% if i.API.users_lookup == 'on' %}on{% else %}off{% endif %}" />
-                        <button type="submit" class="btn btn-primary" name="{{ i.id }}.action" value="save">Guardar</button>
-                        <button type="submit" class="btn btn-success" name="{{ i.id }}.action" value="saverestart">Guardar y Reiniciar</button>
+                        <button type="submit" class="btn btn-primary" name="{{ i.id }}.action" value="save">Guardar&nbsp;<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span></button>
+                        <button type="submit" class="btn btn-success" name="{{ i.id }}.action" value="saverestart">Guardar y Reiniciar&nbsp;<span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
                     </div>
             </form>
         </div>
@@ -127,9 +127,9 @@
                 <div class="form-group">
                     {% csrf_token %}
                     <input id="{{ i.id }}.DATABASE.use" type="hidden" name="{{ i.id }}.DATABASE.use" value="{% if i.DATABASE.use == 'on' %}on{% else %}off{% endif %}" />
-                    <button type="submit" class="btn btn-primary" name="action" value="save">Guardar</button>
-                    <button type="submit" class="btn btn-primary" name="action" value="save">Guardar en Todas las Instancias</button>
-                    <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar</button>
+                    <button type="submit" class="btn btn-primary" name="action" value="save">Guardar&nbsp;<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span></button>
+                    <button type="submit" class="btn btn-primary" name="action" value="save">Guardar en Todas las Instancias&nbsp;<span class="glyphicon glyphicon-export" aria-hidden="true"></span></button>
+                    <button type="submit" class="btn btn-success" name="action" value="saverestart">Guardar y Reiniciar&nbsp;<span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
                 </div>
             </form>
             </div>

@@ -20,5 +20,4 @@ urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^corecontrol/', include('corecontrol.urls')),
     url(r'^admin/', admin.site.urls),
-
 ]

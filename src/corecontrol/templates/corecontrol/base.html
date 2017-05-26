@@ -22,14 +22,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Manage Center</a>
+      <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>&nbsp;Manage Center</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'index' %}">Inicio</a></li>
-        <li><a href="{% url 'corecontrol' %}">Configuración</a></li>
-        <li><a href="{% url 'index' %}">Estadisticas</a></li>
-        <li><a href="#">Ayuda</a></li>
+        <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Inicio</a></li>
+        <li><a href="{% url 'corecontrol' %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Configuración</a></li>
+        <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-signal" aria-hidden="true"></span>&nbsp;Estadisticas</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-education" aria-hidden="true"></span>&nbsp;Ayuda</a></li>
       </ul>
     </div>
 </div>
@@ -39,10 +39,10 @@
     <div class="row">
         <div class="col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="{% url 'status' %}">Estado del Servicio</a><li>
-                <li><a href="{% url 'config' %}/api">Parametros API</a><li>
-                <li><a href="{% url 'config' %}/database">Base de Datos</a><li>
-                <li><a href="{% url 'log' %}">LOG</a><li>
+                <li><a href="{% url 'status' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Estado del Servicio</a><li>
+                <li><a href="{% url 'config' %}/api"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Parametros API</a><li>
+                <li><a href="{% url 'config' %}/database"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Base de Datos</a><li>
+                <li><a href="{% url 'log' %}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;LOG</a><li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

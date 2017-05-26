@@ -26,6 +26,7 @@ sys.path.append(os.path.join(PROJECT_ROOT, 'src'))
 SECRET_KEY = 'r4i^suffk0dushnc#h42%&ahxg1a8!y9j$f!pq@p)65o=myk@i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#DEBUG = False
 DEBUG = False
 
 #ALLOWED_HOSTS = [
