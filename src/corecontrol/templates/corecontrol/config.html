@@ -58,18 +58,13 @@
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label for="{{ i.id }}.friends_sentinel">
-                            <input type="checkbox" id="{{ i.id }}.friends_sentinel"{% if i.API.friends_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Followers Sentinel
+                        <label for="{{ i.id }}.ffs_sentinel">
+                            <input type="checkbox" id="{{ i.id }}.ffs_sentinel"{% if i.API.ffs_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Friends/Followers Sentinel
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label for="{{ i.id }}.follower_sentinel">
-                            <input type="checkbox" id="{{ i.id }}.follower_sentinel"{% if i.API.follower_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Friends Sentinel
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label for="{{ i.id }}.likes_sentinel">
-                            <input type="checkbox" id="{{ i.id }}.likes_sentinel"{% if i.API.friends_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Likes Sentinel
+                        <label for="{{ i.id }}.users_lookup">
+                            <input type="checkbox" id="{{ i.id }}.users_lookup"{% if i.API.users_lookup == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Users Lookup Sentinel
                         </label>
                     </div>
                     <div class="form-group">
