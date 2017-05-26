@@ -44,20 +44,18 @@ def config(request, ret={}, view='api', inst=False):
 
 
 def saveconfig(request, inst, view='api', ret={}):
-    item = None
-    for i in instances:
-        if int(i.get('id', False)) == int(inst):
-            item = i
+    instance = [item for item in instances if item['id'] == int(inst)]
+    sv = instance.pop()
     #instance = next((item for item in instances if item['id'] == inst))
     #instance =
     #[item for item in instances if str(item['id']) == str(inst)]
     #[item['id'] for item in instances if item['id'] == inst]
-    dat = SaveConfigPost(request.POST, inst, item['ip'])
-    rq = requests.post('%s/save/config.ini' % item['ip'],
+    dat = SaveConfigPost(request.POST, inst, sv['ip'])
+    rq = requests.post('%s/save/config.ini' % sv['ip'],
         data=dat).json()
     # savecfg(ini, convertFormArray(request.POST))
     if(request.POST.get('action', False) == 'saverestart'):
-        make_request(request, item['ip'], 'service/twistreapy/start')
+        make_request(request, sv['ip'], 'service/twistreapy/start')
     return config(request,
         ret=rq,
         view=view,
