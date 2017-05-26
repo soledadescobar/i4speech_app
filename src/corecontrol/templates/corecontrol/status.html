@@ -9,12 +9,12 @@
 {% endif %}
 {% for i in instances %}
     <h2 class="sub-header">Instancia {{ i.name }}</h2>
-    <form action="{% if running %}{% url 'stopproc' %}/instance-{{ inst }}{% else %}{% url 'startproc' %}/instance-{{ inst }}{% endif %}" method="post">
+    <form action="{% if i.output.running %}{% url 'stopproc' %}/instance-{{ i.id }}{% else %}{% url 'startproc' %}/instance-{{ i.id }}{% endif %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="instance" value="{{ i.id }}" />
         <div class="form-group">
             <p>Estado de ejecución:
-            {% if i.running %}
+            {% if i.output.running %}
                 {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
             </p>
                 <button type="submit" class="btn btn-danger">Detener</button>
@@ -26,14 +26,14 @@
                 <button type="submit" class="btn btn-success">Iniciar</button>
             {% endif %}
         </div>
-        {% if i.running %}
+        {% if i.output.running %}
         <div class="bg-box">
-            <p class="bg-success">Servicio ejecutandose desde: {{ i.since }}</p>
+            <p class="bg-success">Servicio ejecutandose desde: {{ i.output.since }}</p>
         </div>
         {% endif %}
         <div class="form-group">
             <p>Estado del Servidor Redis:
-                {% if i.redis %}
+                {% if i.output.redis %}
                     {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
                 {% else %}
                     {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
@@ -51,9 +51,9 @@
                   </div>
             </div>
         {% endif %}
-        {% if i.rderrors %}
+        {% if i.output.rderrors %}
             <h3>Alertas</h3>
-            {% for item in i.rderrors %}
+            {% for item in i.output.rderrors %}
             <div class="bg-box">
                 <p class="bg-danger">{{ item }}</p>
             </div>
