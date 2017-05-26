@@ -78,7 +78,7 @@ def startproc(request, inst, ret={}):
 
 
 def stopproc(request, inst, ret={}):
-    instance = [item for item in instances if item['id'] == inst]
+    instance = [item for item in instances if item['id'] == int(inst)]
     sv = instance.pop()
     make_request(request, sv['ip'], 'service/twistreapy/stop')
     ret.update(make_request(request, sv['ip'], 'get/status'))
