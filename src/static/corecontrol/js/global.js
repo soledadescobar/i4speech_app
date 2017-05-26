@@ -36,7 +36,11 @@ function doing_ajax(start) {
 }
 
 function checkboxChange(key, checkbox) {
-    $("input[name='" + key + '.' + checkbox.attr('id') + "']").val($(checkbox).is(':checked') ? 'on' : 'off');
+    attr_id = $(checkbox).attr('id');
+    check_id = key + "." + attr_id.substr(2);
+    //$('input[name="' + key + '.' + checkbox.attr(id) + '"]').val($(checkbox).is(':checked') ? 'on' : 'off');
+    $("input[id='" + check_id + "']").val($(checkbox).is(':checked') ? 'on' : 'off');
+    return $("input[id='" + check_id +"']");
 };
 
 

@@ -49,22 +49,22 @@
                     </div>
                     <div class="checkbox">
                         <label for="{{ i.id }}.stream">
-                            <input type="checkbox" id="{{ i.id }}.stream" {% if i.API.stream == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));"><a href="#" data-toggle="tooltip" title="Servicio de Stream Twitter API">Stream Twitter API</a>
+                            <input type="checkbox" id="{{ i.id }}.stream" {% if i.API.stream == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('{{ i.id }}.API',$(this));"><a href="#" data-toggle="tooltip" title="Servicio de Stream Twitter API">Stream Twitter API</a>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label for="{{ i.id }}.poploop">
-                            <input type="checkbox" id="{{ i.id }}.poploop" {% if i.API.poploop == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));"><a href="#" data-toggle="tooltip" title="Normaliza la cola REDIS en la Base de Datos configurada">Tweet Push DB</a>
+                            <input type="checkbox" id="{{ i.id }}.poploop" {% if i.API.poploop == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('{{ i.id }}.API',$(this));"><a href="#" data-toggle="tooltip" title="Normaliza la cola REDIS en la Base de Datos configurada">Tweet Push DB</a>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label for="{{ i.id }}.ffs_sentinel">
-                            <input type="checkbox" id="{{ i.id }}.ffs_sentinel"{% if i.API.ffs_sentinel == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Friends/Followers Sentinel
+                            <input type="checkbox" id="{{ i.id }}.ffs_sentinel"{% if i.API.ffs_sentinel == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('{{ i.id }}.API',$(this));">Friends/Followers Sentinel
                         </label>
                     </div>
                     <div class="checkbox">
                         <label for="{{ i.id }}.users_lookup">
-                            <input type="checkbox" id="{{ i.id }}.users_lookup"{% if i.API.users_lookup == 'yes' %} checked="checked" {% endif %} onchange="checkboxChange('API',$(this));">Users Lookup Sentinel
+                            <input type="checkbox" id="{{ i.id }}.users_lookup"{% if i.API.users_lookup == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('{{ i.id }}.API',$(this));">Users Lookup Sentinel
                         </label>
                     </div>
                     <div class="form-group">
@@ -81,9 +81,8 @@
                         {% csrf_token %}
                         <input id="{{ i.id }}.API.stream" type="hidden" name="{{ i.id }}.API.stream" value="{% if i.API.stream == 'on' %}on{% else %}off{% endif %}" />
                         <input id="{{ i.id }}.API.poploop" type="hidden" name="{{ i.id }}.API.poploop" value="{% if i.API.poploop == 'on' %}on{% else %}off{% endif %}" />
-                        <input id="{{ i.id }}.API.friends_sentinel" type="hidden" name="{{ i.id }}.API.friends_sentinel" value="{% if i.API.friends_sentinel == 'on' %}on{% else %}off{% endif %}" />
-                        <input id="{{ i.id }}.API.followers_sentinel" type="hidden" name="{{ i.id }}.API.followers_sentinel" value="{% if i.API.followers_sentinel == 'on' %}on{% else %}off{% endif %}" />
-                        <input id="{{ i.id }}.API.likes_sentinel" type="hidden" name="{{ i.id }}.API.likes_sentinel" value="{% if i.API.likes_sentinel == 'on' %}on{% else %}off{% endif %}" />
+                        <input id="{{ i.id }}.API.ffs_sentinel" type="hidden" name="{{ i.id }}.API.ffs_sentinel" value="{% if i.API.ffs_sentinel == 'on' %}on{% else %}off{% endif %}" />
+                        <input id="{{ i.id }}.API.users_lookup" type="hidden" name="{{ i.id }}.API.users_lookup" value="{% if i.API.users_lookup == 'on' %}on{% else %}off{% endif %}" />
                         <button type="submit" class="btn btn-primary" name="{{ i.id }}.action" value="save">Guardar</button>
                         <button type="submit" class="btn btn-success" name="{{ i.id }}.action" value="saverestart">Guardar y Reiniciar</button>
                     </div>
@@ -98,7 +97,7 @@
                 <h2 class="subheader">Configuración de Base de Datos</h2>
                 <div class="checkbox">
                     <label for="{{ i.id }}.use">
-                        <input type="checkbox" id="{{ i.id }}.use"{% if i.DATABASE.use == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('DATABASE',$(this));"><a href="#" data-toggle="tooltip" title="Activa/Desactiva la conexión a la Base de Datos. Desactivarlo inhabilita los servicios Push DB">Activar DB</a>
+                        <input type="checkbox" id="{{ i.id }}.use"{% if i.DATABASE.use == 'on' %} checked="checked" {% endif %} onchange="checkboxChange('{{ i.id }}.DATABASE',$(this));"><a href="#" data-toggle="tooltip" title="Activa/Desactiva la conexión a la Base de Datos. Desactivarlo inhabilita los servicios Push DB">Activar DB</a>
                     </label>
                 </div>
                 <div class="form-group">

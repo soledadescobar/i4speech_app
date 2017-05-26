@@ -15,8 +15,8 @@ def convertFormArray(POST, js=False):
             if x[0] not in ret:
                 ret[x[0]] = {}
             ret[x[0]][x[1]] = POST[k][-1]
-        #else:
-            #ret[k] = POST[k]
+        else:
+            ret[k] = POST[k]
     if js is True:
         return json.dumps(ret)
     return ret
@@ -55,7 +55,7 @@ def SaveConfigPost(PST, inst, host):
             '%s' % host,
             'ids')
     for k in list(POST.keys()):
-        if k.startswith('%s.' % inst):
+        if k.startswith('%s.' % str(inst)):
             POST['%s' % k.strip("%s." % inst)] = POST.pop(k)
     return convertFormArray(POST, True)
 
