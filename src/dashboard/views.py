@@ -13,20 +13,23 @@ instances = getInstances()
 # Create your views here.
 def index(request, inst=1):
     ret = {}
-    ret['inst'] = inst
-    instance = [item for item in instances if item['id'] == inst]
-    ret.update(make_request(
-        request, instance.pop()['ip'], 'get/query/tweet-count'))
-    return render(request, 'dashboard/index.html', ret)
-
-
-def top_hashtags(request, inst=1):
-    ret = {}
-    ret['inst'] = inst
     instance = [item for item in instances if item['id'] == inst]
     if not len(instance):
         instance.append(instances[0])
     sv = instance.pop()
+    ret['inst'] = sv['id']
+    ret.update(make_request(
+        request, sv['ip'], 'get/query/tweet-count'))
+    return render(request, 'dashboard/index.html', ret)
+
+
+def top_hashtags(request, inst=0):
+    ret = {}
+    instance = [item for item in instances if item['id'] == inst]
+    if not len(instance):
+        instance.append(instances[0])
+    sv = instance.pop()
+    ret['inst'] = sv['id']
     ret['top10'] = make_request(
         request, sv['ip'], 'get/json/hashtag-top-10')
     ret['top100'] = make_request(
