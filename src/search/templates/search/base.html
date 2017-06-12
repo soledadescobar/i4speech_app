@@ -3,14 +3,14 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% block bootstrap3_extra_head %}
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="{% static 'corecontrol/css/dashboard.css' %}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
-    <script src="{% static 'corecontrol/js/global.js' %}"></script>
-    <script src="{% static 'corecontrol/js/config.js' %}"></script>
+    <script src="{% static 'dashboard/js/global.js' %}"></script>
     <link href="{% static 'corecontrol/css/bootstrap-tagsinput.css' %}" rel="stylesheet">
     <script src="{% static 'corecontrol/js/bootstrap-tagsinput.js' %}"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
 {% endblock %}
 {% block bootstrap3_content %}
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -26,7 +26,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-signal" aria-hidden="true"></span>&nbsp;Estadisticas</a></li>
+      <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-signal" aria-hidden="true"></span>&nbsp;Estadisticas</a></li>
         <li><a href="{% url 'search' %}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;Busquedas</a></li>
         <li><a href="{% url 'corecontrol' %}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Configuración</a></li>
         <li><a href="#"><span class="glyphicon glyphicon-education" aria-hidden="true"></span>&nbsp;Ayuda</a></li>
@@ -39,14 +39,12 @@
     <div class="row">
         <div class="col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="{% url 'status' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Estado del Servicio</a><li>
-                <li><a href="{% url 'config' %}/api"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Parametros API</a><li>
-                <li><a href="{% url 'config' %}/database"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Base de Datos</a><li>
-                <li><a href="{% url 'log' %}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;LOG</a><li>
+                <li><a href="{% url 'search' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Informaci&oacute;n</a><li>
+                <li><a href="{% url 'search-tweets' %}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;Search API</a><li>
+                <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;B&uacute;squeda de Usuarios</a><li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">{% block title %}(no title){% endblock %}</h1>
                 {% block content %}(no content){% endblock %}
         </div>
     </div>

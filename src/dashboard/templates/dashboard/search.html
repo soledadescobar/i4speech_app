@@ -1,0 +1,20 @@
+{% extends 'search/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}API Search{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h3>Busqueda de Tweets</h3>
+    <form>
+        <div class="form-group">
+            <label for="terms">Parametro de Busqueda <small>prueba</small></label>
+            <input id="terms" type="text" />
+        </div>
+    </form>
+</div>
+{% endblock %}

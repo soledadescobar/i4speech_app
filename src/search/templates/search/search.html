@@ -1,0 +1,81 @@
+{% extends 'search/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}API Search{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h3>Twitter REST Search API</h3>
+    <form id="searchform" action="{% url 'search-tweets-url' %}" method="post">
+        <div class="form-group">
+            <label for="term">Termino de Busqueda </label>
+            <input id="term" name="term" type="text" class="form-control" {% if term %} value="{{ term }}" {% endif %}/>
+            <p class="help-block">@Nombre, #Hashtag o Texto Simple (Solo 1 Termino)</p>
+        </div>
+        <div class="form-group">
+            <label for="raw_query">Query</label>
+            <input id="raw_query" name="raw_query" type="text" class="form-control" {% if raw_query %} value="{{ raw_query }}" {% endif %}/>
+            <p class="help-block">Query de Busqueda Web. Para usarlo: Realizar una busqueda en Twitter, luego copiar lo que sigue del signo ? en la URL</p>
+        </div>
+        <div class="form-group">
+            <label for="since">Desde</label>
+            <input id="since" name="since" type="text" class="form-control"  {% if since %} value="{{ since }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            <label for="until">Hasta</label>
+            <input id="until" name="until" type="text" class="form-control" {% if until %} value="{{ until }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            <label for="since_id">Desde #ID</label>
+            <input id="since_id" name="since_id" type="text" class="form-control"  {% if since_id %} value="{{ since_id }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            <label for="max_id">Hasta #ID</label>
+            <input id="max_id" name="max_id" type="text" class="form-control"  {% if max_id %} value="{{ max_id }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            {% if since_id %}
+                <button type="button" class="btn btn-primary" value="Buscar" onclick="search_backward();"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Buscar IDS Anteriores</button>
+            {% endif %}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" value="Buscar">Buscar</button>
+            {% if max_id %}
+                <button type="button" class="btn btn-primary" value="Buscar" onclick="search_forward();">Buscar IDS Posteriores <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+<script type="text/javascript">
+$(function() { // DOM Ready
+    $("#until").datepicker({
+        language: "es",
+        autoclose: true,
+        format: "yyyy-mm-dd"
+    });
+    $("#since").datepicker({
+        language: "es",
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+});
+
+function search_backward() {
+    var since = $("#since_id").val()
+    $("#max_id").val(since);
+    $("#since_id").val("");
+    $("#searchform").submit()
+}
+
+function search_forward() {
+    var max = $("#max_id").val()
+    $("#since_id").val(until);
+    $("#max_id").val("");
+    $("#searchform").submit()
+}
+</script>
+{% endblock %}

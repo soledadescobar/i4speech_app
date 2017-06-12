@@ -135,7 +135,7 @@ def services(request):
 
 def make_request(request, host, url, ret='json'):
     try:
-        rq = requests.get('%s/%s' % (host, url), timeout=5)
+        rq = requests.get('%s/%s' % (host, url), timeout=10)
     except:
         return {'timeout': True}
     if ret == 'json':
