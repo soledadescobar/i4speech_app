@@ -1,0 +1,66 @@
+{% extends 'search/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}API Search{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h3>REST User Timelines</h3>
+    <form id="searchform" action="{% url 'search-timeline-url' %}" method="post">
+        <div class="form-group">
+            <label for="user_id">ID de Usuario </label>
+            <input id="user_id" name="user_id" type="text" class="form-control" {% if user_id %} value="{{ user_id }}" {% endif %}/>
+            <p class="help-block">ID de Usuario Numerico</p>
+        </div>
+        <div class="form-group">
+            <label for="screen_name">Nombre de Usuario</label>
+            <input id="screen_name" name="screen_name" type="text" class="form-control" {% if screen_name %} value="{{ screen_name }}" {% endif %}/>
+            <p class="help-block">Nombre de Usuario sin @Arroba</p>
+        </div>
+        <div class="form-group">
+            <label for="since_id">Desde #ID</label>
+            <input id="since_id" name="since_id" type="text" class="form-control"  {% if since_id %} value="{{ since_id }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            <label for="max_id">Hasta #ID</label>
+            <input id="max_id" name="max_id" type="text" class="form-control"  {% if max_id %} value="{{ max_id }}" {% endif %}/>
+        </div>
+        <div class="form-group">
+            Incluir Retweets
+        </div>
+        <div class="form-group">
+            Incluir Respuestas
+        </div>
+        <div class="form-group">
+            {% if since_id %}
+                <button type="button" class="btn btn-primary" value="Buscar" onclick="search_backward();"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Buscar IDS Anteriores</button>
+            {% endif %}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" value="Buscar">Buscar</button>
+            {% if max_id %}
+                <button type="button" class="btn btn-primary" value="Buscar" onclick="search_forward();">Buscar IDS Posteriores <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+<script type="text/javascript">
+function search_backward() {
+    var since = $("#since_id").val()
+    $("#max_id").val(since);
+    $("#since_id").val("");
+    $("#searchform").submit()
+}
+
+function search_forward() {
+    var max = $("#max_id").val()
+    $("#since_id").val(until);
+    $("#max_id").val("");
+    $("#searchform").submit()
+}
+</script>
+{% endblock %}

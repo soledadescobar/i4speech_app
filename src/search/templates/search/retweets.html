@@ -1,0 +1,27 @@
+{% extends 'search/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}API Search{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h3>Búsqueda de Retweets</h3>
+    <form id="searchform" action="{% url 'search-retweets-url' %}" method="post">
+        <div class="form-group">
+            <label for="id_tweet">ID Tweet</label>
+            <input id="id_tweet" name="id_tweet" type="text" class="form-control" {% if id_tweet %} value="{{ id_tweet }}" {% endif %}/>
+            <p class="help-block">ID del Tweets a buscar. Devuelve los ultimos 100 retweets</p>
+            <p class="help-block"><a href="">Buscar Tweets en Base de Datos para obtener su ID</a></p>
+        </div>
+        <div class="form-group">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" value="Buscar">Buscar</button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

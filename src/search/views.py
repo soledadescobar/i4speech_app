@@ -13,7 +13,7 @@ def index(request):
     instances = getInstances()
     for inst in instances:
         ret['instances'][inst['name']] = make_request(
-            request, inst['ip'], 'get/rates/json')
+            '', inst['ip'], 'get/rates/json')
     return render(request, 'search/index.html', ret)
 
 
@@ -25,3 +25,30 @@ def search(request):
     #params = utils.searchParams(request.POST)
     ret = utils.procSearch(request.POST)
     return render(request, 'search/search.html', ret)
+
+
+def searchTimeline(request):
+    return render(request, 'search/timeline.html')
+
+
+def timeline(request):
+    ret = utils.procTimeline(request.POST)
+    return render(request, 'search/timeline.html', ret)
+
+
+def retweets(request):
+    return render(request, 'search/retweets.html')
+
+
+def searchRetweets(request):
+    ret = utils.procRetweets(request.POST)
+    return render(request, 'search/retweets.html', ret)
+
+
+def ffs(request):
+    return render(request, 'search/ffs.html')
+
+
+def searchFfs(request):
+    ret = utils.procFfs(request.POST)
+    return render(request, 'search/ffs.html', ret)

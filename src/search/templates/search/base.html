@@ -41,7 +41,10 @@
             <ul class="nav nav-sidebar">
                 <li><a href="{% url 'search' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Informaci&oacute;n</a><li>
                 <li><a href="{% url 'search-tweets' %}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;Search API</a><li>
-                <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;B&uacute;squeda de Usuarios</a><li>
+                <li><a href="{% url 'search-timeline' %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;User Timelines API</a><li>
+                <li><a href="{% url 'search-retweets' %}"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>&nbsp;Retweets API</a><li>
+                <li><a href="{% url 'search-ffs' %}"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>&nbsp;Friends/Followers API</a><li>
+                <li><a href="#"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>&nbsp;Búsqueda en Base de Datos</a><li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

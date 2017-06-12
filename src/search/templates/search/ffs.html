@@ -1,0 +1,26 @@
+{% extends 'search/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}API Search{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<div>
+    <h3>Búsqueda de Friends/Followers</h3>
+    <form id="searchform" action="{% url 'search-ffs-url' %}" method="post">
+        <div class="form-group">
+            <label for="user_id">ID de Usuario</label>
+            <input id="user_id" name="user_id" type="text" class="form-control" {% if user_id %} value="{{ user_id }}" {% endif %}/>
+            <p class="help-block"><a href="">Buscar Usuarios en Base de Datos para obtener su ID</a></p>
+        </div>
+        <div class="form-group">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" value="Buscar">Buscar</button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

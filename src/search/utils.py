@@ -13,22 +13,9 @@ def deleteEmpty(deleteme):
 
 
 def procSearch(params):
-    instances = getInstances()
-    dat = json.dumps(params)
-    for i in instances:
-        #TODO: Tratar timoutes en este post
-        try:
-            r = requests.post(
-                '%s/search/tweets' % i['ip'],
-                data=dat,
-                timeout=15)
-        except:
-            continue
-        if r.status_code == requests.codes.ok:
-            rq = r.json()
-            if rq.get('error', False):
-                continue
-            return rq
+    ret = procRequest('search/tweets', json.dumps(params))
+    if ret:
+        return ret
     ret = {
         'error': True,
         'message': 'Ninguna Instancia Respondió Correctamente',
@@ -41,3 +28,63 @@ def procSearch(params):
         'max_id': params.get('max_id', '')
         }
     return deleteEmpty(ret)
+
+
+def procTimeline(params):
+    ret = procRequest('search/timeline', json.dumps(params))
+    if ret:
+        return ret
+    ret = {
+        'error': True,
+        'message': 'Ninguna Instancia Respondió Correctamente',
+        'message_type': 'danger',
+        'user_id': params.get('user_id', ''),
+        'screen_name': params.get('screen_name', ''),
+        'since_id': params.get('since_id', ''),
+        'max_id': params.get('max_id', '')
+        }
+    return deleteEmpty(ret)
+
+
+def procRetweets(params):
+    ret = procRequest('search/retweets', json.dumps(params))
+    if ret:
+        return ret
+    ret = {
+        'error': True,
+        'message': 'Ninguna Instancia Respondió Correctamente',
+        'message_type': 'danger',
+        'tweet_id': params.get('tweet_id', ''),
+        }
+    return deleteEmpty(ret)
+
+
+def procFfs(params):
+    ret = procRequest('search/ffs', json.dumps(params))
+    if ret:
+        return ret
+    ret = {
+        'error': True,
+        'message': 'Ninguna Instancia Respondió Correctamente',
+        'message_type': 'danger',
+        'user_id': params.get('user_id', ''),
+        }
+    return deleteEmpty(ret)
+
+
+def procRequest(url, dat, t=15):
+    instances = getInstances()
+    for i in instances:
+        try:
+            r = requests.post(
+                '%s/%s' % (i['ip'], url),
+                data=dat,
+                timeout=t)
+        except:
+            continue
+        if r.status_code == requests.codes.ok:
+            rq = r.json()
+            if rq.get('error', False):
+                continue
+            return rq
+    return False
