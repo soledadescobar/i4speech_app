@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.shortcuts import render
 from corecontrol.views import make_request
 from corecontrol.utils import getInstances
 from . import utils
 
 
-instances = getInstances()
-
-
 def index(request):
     # Consultar Rates
     ret = {}
     ret['instances'] = {}
+    instances = getInstances()
     for inst in instances:
         ret['instances'][inst['name']] = make_request(
             request, inst['ip'], 'get/rates/json')
