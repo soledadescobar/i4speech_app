@@ -91,7 +91,7 @@ DATABASES = {
         'PASSWORD': 'POd9GBlo7M9sECwE',
         #'PASSWORD': 'gorila38',
         'HOST': '104.154.237.215',
-        'HOST': 'localhost',
+        #'HOST': 'localhost',
         'PORT': '5432',
     }
 }

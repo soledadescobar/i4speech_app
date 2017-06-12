@@ -9,28 +9,6 @@ a
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
 <div>
-    {% for k,v in instances.items %}
-    {% if v.timeout %}
-        timeout
-    {% else %}
-        <div class="row">
-            <h2>{{ k }}<h2>
-            {% for r, x in v.items %}
-                <h3>{{r}}<h3>
-                <table class="table table-condensed">
-                <tr>
-                    <td>Limite</td><td>{{x.limit}}</td>
-                </tr>
-                <tr>
-                    <td>Restan</td><td>{{x.remaining}}</td>
-                </tr>
-                <tr>
-                    <td>Reset</td><td>{{x.reset}}</td>
-                </tr>
-                </table>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% endfor %}
+
 </div>
 {% endblock %}
