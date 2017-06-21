@@ -1,0 +1,23 @@
+{% extends 'help/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+a
+{% block title %}Ayuda{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<h2>Ayuda</h2>
+<div>
+    <dl>
+        <dt>Documentación</dt>
+        <dd>La documentación esta disponible en <a href="http://trac.twistreapy.com/" title="Managecenter Wiki&Track">Wiki&Track</a>.</dd>
+        <dt>Preguntas Frecuentes</dt>
+        <dd>La sección <a>Preguntas Frecuentes</a> de la documentación contiene las respuestas rapidas a las preguntas mas comunes sobre el uso de <strong>ManageCenter</strong></dd>
+        <dt>Reporte de Errores</dt>
+        <dd>En la sección <a>Tickets</a> de <a>Wiki&Trace</a> pueden crearse tickets y administrarlos.
+        <br>Desde Managecenter puede reportar errores desde el panel inferior</dd>
+    </dl>
+</div>
+{% endblock %}
