@@ -19,6 +19,8 @@ def status(request, ret={}):
             {"id": i['id'],
             "output": make_request(request, '%s' % i['ip'], 'get/status')})
         ret['instances'][-1].update(i)
+        if ret['instances'][-1]['output'].get('rderrors', False):
+            ret['rderrors'] = ret['instances'][-1]['output'].get('rderrors')
     return render(request, 'corecontrol/status.html', ret)
 
 
