@@ -89,10 +89,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'managecenter',
         'USER': 'postgres',
-        #'PASSWORD': 'POd9GBlo7M9sECwE',
-        'PASSWORD': 'gorila38',
-        #'HOST': '104.154.237.215',
-        'HOST': 'localhost',
+        'PASSWORD': 'POd9GBlo7M9sECwE',
+        #'PASSWORD': 'gorila38',
+        'HOST': '104.154.237.215',
+        #'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -135,11 +135,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_URL = '/static/'
 
-#STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+#STATICFILES_DIRS = (
+    #os.path.join(BASE_DIR, "static"),
+#)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
