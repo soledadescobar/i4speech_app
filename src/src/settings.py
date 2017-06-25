@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'bootstrap3',
     'corecontrol',
     'dashboard',
-    'search'
+    'search',
+    'help'
 ]
 
 MIDDLEWARE = [
