@@ -7,14 +7,12 @@ from corecontrol.views import make_request
 from corecontrol.utils import getInstances
 
 
-instances = getInstances()
-
-
 # Create your views here.
 def index(request, inst=1):
+    instances = getInstances()
     ret = {}
     instance = [item for item in instances if item['id'] == inst]
-    if not len(instance):
+    if len(instance) < 1:
         instance.append(instances[0])
     sv = instance.pop()
     ret['inst'] = sv['id']
@@ -24,9 +22,10 @@ def index(request, inst=1):
 
 
 def top_hashtags(request, inst=0):
+    instances = getInstances()
     ret = {}
     instance = [item for item in instances if item['id'] == inst]
-    if not len(instance):
+    if len(instance) < 1:
         instance.append(instances[0])
     sv = instance.pop()
     ret['inst'] = sv['id']
@@ -39,6 +38,7 @@ def top_hashtags(request, inst=0):
 
 
 def getTsv(request, inst, query):
+    instances = getInstances()
     instance = [item for item in instances if item['id'] == inst]
     if not len(instance):
         instance.append(instances[0])
