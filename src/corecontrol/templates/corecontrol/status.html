@@ -1,11 +1,26 @@
 {% extends 'corecontrol/base.html' %}
 {% load bootstrap3 %}
 
-{% block title %}Servicio TwiStreapy{% endblock %}
+{% block title %}Servidores{% endblock %}
 
 {% block content %}
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+{% if rderrors %}
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="alertsmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Alertas
+    <span class="caret"></span>
+    <span class="label">{{ rderrors|length }}</span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="alertsmenu">
+    {% for item in rderrors %}
+        <li><a href="#">{{ item }}</a></li>
+        <li role="separator" class="divider"></li>
+    {% endfor %}
+  </ul>
+</div>
 {% endif %}
 {% for i in instances %}
     <h2 class="sub-header">Instancia {{ i.name }}</h2>
@@ -27,7 +42,7 @@
             {% endif %}
         </div>
         <div class="form-group">
-            <p>Estado del Servidor Redis:
+            <p>Conexión con Servidor Redis:
                 {% if i.output.redis %}
                     {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
                 {% else %}

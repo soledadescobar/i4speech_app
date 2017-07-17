@@ -95,3 +95,13 @@ body {
   /* Set the fixed height of the footer here */
   height: 60px;
 }
+
+.dropdown span.label {
+    background: #e66454 none repeat scroll 0 0;
+    //display: block;
+    //font-size: 8px;
+    //line-height: 10px;
+    padding: 0 2px;
+    //position: absolute;
+    //right: 10px;
+}
