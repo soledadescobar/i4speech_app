@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^search/', include('search.urls')),
     url(r'^help/', include('help.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^', coreviews.status())
+    url(r'^', coreviews.status)
 ]
