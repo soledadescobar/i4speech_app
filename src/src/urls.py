@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from apps.corecontrol import views as coreviews
 
 urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
@@ -22,4 +23,5 @@ urlpatterns = [
     url(r'^search/', include('search.urls')),
     url(r'^help/', include('help.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^', coreviews.status())
 ]
