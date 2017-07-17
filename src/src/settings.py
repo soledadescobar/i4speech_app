@@ -88,10 +88,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'managecenter',
-        'USER': 'postgres',
-        'PASSWORD': 'POd9GBlo7M9sECwE',
+        'USER': 'pst',
+        'PASSWORD': 'bP9GZY3GXz4ePrPX',
         #'PASSWORD': 'gorila38',
-        'HOST': '104.154.237.215',
+        'HOST': '10.128.0.3',
         #'HOST': 'localhost',
         'PORT': '5432',
     }
