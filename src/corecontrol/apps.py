@@ -6,3 +6,4 @@ from django.apps import AppConfig
 
 class CorecontrolConfig(AppConfig):
     name = 'corecontrol'
+    verbose_name = 'Configuraciones'

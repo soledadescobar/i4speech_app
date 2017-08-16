@@ -4,6 +4,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class ControlConfig(AppConfig):
-    name = 'control'
-    verbose_name = "Administración de Datos"
+class RestConfig(AppConfig):
+    name = 'rest'

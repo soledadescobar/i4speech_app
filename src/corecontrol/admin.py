@@ -19,7 +19,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'server_type', 'ip')
+    list_display = ('name', 'server_type', 'ip', 'apikey')
 
     search_fields = ['server__name', 'server__ip']
 

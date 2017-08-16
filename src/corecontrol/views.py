@@ -1,160 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import render
-from django.http import HttpResponse
-import json
-import requests
-from .utils import *
+
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, Http404
+import requests
 from .models import *
+from control.models import Keyword, Candidato
+from django.contrib.auth.decorators import login_required
 
 
-#instances = getInstances()
+class ConfigurationsListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
-
-# Create your views here.
-def status(request, ret={}):
-    # Consultar Status
-    ret['instances'] = []
-    for i in instances:
-        ret['instances'].append(
-            {"id": i['id'],
-            "output": make_request(request, '%s' % i['ip'], 'get/status')})
-        ret['instances'][-1].update(i)
-        if ret['instances'][-1]['output'].get('rderrors', False):
-            ret['rderrors'] = ret['instances'][-1]['output'].get('rderrors')
-    return render(request, 'corecontrol/status.html', ret)
-
-
-def config(request, ret={}, view='api', inst=False):
-    ret['instances'] = instances
-    ret['view'] = view
-    for i, val in enumerate(ret['instances']):
-        ret['instances'][i].update(
-            make_request(
-                request,
-                '%s' % val['ip'],
-                'get/config.ini'))
-        if ret['instances'][i].get('timeout', False):
-            continue
-        kws = ret['instances'][i]['API']['keywords'].split(',')
-        kws.sort()
-        ret['instances'][i]['API']['keywords'] = ",".join(kws)
-        ret['instances'][i]['API']['user_ids'] = convertUsers(
-            ret['instances'][i]['API']['user_ids'].split(','), 'names')
-    if inst:
-        ret['anchor'] = 'instances-%s' % inst
-    return render(request, 'corecontrol/config.html', ret)
-
-
-def saveconfig(request, inst, view='api', ret={}):
-    instance = [item for item in instances if item['id'] == int(inst)]
-    sv = instance.pop()
-    #instance = next((item for item in instances if item['id'] == inst))
-    #instance =
-    #[item for item in instances if str(item['id']) == str(inst)]
-    #[item['id'] for item in instances if item['id'] == inst]
-    dat = SaveConfigPost(request.POST, inst, sv['ip'])
-    rq = requests.post('%s/save/config.ini' % sv['ip'],
-        data=dat).json()
-    # savecfg(ini, convertFormArray(request.POST))
-    if(request.POST.get('action', False) == 'saverestart'):
-        make_request(request, sv['ip'], 'service/twistreapy/start')
-    return config(request,
-        ret=rq,
-        view=view,
-        inst=inst
-    )
-
-
-def startproc(request, inst, ret={}):
-    instance = [item for item in instances if item['id'] == int(inst)]
-    sv = instance.pop()
-    make_request(request, sv['ip'], 'service/twistreapy/start')
-    ret.update(make_request(request, sv['ip'], 'get/status'))
-    if ret['running']:
-        ret['message_type'] = 'success'
-        ret['message'] = 'Servicio Iniciado Exitosamente'
-    else:
-        ret['message_type'] = 'danger'
-        ret['message'] = 'El Servicio no se Inicio Correctamente'
-    return status(request, ret)
-
-
-def stopproc(request, inst, ret={}):
-    instance = [item for item in instances if item['id'] == int(inst)]
-    sv = instance.pop()
-    make_request(request, sv['ip'], 'service/twistreapy/stop')
-    ret.update(make_request(request, sv['ip'], 'get/status'))
-    ret['message_type'] = 'info'
-    ret['message'] = 'Servicio Detenido'
-    return status(request, ret)
-
-
-def logfile(request, inst=False, ret={}, raw=False):
-    ret['instances'] = []
-    for i in instances:
-        ret['instances'].append(
-            make_request(
-                request,
-                instance['ip'],
-                'get/log',
-                'content'))
-    if raw:
-        return HttpResponse(ret, content_type='text/plain')
-    else:
-        if inst:
-            ret['anchor'] = 'instances-%s' % inst
-        return render(request, 'corecontrol/log.html', ret)
-
-
-def clearlog(request, inst, ret={}):
-    instance = [item for item in instances if item['id'] == inst]
-    make_request(request, instance['ip'], 'clear/log')
-    ret['message'] = 'LOG Archivado y Limpiado Exitosamente'
-    ret['message_type'] = 'success'
-    return logfile(request, ret)
-
-
-def startrd(request, ret={}):
-    instance = [item for item in instances if item['id'] == inst]
-    make_request(request, instance['ip'], 'service/redis/start')
-    ret.update(make_request(request, sv, 'get/status'))
-    if ret['redis']:
-        ret['message_type'] = 'success'
-        ret['message'] = 'Redis Iniciado Correctamente'
-    else:
-        ret['message_type'] = 'danger'
-        ret['message'] = 'No se pudo iniciar el servidor Redis'
-    return status(request, ret)
-
-
-def downloadlog(request):
-    return logfile(request, raw=True)
-
-
-def services(request):
-    pass
-
-
-def make_request(request, host, url, ret='json'):
-    try:
-        rq = requests.get('%s/%s' % (host, url), timeout=10)
-    except:
-        return {'timeout': True}
-    if ret == 'json':
-        return rq.json()
-    if ret == 'json_load':
-        return json.loads(rq.json())
-    elif ret == 'content':
-        return rq.content
-    elif ret == 'text':
-        return rq.text
-    else:
-        return rq.json()
-
-
-class ConfigurationsListView(ListView):
     model = Configuration
 
     template_name = 'corecontrol/configuration.html'
@@ -162,3 +21,51 @@ class ConfigurationsListView(ListView):
     context_object_name = 'configurations'
 
     queryset = Configuration.objects.prefetch_related('keywords', 'candidatos')
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ConfigurationsListView, self).get_context_data(**kwargs)
+
+        context['keywords'] = Keyword.objects.all().order_by('name')
+
+        context['candidatos'] = Candidato.objects.all().order_by('name')
+
+        return context
+
+
+class ServersListView(LoginRequiredMixin, ListView):
+    model = Server
+
+    template_name = 'corecontrol/status.html'
+
+    context_object_name = 'servers'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ServersListView, self).get_context_data(**kwargs)
+
+        context['status'] = {}
+
+        for server in context['servers']:
+            r = requests.get(
+                "http://%s:5000/status" % server.ip,
+                auth=('admin', 'secret'),
+                timeout=5
+            )
+            context['status'][server.id] = True if r.status_code == 200 else False
+
+        return context
+
+
+@login_required
+def get_server_status(request, pk):
+    server = Server.objects.filter(id=pk).get()
+    r = requests.get(
+        "http://%s:5000/status" % server.ip,
+        auth=('admin', 'secret'),
+        timeout=5
+    )
+    if r.status_code == 200:
+        return HttpResponse('OK')
+    else:
+        return Http404

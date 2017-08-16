@@ -7,7 +7,27 @@
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
-<table class="table">
+<div class="row">
+    <div class="col-md-6">
+        <h3>Candidatos</h3>
+        {% for c in candidatos %}
+            {{ c.screen_name }} <br>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <h3>Keywords & Hashtags</h3>
+        {% for k in keywords %}
+            {{ k.name }} <br>
+        {% endfor %}
+    </div>
+</div>
+<hr>
+<table class="table table-condensed table-hover">
+<tr>
+    <th>Servidor</th>
+    <th>Keywords & Hashtags</th>
+    <th>Candidatos</th>
+</tr>
 {% for c in configurations %}
 <tr>
     <td>{{ c.server }}</td>

@@ -38,6 +38,9 @@ class ApiKey(models.Model):
     api_key = models.CharField(max_length=100)
     api_secret = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class ServerType(models.Model):
     name = models.CharField("Nombre", max_length=50)
@@ -54,7 +57,7 @@ class Server(models.Model):
     server_type = models.ForeignKey(ServerType, on_delete=models.CASCADE)
     name = models.CharField("Nombre", max_length=100)
     ip = models.GenericIPAddressField()
-    apikey = models.ForeignKey(ApiKey)
+    apikey = models.ForeignKey(ApiKey, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Servidor"
@@ -70,8 +73,8 @@ class Configuration(models.Model):
     keywords = models.ManyToManyField(Keyword)
 
     class Meta:
-        verbose_name = "Configuracion"
-        verbose_name_plural = "Configuraciones"
+        verbose_name = "Configuración"
+        verbose_name_plural = "Configuraciónes"
 
     def __str__(self):
         return self.server.__str__()
