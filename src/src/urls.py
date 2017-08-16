@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^corecontrol/', include('corecontrol.urls')),
     url(r'^search/', include('search.urls')),
     url(r'^help/', include('help.urls')),
+    url(r'^control/', include('control.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^', coreviews.status)
 ]
