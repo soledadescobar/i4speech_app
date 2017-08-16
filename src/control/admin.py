@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.contrib import admin
+from .models import *
+
+
+@admin.register(Posicion)
+class PosicionAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    search_fields = ['posicion__name']
+
+
+@admin.register(Frente)
+class FrenteAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    search_fields = ['frente__name']
+
+
+@admin.register(Bloque)
+class BloqueAdmin(admin.ModelAdmin):
+    list_display = ('name', 'frente')
+
+    search_fields = ['bloque__name', 'frente__name']
+
+
+@admin.register(Provincia)
+class ProvinciaAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    search_fields = ['provincia__name']
+
+
+@admin.register(Candidato)
+class CandidatoAdmin(admin.ModelAdmin):
+    list_display = ('name', 'screen_name', 'frente', 'bloque', 'provincia')
+
+    search_fields = ['candidato__name', 'candidato__screen_name', 'frente__name', 'bloque__name', 'provincia__name']
+
+    list_filter = ('provincia', 'frente', 'bloque')
+
+
+@admin.register(Lista)
+class ListaAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'candidato',
+        'frente',
+        'bloque',
+        'provincia')
+
+    search_fields = [
+        'lista__name',
+        'candidato__name',
+        'candidato__screen_name',
+        'frente__name',
+        'bloque__name',
+        'provincia__name']
+
+    list_filter = ('provincia', 'frente', 'bloque')
+
