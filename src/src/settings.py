@@ -14,15 +14,28 @@ import os
 import sys
 
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.join(PROJECT_ROOT, 'src'))
 
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'r4i^suffk0dushnc#h42%&ahxg1a8!y9j$f!pq@p)65o=myk@i'
 
-DEBUG = False
+# SECURITY WARNING: don't run with debug turned on in production!
+#DEBUG = False
+DEBUG = True
 
+#ALLOWED_HOSTS = [
+#    'localhost', '127.0.0.1',
+#    '104.154.111.244', 'pst-webhost']
 ALLOWED_HOSTS = ['*']
+
+
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +59,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -68,17 +82,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'src.wsgi.application'
 
 
+# Database
+# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'managecenter',
-        'USER': 'pst',
-        'PASSWORD': 'bP9GZY3GXz4ePrPX',
-        'HOST': '10.128.0.3',
+        'USER': 'postgres',
+        #'PASSWORD': 'bP9GZY3GXz4ePrPX',
+        'PASSWORD': 'gorila38',
+        #'HOST': '10.128.0.3',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
+
+# Password validation
+# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -96,7 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LANGUAGE_CODE = 'es-AR'
+# Internationalization
+# https://docs.djangoproject.com/en/1.10/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -107,13 +132,20 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+#STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 BOOTSTRAP3 = {

@@ -5,9 +5,11 @@ from django.http import HttpResponse
 import json
 import requests
 from .utils import *
+from django.views.generic import ListView, DetailView
+from .models import *
 
 
-instances = getInstances()
+#instances = getInstances()
 
 
 # Create your views here.
@@ -150,3 +152,13 @@ def make_request(request, host, url, ret='json'):
         return rq.text
     else:
         return rq.json()
+
+
+class ConfigurationsListView(ListView):
+    model = Configuration
+
+    template_name = 'corecontrol/configuration.html'
+
+    context_object_name = 'configurations'
+
+    queryset = Configuration.objects.prefetch_related('keywords', 'candidatos')

@@ -22,5 +22,6 @@ urlpatterns = [
         views.downloadlog, name='logdl'),
     url(r'^log/instance-(?P<inst>\d+)', views.logfile),
     url(r'^log', views.logfile, name='log'),
+    url(r'^tmp-cfg/$', views.ConfigurationsListView.as_view(), name='configuration'),
     url(r'^$', views.status, name='corecontrol'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

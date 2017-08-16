@@ -5,6 +5,13 @@ from django.contrib import admin
 from .models import *
 
 
+@admin.register(Keyword)
+class KeywordAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    search_fields = ['keyword__name']
+
+
 @admin.register(Posicion)
 class PosicionAdmin(admin.ModelAdmin):
     list_display = ('name',)
