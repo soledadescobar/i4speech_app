@@ -1,0 +1,20 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Lista de Candidatos{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+{% for c in candidatos %}
+<div class="row">
+    <p>
+        {{ c.name }}<br>
+        {{ c.screen_name }}<br>
+        {{ c.frente }}<br>
+        {{ c.bloque }}
+    </p>
+</div>
+{% endfor %}
+{% endblock %}

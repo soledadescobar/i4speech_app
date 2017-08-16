@@ -1,0 +1,19 @@
+{% extends 'corecontrol/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Configuración de Servidores{% endblock %}
+
+{% block content %}
+{% if message %}
+    {% bootstrap_alert message alert_type=message_type %}
+{% endif %}
+<table class="table">
+{% for c in configurations %}
+<tr>
+    <td>{{ c.server }}</td>
+    <td>{{ c.lista_keywords }}</td>
+    <td>{{ c.lista_screen_names }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
