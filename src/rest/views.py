@@ -26,18 +26,21 @@ def http_basic_auth(func):
 
 @http_basic_auth
 @login_required
-def get_server_configuration(request, pk):
-    config = Configuration.objects.filter(server=pk).get()
+def get_server_configuration(request, name):
+    config = Configuration.objects.filter(server__name=name).get()
 
     response = {
         'track': [],
-        'follow': []
+        'follow': [],
+        'apikey': {}
     }
 
     for keyword in config.keywords.all():
         response['track'].append(keyword.name)
 
     for candidato in config.candidatos.all():
-        response['follow'].append(candidato.screen_name)
+        response['track'].append("@%s" % candidato.screen_name)
+
+    response['apikey'] = config.server.get_apikeys()
 
     return HttpResponse(json.dumps(response), content_type='application/json')

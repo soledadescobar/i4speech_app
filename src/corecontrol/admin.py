@@ -8,13 +8,18 @@ from .models import *
 admin.site.register(Instances)
 
 
+def ConfigurationSyncListInLine(obj):
+    sync = ConfigurationSync.objects.filter(configuration=obj).get()
+    return sync.get_status_display()
+ConfigurationSyncListInLine.short_description = "Sincronización"
+
+
 @admin.register(Configuration)
 class ConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('server', 'lista_keywords', 'lista_screen_names')
+
+    list_display = ('server', ConfigurationSyncListInLine, 'lista_keywords', 'lista_screen_names')
 
     search_fields = ['server__name', 'keywords__name', 'candidatos__name']
-
-    list_filter = ('server',)
 
 
 @admin.register(Server)

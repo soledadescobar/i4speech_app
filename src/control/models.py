@@ -39,6 +39,7 @@ class Posicion(models.Model):
 class Candidato(models.Model):
     name = models.CharField("Nombre", max_length=120)
     screen_name = models.CharField("Screen Name", max_length=120)
+    user_id = models.IntegerField("Twitter User ID", null=True, default=None)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
     frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
     bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
