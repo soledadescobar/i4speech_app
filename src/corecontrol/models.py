@@ -111,7 +111,7 @@ class ConfigurationSync(models.Model):
         (STATUS_UNKNOWN_RESPONSE, 'Respuesta Erronea'),
         (STATUS_ERROR, 'Falló')
     )
-    configuration = models.ForeignKey(Configuration)
+    configuration = models.OneToOneField(Configuration, on_delete=models.CASCADE)
     created_at = models.DateTimeField("Creado", auto_now_add=True)
     modified_at = models.DateTimeField("Modificado", auto_now=True)
     status = models.CharField(
