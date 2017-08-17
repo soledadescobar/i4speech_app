@@ -42,11 +42,25 @@ class ProvinciaAdmin(admin.ModelAdmin):
 
 @admin.register(Candidato)
 class CandidatoAdmin(admin.ModelAdmin):
-    list_display = ('name', 'screen_name', 'frente', 'bloque', 'provincia')
+    list_select_related = (
+        'bloque',
+        'bloque__frente',
+    )
 
-    search_fields = ['candidato__name', 'candidato__screen_name', 'frente__name', 'bloque__name', 'provincia__name']
+    list_display = ('name', 'screen_name', 'bloque', 'provincia')
 
-    list_filter = ('provincia', 'frente', 'bloque')
+    search_fields = ['candidato__name', 'candidato__screen_name', 'bloque__name', 'provincia__name']
+
+    list_filter = ('provincia', 'bloque')
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'screen_name')
+        }),
+        ('Datos para Gráficos', {
+            'fields': ('bloque', 'provincia')
+        })
+    )
 
 
 @admin.register(Lista)

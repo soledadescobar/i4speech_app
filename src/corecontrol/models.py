@@ -32,7 +32,12 @@ class Instances(models.Model):
 
 
 class ApiKey(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(
+        "Nombre",
+        max_length=10,
+        help_text="Nombre corto para representar las keys."
+                  "Máximo 10 caracateres. Ejemplo: pst-gs1 para una key cargada por Gabriel Scarcella de PST"
+    )
     consumer_key = models.CharField(max_length=100)
     consumer_secret = models.CharField(max_length=100)
     api_key = models.CharField("access_token", max_length=100)
@@ -57,7 +62,13 @@ class Server(models.Model):
     server_type = models.ForeignKey(ServerType, on_delete=models.CASCADE)
     name = models.CharField("Nombre", max_length=100)
     ip = models.GenericIPAddressField()
-    apikey = models.ForeignKey(ApiKey, on_delete=models.CASCADE)
+    apikey = models.ForeignKey(
+        ApiKey,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        default=None
+    )
 
     class Meta:
         verbose_name = "Servidor"
@@ -74,11 +85,24 @@ class Server(models.Model):
             'access_token_secret': self.apikey.api_secret
         }
 
+    def usage_count(self):
+        return "%d%%" % self.configuration.keywords.count() if hasattr(self, 'configuration') else 0
+
+    usage_count.short_description = 'Uso'
+
 
 class Configuration(models.Model):
-    server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    candidatos = models.ManyToManyField(Candidato)
-    keywords = models.ManyToManyField(Keyword)
+    server = models.OneToOneField(Server, on_delete=models.CASCADE)
+    candidatos = models.ManyToManyField(
+        Candidato,
+        blank=True,
+        default=None
+    )
+    keywords = models.ManyToManyField(
+        Keyword,
+        blank=True,
+        default=None
+    )
 
     class Meta:
         verbose_name = "Configuración"

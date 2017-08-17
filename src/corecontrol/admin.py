@@ -4,6 +4,11 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from .models import *
 
+
+class ManageCenterAdmin(admin.AdminSite):
+    site_header = 'i4Media Suit'
+
+admin_site = ManageCenterAdmin(name='admin')
 # Register your models here.
 admin.site.register(Instances)
 
@@ -21,10 +26,18 @@ class ConfigurationAdmin(admin.ModelAdmin):
 
     search_fields = ['server__name', 'keywords__name', 'candidatos__name']
 
+    filter_horizontal = ('keywords', 'candidatos')
+
+
+class ServerConfigurationInLine(admin.TabularInline):
+    pass
+
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'server_type', 'ip', 'apikey')
+    list_display = ('name', 'usage_count', 'server_type', 'ip', 'apikey')
+
+    list_editable = ('apikey',)
 
     search_fields = ['server__name', 'server__ip']
 

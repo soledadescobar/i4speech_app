@@ -8,7 +8,7 @@ sys.path.append(os.path.join(PROJECT_ROOT, 'src'))
 
 SECRET_KEY = 'r4i^suffk0dushnc#h42%&ahxg1a8!y9j$f!pq@p)65o=myk@i'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
     'bootstrap3',
     'corecontrol',
     'dashboard',
@@ -45,6 +45,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -61,13 +62,25 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'managecenter',
+        'NAME': 'staging_managecenter',
         'USER': 'pst',
         'PASSWORD': 'bP9GZY3GXz4ePrPX',
         'HOST': '10.128.0.3',
         'PORT': '5432',
     }
 }
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://10.128.0.11:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -111,6 +124,6 @@ BOOTSTRAP3 = {
 
 LOGIN_REDIRECT_URL = 'index'
 
-RAVEN_CONFIG = {
-    'dsn': 'https://4b7210f68ae84d1eb0fd9af389f2e643:57c9720a50bd48fba55bff9f82301c03@sentry.io/204330',
-}
+# RAVEN_CONFIG = {
+#     'dsn': 'https://4b7210f68ae84d1eb0fd9af389f2e643:57c9720a50bd48fba55bff9f82301c03@sentry.io/204330',
+# }

@@ -13,7 +13,7 @@ class Frente(models.Model):
 
 class Bloque(models.Model):
     name = models.CharField("Bloque", max_length=120)
-    frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
+    frente = models.OneToOneField(Frente, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -26,7 +26,11 @@ class Provincia(models.Model):
         return self.name
 
 class Posicion(models.Model):
-    name = models.CharField("Posición", max_length=120)
+    name = models.CharField(
+        "Posición",
+        max_length=120,
+        help_text="Posición o Cargo a Ocupar"
+    )
 
     class Meta:
         verbose_name = "Posición"
@@ -38,11 +42,34 @@ class Posicion(models.Model):
 
 class Candidato(models.Model):
     name = models.CharField("Nombre", max_length=120)
-    screen_name = models.CharField("Screen Name", max_length=120)
-    user_id = models.IntegerField("Twitter User ID", null=True, default=None)
-    provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
-    frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
-    bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
+    screen_name = models.CharField(
+        "Screen Name",
+        max_length=120,
+        help_text="Usuario de Twitter",
+        unique=True
+    )
+    user_id = models.BigIntegerField(
+        "Twitter User ID",
+        null=True,
+        blank=True,
+        default=None,
+        help_text="ID de usuario de Twitter (Se obtiene de forma automatica al guardar)",
+        editable=False
+    )
+    provincia = models.ForeignKey(
+        Provincia,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
+    bloque = models.ForeignKey(
+        Bloque,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
 
     def __str__(self):
         return self.name
@@ -54,14 +81,24 @@ class Lista(models.Model):
     bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
     candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE)
-    posicion = models.ForeignKey(Posicion, on_delete=models.CASCADE)
+    posicion = models.ForeignKey(
+        Posicion,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
 
     def __str__(self):
         return self.name
 
 
 class Keyword(models.Model):
-    name = models.CharField("Keyword", max_length=100, help_text="Keyword o Hashtag comenzando con #")
+    name = models.CharField(
+        "Keyword",
+        max_length=100,
+        help_text="Keyword o Hashtag comenzando con #"
+    )
 
     def __str__(self):
         return self.name

@@ -9,37 +9,56 @@
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
 <table class="table table-condensed table-hover">
+    <thead>
     <tr>
         <th>Servidor</th>
         <th>Tipo</th>
+        <th>Uso</th>
         <th>Estado</th>
+        <th>Sincronización</th>
         <th>Acciones</th>
     </tr>
+    </thead>
+    <tbody>
 {% for s in servers %}
     <tr>
         <td>{{ s.name }}</td>
         <td>{{ s.server_type }}</td>
+        <td>{{ s.usage_count }} %</td>
         <td id="status-{{ s.id }}">&nbsp;</td>
-        <td><button class="btn btn-primary btn-xs">Reiniciar</button></td>
+        <td>{% with sync|key:s as status %}{{ status }}{% endwith %}</td>
+        <td>
+            <button class="btn btn-warning btn-xs">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>&nbsp;
+                Reiniciar
+            </button>&nbsp;
+            <button class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;
+                Sincronizar
+            </button>
+        </td>
     </tr>
 {% endfor %}
+    </tbody>
 </table>
 <script>
 $( document ).ready(function() {
-    {% for s, v in status.items %}
+    {% for s in servers %}
     $("#status-{{ s }}").LoadingOverlay("show");
+        changed = false;
         $.ajax({
-            url: "{% url 'server-status' s %}",
+            url: "{% url 'server-status' s.id %}",
             statusCode: {
-                404: function() {
-                    $("#status-{{ s }}").html('<span class="glyphicon glyphicon-remove-circle color-red"></span>');
-                },
                 200: function() {
-                    $("#status-{{ s }}").html('<span class="glyphicon glyphicon-ok-circle color-green"></span>');
+                    $("#status-{{ s.id }}").html('<span class="glyphicon glyphicon-ok-circle color-green"></span>');
+                    changed = true;
                 }
             }
         });
-    $("#status-{{ s }}").LoadingOverlay("hide");
+        if(changed==false) {
+            $("#status-{{ s.id }}").html('<span class="glyphicon glyphicon-remove-circle color-red"></span>');
+        }
+    $("#status-{{ s.id }}").LoadingOverlay("hide");
     {% endfor %}
 });
 </script>
