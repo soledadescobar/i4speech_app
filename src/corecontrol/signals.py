@@ -6,7 +6,7 @@ from .models import Configuration, ConfigurationSync
 
 @receiver(post_save, sender=Configuration)
 def update_trigger(instance, **kwargs):
-    sync = ConfigurationSync(configuration=instance)
+    sync, created = ConfigurationSync.objects.get_or_create(configuration=instance)
     try:
         r = requests.get(
             "http://%s:5000/update" % instance.server.ip,
