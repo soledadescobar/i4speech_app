@@ -14,7 +14,11 @@ queue = None
 def connect_redis():
     global queue
     if not queue:
-        queue = redis.Redis(settings.SEARCH_REDIS_HOST)
+        queue = redis.Redis(
+            host=settings.REDIS_HOST,
+            port=settings.REDIS_PORT,
+            db=settings.REDIS_DB
+        )
 
 
 @shared_task

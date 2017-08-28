@@ -144,7 +144,11 @@ SUIT_CONFIG = {
     },
 }
 
-CELERY_RESULT_BACKEND = 'django-cache'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+REDIS_HOST = '10.128.0.11'
+REDIS_PORT = 6379
+REDIS_DB = 0
 
-SEARCH_REDIS_HOST = '10.128.0.11'
+CELERY_RESULT_BACKEND = 'django-cache'
+CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
+
+
