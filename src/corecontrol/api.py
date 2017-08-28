@@ -45,6 +45,9 @@ def set_active_api(obj, check_endpoint=False, endpoint=None):
         sleep_on_rate_limit=True
     )
     if check_endpoint:
-        if api.CheckRateLimit(endpoint) <= 1:
+        try:
+            if api.CheckRateLimit(endpoint) <= 1:
+                return False
+            return True
+        except twitter.TwitterError:
             return False
-        return True
