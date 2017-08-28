@@ -1,0 +1,15 @@
+# django.ini file
+[uwsgi]
+wsgi-file       = /var/lib/jenkins/workspace/managecenter/src/src/wsgi.py
+master          = true
+processes       = 10
+threads         = 2
+enable-threads  = true
+harakiri        = 30
+socket          = /tmp/managecenter.sock
+chmod-socket    = 775
+chdir           = /var/lib/jenkins/workspace/managecenter/src
+module          = src.wsgi
+#home            = /var/lib/jenkins/workspace/managecenter/venv
+#vacuum          = true
+touch-reload    = /var/lib/jenkins/workspace/managecenter/src/src/settings.py
