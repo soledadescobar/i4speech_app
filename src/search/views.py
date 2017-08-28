@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render
-#from corecontrol.views import make_request
-#from corecontrol.utils import getInstances
-from . import utils
+# from corecontrol.views import make_request
+# from corecontrol.utils import getInstances
+from . import utils, tasks
 
 
 def index(request):
     # Consultar Rates
+    task = tasks.tweet_search()
+    print(task)
     ret = {}
     return render(request, 'search/index.html', ret)
 

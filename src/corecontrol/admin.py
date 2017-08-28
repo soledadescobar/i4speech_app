@@ -9,7 +9,7 @@ class ManageCenterAdmin(admin.AdminSite):
     site_header = 'i4Media Suit'
 
 admin_site = ManageCenterAdmin(name='admin')
-# Register your models here.
+
 admin.site.register(Instances)
 
 

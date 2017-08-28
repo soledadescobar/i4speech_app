@@ -55,12 +55,14 @@ class CandidatoAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'screen_name')
+            'fields': ('name', 'screen_name', 'user_id')
         }),
         ('Datos para Gráficos', {
             'fields': ('bloque', 'provincia')
         })
     )
+
+    readonly_fields = ['user_id']
 
 
 @admin.register(Lista)

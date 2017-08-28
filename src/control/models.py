@@ -10,6 +10,10 @@ class Frente(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def ws_values():
+        return ['id', 'name']
+
 
 class Bloque(models.Model):
     name = models.CharField("Bloque", max_length=120)
@@ -18,12 +22,21 @@ class Bloque(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def ws_values():
+        return ['id', 'name']
+
 
 class Provincia(models.Model):
     name = models.CharField("Provincia", max_length=120)
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def ws_values():
+        return ['id', 'name']
+
 
 class Posicion(models.Model):
     name = models.CharField(
@@ -41,7 +54,10 @@ class Posicion(models.Model):
 
 
 class Candidato(models.Model):
-    name = models.CharField("Nombre", max_length=120)
+    name = models.CharField(
+        "Nombre",
+        max_length=120
+    )
     screen_name = models.CharField(
         "Screen Name",
         max_length=120,
@@ -73,6 +89,13 @@ class Candidato(models.Model):
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def ws_values(extra=True):
+        respone = ['id', 'name', 'screen_name']
+        if extra:
+            respone.append('user_id')
+        return respone
 
 
 class Lista(models.Model):
