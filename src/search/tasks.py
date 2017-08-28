@@ -5,6 +5,7 @@ import redis
 import json
 from corecontrol.api import get_active_api as get_api
 from .models import Tweet, TweetResult
+from django.conf import settings
 
 
 queue = None
@@ -13,7 +14,7 @@ queue = None
 def connect_redis():
     global queue
     if not queue:
-        queue = redis.Redis()
+        queue = redis.Redis(settings.SEARCH_REDIS_HOST)
 
 
 @shared_task
