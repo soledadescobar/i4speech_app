@@ -42,7 +42,7 @@ def set_active_api(obj, check_endpoint=False, endpoint=None):
         obj.consumer_secret,
         obj.api_key,
         obj.api_secret,
-        sleep_on_rate_limit=False
+        sleep_on_rate_limit=True
     )
     if check_endpoint:
         if api.CheckRateLimit(endpoint) <= 1:
