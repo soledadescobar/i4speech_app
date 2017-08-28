@@ -22,7 +22,7 @@ def connect_redis():
         )
 
 
-@task(name="Busqueda de Tweets")
+@task(name="tweet_search")
 def tweet_search(obj):
     connect_redis()
     api = get_api(endpoint='tweets')
