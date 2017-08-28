@@ -46,7 +46,7 @@ def store_search(result, model, obj):
     ids = []
     for r in result:
         status = r.AsDict()
-        queue.rpush('search', json.dumps(status))
+        queue.rpush('stream-v2', json.dumps(status))
         res = model(
             tweet=obj,
             screen_name=status.get('user')['screen_name'],
