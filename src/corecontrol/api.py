@@ -46,8 +46,8 @@ def set_active_api(obj, check_endpoint=False, endpoint=None):
     )
     if check_endpoint:
         try:
-            if api.CheckRateLimit(endpoint) <= 1:
-                return False
-            return True
+            api.CheckRateLimit(endpoint)
         except:
             return False
+        else:
+            return True
