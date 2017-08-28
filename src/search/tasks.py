@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from celery.decorators import task
 import redis
 import json
+import time
 from corecontrol.api import get_active_api as get_api
 from .models import Tweet, TweetResult
 from django.conf import settings
@@ -26,16 +27,21 @@ def connect_redis():
 def tweet_search(obj):
     connect_redis()
     api = get_api(endpoint='tweets')
-    search = api.GetSearch(
-        term=obj.term,
-        raw_query=obj.raw_query,
-        since=obj.since,
-        until=obj.until,
-        since_id=obj.since_id,
-        max_id=obj.max_id,
-        count=100,
-        include_entities=True
-    )
+    try:
+        search = api.GetSearch(
+            term=obj.term,
+            raw_query=obj.raw_query,
+            since=obj.since,
+            until=obj.until,
+            since_id=obj.since_id,
+            max_id=obj.max_id,
+            count=100,
+            include_entities=True
+        )
+    except:
+        time.sleep(5)
+        tweet_search(obj)
+        return None
     if not len(search):
         return False
     ids = store_search(search, TweetResult, obj)
