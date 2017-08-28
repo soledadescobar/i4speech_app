@@ -7,4 +7,4 @@ from .models import Tweet
 @receiver(post_save, sender=Tweet)
 def update_trigger(instance, created, **kwargs):
     if created:
-        tweet_search(instance)
+        tweet_search.s(instance)
