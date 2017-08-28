@@ -18,7 +18,7 @@ class TweetResultsInline(admin.TabularInline):
 @admin.register(Tweet)
 class TweetAdmin(admin.ModelAdmin):
 
-    list_display = ('term', 'raw_query', 'results_count')
+    list_display = ('term', 'raw_query', 'results_count', 'since_id', 'max_id')
 
     inlines = [
         TweetResultsInline
