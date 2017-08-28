@@ -152,5 +152,4 @@ REDIS_DB = 0
 
 CELERY_RESULT_BACKEND = 'django-cache'
 CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
-
-
+CELERY_TASK_SERIALIZER = 'pickle'
