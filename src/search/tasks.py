@@ -26,16 +26,27 @@ def connect_redis():
 def tweet_search(obj):
     connect_redis()
     api = get_api(endpoint='tweets')
-    search = api.GetSearch(
-        term=obj.term,
-        raw_query=obj.raw_query,
-        since=obj.since,
-        until=obj.until,
-        since_id=obj.since_id,
-        max_id=obj.max_id,
-        count=100,
-        include_entities=True
-    )
+    if obj.results_count() > 0:
+        search = api.GetSearch(
+            term=obj.term,
+            raw_query=obj.raw_query,
+            since=obj.since,
+            until=obj.until,
+            max_id=obj.since_id,
+            count=100,
+            include_entities=True
+        )
+    else:
+        search = api.GetSearch(
+            term=obj.term,
+            raw_query=obj.raw_query,
+            since=obj.since,
+            until=obj.until,
+            since_id=obj.since_id,
+            max_id=obj.max_id,
+            count=100,
+            include_entities=True
+        )
     if not len(search):
         return False
     ids = store_search(search, TweetResult, obj)
