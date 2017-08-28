@@ -45,7 +45,7 @@ def tweet_search(obj):
         obj.since_id = ids[0]
     obj.save()
     if obj.results_count() < obj.max_results:
-        tweet_search(obj)
+        tweet_search.delay(obj)
 
 
 def store_search(result, model, obj):
