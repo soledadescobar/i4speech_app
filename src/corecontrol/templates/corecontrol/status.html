@@ -1,81 +1,65 @@
 {% extends 'corecontrol/base.html' %}
 {% load bootstrap3 %}
+{% load corecontrol_extras %}
 
-{% block title %}Servidores{% endblock %}
+{% block title %}Estado de los Servidores{% endblock %}
 
 {% block content %}
 {% if message %}
     {% bootstrap_alert message alert_type=message_type %}
 {% endif %}
-{% if rderrors %}
-<div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="alertsmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Alertas
-    <span class="caret"></span>
-    <span class="label">{{ rderrors|length }}</span>
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="alertsmenu">
-    {% for item in rderrors %}
-        <li><a href="#">{{ item }}</a></li>
-        <li role="separator" class="divider"></li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-{% for i in instances %}
-    <h2 class="sub-header">Instancia {{ i.name }}</h2>
-    <form action="{% if i.output.running %}{% url 'stopproc' %}/instance-{{ i.id }}{% else %}{% url 'startproc' %}/instance-{{ i.id }}{% endif %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="instance" value="{{ i.id }}" />
-        <div class="form-group">
-            <p>Estado de ejecución:
-            {% if i.output.running %}
-                {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
-            </p>
-                <button type="submit" class="btn btn-danger">Detener</button>
-                {% bootstrap_button "Iniciar" button_type="button" button_class="btn-success" extra_classes="disabled" name="startpr" %}
-            {% else %}
-                {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
-            </p>
-                {% bootstrap_button "Detener" button_type="button" button_class="btn-danger" extra_classes="disabled" name="stoppr" %}
-                <button type="submit" class="btn btn-success">Iniciar</button>
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <p>Conexión con Servidor Redis:
-                {% if i.output.redis %}
-                    {% bootstrap_icon 'ok-circle' extra_classes="color-green" %}
-                {% else %}
-                    {% bootstrap_icon 'remove-circle' extra_classes="color-red" %}
-                {% endif %}
-            </p>
-        </div>
-        {% if i.output.running %}
-        <div class="bg-box">
-            <p class="bg-success">Servicio ejecutandose desde: {{ i.output.since }}</p>
-        </div>
-        {% endif %}
-        {% if i.output.timeout %}
-            <div class="alert alert-danger" role="alert">
-                  <p><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  El Conector Bridge de Instancia {{ i.name }} No Responde (Timeout)</p>
-                  <div>
-                      <button type="button" class="btn btn-primary" name="action" value="save">Ejecutar Reinicio Bridge</button>
-                      <button type="button" class="btn btn-danger" name="action" value="remove">Remover Instancia {{ i.name }}</button>
-                  </div>
-            </div>
-        {% endif %}
-<!--
-        {% if i.output.rderrors %}
-            <h3>Alertas</h3>
-            {% for item in i.output.rderrors %}
-            <div class="bg-box">
-                <p class="bg-danger">{{ item }}</p>
-            </div>
-            {% endfor %}
-        {% endif %}
--->
-    </form>
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>Servidor</th>
+        <th>Tipo</th>
+        <th>Uso</th>
+        <th>Estado</th>
+        <th>Sincronización</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for s in servers %}
+    <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ s.server_type }}</td>
+        <td>{{ s.usage_count }} %</td>
+        <td id="status-{{ s.id }}">&nbsp;</td>
+        <td>{% with sync|key:s as status %}{{ status }}{% endwith %}</td>
+        <td>
+            <button class="btn btn-warning btn-xs">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>&nbsp;
+                Reiniciar
+            </button>&nbsp;
+            <button class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;
+                Sincronizar
+            </button>
+        </td>
+    </tr>
 {% endfor %}
+    </tbody>
+</table>
+<script>
+$( document ).ready(function() {
+    {% for s in servers %}
+    $("#status-{{ s }}").LoadingOverlay("show");
+        changed = false;
+        $.ajax({
+            url: "{% url 'server-status' s.id %}",
+            statusCode: {
+                200: function() {
+                    $("#status-{{ s.id }}").html('<span class="glyphicon glyphicon-ok-circle color-green"></span>');
+                    changed = true;
+                }
+            }
+        });
+        if(changed==false) {
+            $("#status-{{ s.id }}").html('<span class="glyphicon glyphicon-remove-circle color-red"></span>');
+        }
+    $("#status-{{ s.id }}").LoadingOverlay("hide");
+    {% endfor %}
+});
+</script>
 {% endblock %}

@@ -6,21 +6,9 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    url(r'^config/(?P<view>\w+)/save/instance-(?P<inst>\d+)', views.saveconfig),
-    url(r'^config/(?P<view>\w+)', views.config),
-    url(r'^config', views.config, name='config'),
-    url(r'^service/start/instance-(?P<inst>\d+)', views.startproc),
-    url(r'^service/start', views.startproc, name='startproc'),
-    url(r'^service/stop/instance-(?P<inst>\d+)', views.stopproc),
-    url(r'^service/stop', views.stopproc, name='stopproc'),
-    url(r'^service/clearlog/instance-(?P<inst>\d+)',
-        views.clearlog, name='clearlog'),
-    url(r'^service/redis/start', views.startrd, name='startrd'),
-    url(r'^services', views.services, name='services'),
-    url(r'^status', views.status, name='status'),
-    url(r'^log/instance-(?P<inst>\d+)/download',
-        views.downloadlog, name='logdl'),
-    url(r'^log/instance-(?P<inst>\d+)', views.logfile),
-    url(r'^log', views.logfile, name='log'),
-    url(r'^$', views.status, name='corecontrol'),
+    url(r'^$', views.ConfigurationsListView.as_view(), name='index'),
+    url(r'^servers/$', views.ServersListView.as_view(), name='servers'),
+    url(r'^servers/config$', views.ConfigurationsListView.as_view(), name='servers-config'),
+    url(r'^server-(?P<pk>[0-9]*)/status$', views.get_server_status, name='server-status'),
+    url(r'^server-(?P<pk>[0-9]*)/restart', views.get_server_status, name='server-restart'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
