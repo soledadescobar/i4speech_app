@@ -47,7 +47,7 @@ class CandidatoAdmin(admin.ModelAdmin):
         'bloque__frente',
     )
 
-    list_display = ('name', 'screen_name', 'bloque', 'provincia')
+    list_display = ('name', 'screen_name_url', 'bloque', 'provincia')
 
     search_fields = ['candidato__name', 'candidato__screen_name', 'bloque__name', 'provincia__name']
 
@@ -63,6 +63,12 @@ class CandidatoAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = ['user_id']
+
+    def screen_name_url(self, obj):
+        return '<a href="https://twitter.com/intent/user?user_id=%s" target="_blank">%s</a>' % (
+            obj.user_id, obj.screen_name
+        )
+    screen_name_url.short_description = "Screen Name"
 
 
 @admin.register(Lista)
