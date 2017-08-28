@@ -1,6 +1,7 @@
 # Create your tasks here
 from __future__ import absolute_import
-from celery import shared_task
+# from celery import shared_task
+from celery.decorators import task
 import redis
 import json
 from corecontrol.api import get_active_api as get_api
@@ -21,7 +22,7 @@ def connect_redis():
         )
 
 
-@shared_task
+@task(name="Busqueda de Tweets")
 def tweet_search(obj):
     connect_redis()
     api = get_api(endpoint='tweets')

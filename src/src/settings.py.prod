@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
     'django_celery_results',
+    'django_celery_beat',
     'bootstrap3',
     'corecontrol',
     'dashboard',
