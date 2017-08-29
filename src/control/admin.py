@@ -58,11 +58,11 @@ class CandidatoAdmin(admin.ModelAdmin):
         'bloque__frente',
     )
 
-    list_display = ('name', 'screen_name_url', 'bloque', 'provincia')
+    list_display = ('name', 'screen_name_url', 'bloque', 'frente')
 
     search_fields = ['name', 'screen_name']
 
-    list_filter = ('provincia', 'bloque')
+    list_filter = ('frente', 'bloque')
 
     readonly_fields = ['screen_name_url']
 
@@ -71,7 +71,7 @@ class CandidatoAdmin(admin.ModelAdmin):
             'fields': ('name', 'screen_name', 'screen_name_url')
         }),
         ('Datos para Gráficos', {
-            'fields': ('bloque', 'provincia')
+            'fields': ('frente', 'bloque')
         })
     )
 
