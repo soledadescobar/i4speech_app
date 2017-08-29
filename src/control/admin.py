@@ -21,9 +21,18 @@ class PosicionAdmin(admin.ModelAdmin):
 
 @admin.register(Frente)
 class FrenteAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'display_color')
 
     search_fields = ['frente__name']
+
+    readonly_fields = ['display_color']
+
+    def display_color(self, obj):
+        return '<span style="background: #{};">&nbsp;{}</span>'.format(
+            obj.color, obj.color
+        )
+    display_color.short_description = "Color"
+    display_color.allow_tags = True
 
 
 @admin.register(Bloque)
