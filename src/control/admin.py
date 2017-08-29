@@ -68,7 +68,7 @@ class CandidatoAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'screen_name_url')
+            'fields': ('name', 'screen_name', 'screen_name_url')
         }),
         ('Datos para Gráficos', {
             'fields': ('bloque', 'provincia')
