@@ -120,7 +120,6 @@ def get_csv(request, query=None, model=None, join=None):
 @login_required
 @csrf_exempt
 def get_json(request, query=None, model=None):
-    from .webservices import json_generator
     import json
 
     if model:
@@ -130,12 +129,15 @@ def get_json(request, query=None, model=None):
             rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values())
         else:
             rows = mod.objects.all().values(*mod.ws_values())
+
+        from .webservices import json_generator
+
+        response = StreamingHttpResponse(
+            json_generator(rows),
+            content_type="application/json"
+        )
+
+        return response
+
     elif query:
         pass
-
-    response = StreamingHttpResponse(
-        json_generator(rows),
-        content_type="application/json"
-    )
-
-    return response

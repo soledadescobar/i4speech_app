@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 
 def csv_generator(rows, description=None, headers=False, params=None, base=''):
     if headers:
-        if type(headers) is str:
+        if type(headers) is unicode:
             yield '%s\n' % headers
         elif type(headers) is list:
             yield '%s\n' % ','.join(headers)
@@ -26,12 +29,12 @@ def csv_generator(rows, description=None, headers=False, params=None, base=''):
                 line += '%s%s%s' % (
                     base,
                     ',' if count > 0 else '',
-                    str(value).strip() if type(value) is not str else value.strip()
+                    unicode(value).strip() if type(value) is not unicode else value.strip()
                 )
             elif type(params) is dict:
                 line += '%s%s%s' % (
                     base,
-                    value.strip() if type(value) is str else str(value).strip(),
+                    value.strip() if type(value) is unicode else unicode(value).strip(),
                     ',' if index < values_pos else '.'
                 )
             count += 1
@@ -49,7 +52,7 @@ def json_generator(rows):
             index += 1
             yield '\n\t\t"%s": "%s"' % (
                 k,
-                v if type(v) is str else str(v)
+                v if type(v) is unicode else unicode(v)
             )
             yield '%s' % ',' if index < count else ''
         yield '\n\t}'
