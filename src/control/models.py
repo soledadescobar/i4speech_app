@@ -92,6 +92,13 @@ class Candidato(models.Model):
         blank=True,
         default=None
     )
+    posicion = models.ForeignKey(
+        Posicion,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
     bloque = models.ForeignKey(
         Bloque,
         on_delete=models.CASCADE,
