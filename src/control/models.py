@@ -11,6 +11,9 @@ class Frente(models.Model):
     def __str__(self):
         return self.name
 
+    def __unicode__(self):
+        return self.name
+
     @staticmethod
     def ws_values():
         return ['id', 'name']
@@ -23,6 +26,9 @@ class Bloque(models.Model):
     def __str__(self):
         return self.name
 
+    def __unicode__(self):
+        return self.name
+
     @staticmethod
     def ws_values():
         return ['id', 'name']
@@ -32,6 +38,9 @@ class Provincia(models.Model):
     name = models.CharField("Provincia", max_length=120)
 
     def __str__(self):
+        return self.name
+
+    def __unicode__(self):
         return self.name
 
     @staticmethod
@@ -51,6 +60,9 @@ class Posicion(models.Model):
         verbose_name_plural = "Posiciones"
 
     def __str__(self):
+        return self.name
+
+    def __unicode__(self):
         return self.name
 
 
@@ -98,6 +110,9 @@ class Candidato(models.Model):
     def __str__(self):
         return self.name
 
+    def __unicode__(self):
+        return self.name
+
     @staticmethod
     def ws_values(extra=True):
         respone = ['id', 'name', 'screen_name']
@@ -123,6 +138,9 @@ class Lista(models.Model):
     def __str__(self):
         return self.name
 
+    def __unicode__(self):
+        return self.name
+
 
 class Keyword(models.Model):
     name = models.CharField(
@@ -132,4 +150,7 @@ class Keyword(models.Model):
     )
 
     def __str__(self):
+        return self.name
+
+    def __unicode__(self):
         return self.name
