@@ -60,7 +60,7 @@ class CandidatoAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'screen_name_url', 'bloque', 'provincia')
 
-    search_fields = ['name', 'screen_name', 'bloque', 'frente', 'provincia']
+    search_fields = ['name', 'screen_name']
 
     list_filter = ('provincia', 'bloque')
 
