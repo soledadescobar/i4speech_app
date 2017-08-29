@@ -21,7 +21,7 @@ class Frente(models.Model):
 
 class Bloque(models.Model):
     name = models.CharField("Bloque", max_length=120)
-    frente = models.OneToOneField(Frente, on_delete=models.CASCADE)
+    frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
