@@ -92,28 +92,30 @@ def get_csv(request, query=None, model=None, join=None):
             response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
             return response
 
-    elif model:
+    elif model and join:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
 
         if request.method == 'POST':
             raw_rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values(extra=True))
         else:
-            raw_rows = mod.objects.all().values(*mod.ws_values(extra=True))
-
-        if join:
-            from .webservices import csv_join_flare_generator
-
-            response = StreamingHttpResponse(
-                csv_join_flare_generator(
-                    model,
-                    join,
-                    raw_rows
-                ),
-                content_type="text/csv"
-            )
-            response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+            response = HttpResponse('ONLY POST ALLOWED')
+            response.status_code = 500
             return response
+
+        from .webservices import csv_join_flare_generator
+
+        response = StreamingHttpResponse(
+            csv_join_flare_generator(
+                model,
+                join,
+                raw_rows
+            ),
+            content_type="text/csv"
+        )
+        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+
+        return response
 
 
 @http_basic_auth
