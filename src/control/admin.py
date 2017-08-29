@@ -30,6 +30,8 @@ class FrenteAdmin(admin.ModelAdmin):
 class BloqueAdmin(admin.ModelAdmin):
     list_display = ('name', 'frente')
 
+    list_filter = ('frente',)
+
     search_fields = ['bloque__name', 'frente__name']
 
 
