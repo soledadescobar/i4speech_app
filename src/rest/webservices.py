@@ -55,3 +55,48 @@ def json_generator(rows):
         yield '\n\t}'
         yield '%s' % ',' if idx+1 < len(rows) else ''
     yield '\n]'
+
+
+def csv_join_flare_generator(model, join, raw_rows):
+    from .models import ModelJoin
+
+    instance = ModelJoin.objects.filter(model=model, name=join).all().get()
+
+    from django.db import connections
+    from .cursor import to_dict
+
+    with connections['rest'].cursor() as cursor:
+        args = {
+            instance.param: tuple(
+                i.get(instance.field) for i in raw_rows
+            )
+        }
+
+        cursor.execute(instance.sql, args)
+
+        rows_list = to_dict(cursor)
+
+    def search(field, name, v):
+        for r in rows_list:
+            if r[field] == v:
+                return r[name]
+
+    res = []
+
+    for row in raw_rows:
+        res.append(row.copy())
+        value = search(
+            instance.field,
+            instance.name,
+            row.get(instance.field)
+        )
+        if value is None:
+            value = 0
+        res[-1].update(
+            {instance.name: value}
+        )
+    yield instance.headers
+    yield '\n'
+    for row in res:
+        yield instance.syntax.format(**row)
+        yield '\n'

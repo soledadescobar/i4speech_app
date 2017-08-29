@@ -6,6 +6,7 @@ from django.db import models
 
 class Frente(models.Model):
     name = models.CharField("Frente", max_length=120)
+    color = models.CharField("Color Hexadecimal sin #", max_length=6)
 
     def __str__(self):
         return self.name
@@ -86,6 +87,13 @@ class Candidato(models.Model):
         blank=True,
         default=None
     )
+    frente = models.ForeignKey(
+        Frente,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
 
     def __str__(self):
         return self.name
@@ -94,7 +102,7 @@ class Candidato(models.Model):
     def ws_values(extra=True):
         respone = ['id', 'name', 'screen_name']
         if extra:
-            respone.append('user_id')
+            respone.extend(['user_id', 'frente__name', 'bloque__name'])
         return respone
 
 

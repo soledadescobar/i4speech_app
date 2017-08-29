@@ -8,6 +8,7 @@ from functools import wraps
 import json
 from django.contrib.auth.decorators import login_required
 from .models import Query, ModelJoin
+from .cursor import to_dict
 # Create your views here.
 
 
@@ -60,9 +61,8 @@ def get_server_configuration(request, name):
 @login_required
 @csrf_exempt
 def get_csv(request, query=None, model=None, join=None):
-    from .webservices import csv_generator
-
     if query:
+        from .webservices import csv_generator
         from django.db import connections
 
         q = Query.objects.filter(name=query).get()
@@ -75,46 +75,45 @@ def get_csv(request, query=None, model=None, join=None):
 
             rows = cursor.fetchall()
             description = cursor.description
+            params = {
+                'keys': [v for v in q.get_params()],
+                'values': [v for v in q.get_values()]
+            }
+
+            response = StreamingHttpResponse(
+                csv_generator(
+                    rows,
+                    description=description,
+                    params=params,
+                    headers=True
+                ),
+                content_type="text/csv"
+            )
+            response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+            return response
 
     elif model:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
 
         if request.method == 'POST':
-            raw_rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values())
+            raw_rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values(extra=True))
         else:
             raw_rows = mod.objects.all().values(*mod.ws_values(extra=True))
 
         if join:
-            j = ModelJoin.objects.filter(model=model, name=join).all().get()
+            from .webservices import csv_join_flare_generator
 
-            from django.db import connections
-
-            with connections['rest'].cursor() as cursor:
-                params = j.ws_fields
-                for k, v in list(params.items()):
-                    params[k] = (i.get(v) for i in raw_rows)
-
-                params = {'ids': (138814032, 24900072, 3343144691)}
-                cursor.execute(j.sql, **params)
-
-                print(cursor)
-                return cursor
-
-    response = StreamingHttpResponse(
-        csv_generator(
-            rows,
-            description=description,
-            params={
-                'keys': [v for v in q.get_params()],
-                'values': [v for v in q.get_values()]
-            },
-            headers=True
-        ),
-        content_type="text/csv"
-    )
-    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
-    return response
+            response = StreamingHttpResponse(
+                csv_join_flare_generator(
+                    model,
+                    join,
+                    raw_rows
+                ),
+                content_type="text/csv"
+            )
+            response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+            return response
 
 
 @http_basic_auth

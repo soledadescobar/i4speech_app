@@ -27,4 +27,3 @@ class QueryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ModelJoin)
-admin.site.register(ModelJoinField)
