@@ -99,9 +99,7 @@ def get_csv(request, query=None, model=None, join=None):
         if request.method == 'POST':
             raw_rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values(extra=True))
         else:
-            response = HttpResponse('ONLY POST ALLOWED')
-            response.status_code = 500
-            return response
+            raw_rows = mod.objects.all().values(*mod.ws_values(extra=True))
 
         from .webservices import csv_join_flare_generator
 
