@@ -28,7 +28,7 @@ class FrenteAdmin(admin.ModelAdmin):
     readonly_fields = ['display_color']
 
     def display_color(self, obj):
-        return '<span style="background: #{};">&nbsp;{}</span>'.format(
+        return '<span style="background: #{};">&nbsp;{}&nbsp;</span>'.format(
             obj.color, obj.color
         )
     display_color.short_description = "Color"
@@ -60,7 +60,7 @@ class CandidatoAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'screen_name_url', 'bloque', 'provincia')
 
-    search_fields = ['candidato__name', 'candidato__screen_name', 'bloque__name', 'provincia__name']
+    search_fields = ['name', 'screen_name', 'bloque', 'frente', 'provincia']
 
     list_filter = ('provincia', 'bloque')
 
