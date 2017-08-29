@@ -53,22 +53,23 @@ class CandidatoAdmin(admin.ModelAdmin):
 
     list_filter = ('provincia', 'bloque')
 
+    readonly_fields = ['screen_name_url']
+
     fieldsets = (
         (None, {
-            'fields': ('name', 'screen_name')
+            'fields': ('name', 'screen_name_url')
         }),
         ('Datos para Gráficos', {
             'fields': ('bloque', 'provincia')
         })
     )
 
-    readonly_fields = ['user_id']
-
     def screen_name_url(self, obj):
-        return '<a href="https://twitter.com/intent/user?user_id=%s" target="_blank">%s</a>' % (
+        return '<a href="https://twitter.com/intent/user?user_id={}" target="_blank">{}</a>'.format(
             obj.user_id, obj.screen_name
         )
     screen_name_url.short_description = "Screen Name"
+    screen_name_url.allow_tags = True
 
 
 @admin.register(Lista)
