@@ -56,7 +56,7 @@ class QueryValue(models.Model):
 
 class ModelJoin(models.Model):
     model = models.CharField("Nombre del Modelo", max_length=15)
-    field = models.CharField("Campo del Modelo", max_length=15)
+    field = models.CharField("Campo del Modelo para el Parametro", max_length=15)
     name = models.CharField("Nombre", max_length=15)
     param = models.CharField("Parametro en la Query", max_length=15)
     sql = models.TextField("SQL")
@@ -69,3 +69,25 @@ class ModelJoin(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.model, self.name)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.model, self.name)
+
+    def ws_fields(self):
+        fields = ModelJoinField.objects.filter(modeljoin=self).all()
+        return [field.name for field in fields]
+
+
+class ModelJoinField(models.Model):
+    modeljoin = models.ForeignKey(ModelJoin)
+    name = models.CharField("Nombre del Campo en el Modelo", max_length=15)
+
+    class Meta:
+        verbose_name = "Campo para Devolver"
+        verbose_name_plural = "Campos para Devolver"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name

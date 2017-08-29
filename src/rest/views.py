@@ -93,20 +93,23 @@ def get_csv(request, query=None, model=None, join=None):
             return response
 
     elif model and join:
+        from .models import ModelJoin
+
+        instance = ModelJoin.objects.filter(model=model, name=join).all().get()
+
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
 
         if request.method == 'POST':
-            raw_rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values(extra=True))
+            raw_rows = mod.objects.filter(**json.loads(request.body)).values(*instance.ws_fields())
         else:
-            raw_rows = mod.objects.all().values(*mod.ws_values(extra=True))
+            raw_rows = mod.objects.all().values(*instance.ws_fields())
 
         from .webservices import csv_join_flare_generator
 
         response = StreamingHttpResponse(
             csv_join_flare_generator(
-                model,
-                join,
+                instance,
                 raw_rows
             ),
             content_type="text/csv"

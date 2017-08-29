@@ -26,4 +26,14 @@ class QueryAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(ModelJoin)
+class ModelJoinFieldInLine(admin.TabularInline):
+    model = ModelJoinField
+
+
+@admin.register(ModelJoin)
+class ModeljoinAdmin(admin.ModelAdmin):
+    list_display = ('model', 'field', 'name', 'param')
+
+    inlines = [
+        ModelJoinFieldInLine
+    ]

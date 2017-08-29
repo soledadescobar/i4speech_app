@@ -60,11 +60,7 @@ def json_generator(rows):
     yield '\n]'
 
 
-def csv_join_flare_generator(model, join, raw_rows):
-    from .models import ModelJoin
-
-    instance = ModelJoin.objects.filter(model=model, name=join).all().get()
-
+def csv_join_flare_generator(instance, raw_rows):
     from django.db import connections
     from .cursor import to_dict
 
