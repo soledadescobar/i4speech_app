@@ -71,7 +71,7 @@ class CandidatoAdmin(admin.ModelAdmin):
             'fields': ('name', 'screen_name', 'screen_name_url')
         }),
         ('Datos para Gráficos', {
-            'fields': ('frente', 'bloque')
+            'fields': ('frente', 'bloque', 'provincia')
         })
     )
 

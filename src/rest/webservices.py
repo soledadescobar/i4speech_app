@@ -99,3 +99,26 @@ def csv_join_flare_generator(instance, raw_rows):
     for row in res:
         yield instance.syntax.format(**row)
         yield '\n'
+
+
+def tsv_generator(sql=None, rows=None, description=None):
+    if sql:
+        from django.db import connections
+
+        with connections['rest'].cursor() as cursor:
+            cursor.execute(sql)
+
+            rows = cursor.fetchall()
+            description = cursor.description
+
+    if description:
+        for desc in description:
+            yield '%s\t' % desc.name
+        yield '\n'
+    for row in rows:
+        for k, v in list(row.items()):
+            if type(v) is float:
+                yield '%s\t' % '{0:g}'.format(float(v))
+            else:
+                yield '%s\t' % v
+        yield '\n'

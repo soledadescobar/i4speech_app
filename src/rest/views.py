@@ -60,7 +60,7 @@ def get_server_configuration(request, name):
 @http_basic_auth
 @login_required
 @csrf_exempt
-def get_csv(request, query=None, model=None, join=None):
+def get_csv(request, query=None, model=None, join=None, webservice=None):
     if query:
         from .webservices import csv_generator
         from django.db import connections
@@ -95,7 +95,7 @@ def get_csv(request, query=None, model=None, join=None):
     elif model and join:
         from .models import ModelJoin
 
-        instance = ModelJoin.objects.filter(model=model, name=join).all().get()
+        instance = ModelJoin.objects.filter(model=model, name=join, webservice=webservice).all().get()
 
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
@@ -122,10 +122,24 @@ def get_csv(request, query=None, model=None, join=None):
 @http_basic_auth
 @login_required
 @csrf_exempt
-def get_json(request, query=None, model=None):
+def get_json(request, query=None, model=None, filtered=False):
     import json
 
-    if model:
+    if filtered and model and request.method == 'POST':
+        import importlib
+        from .models import ModelCustomFilter
+
+        custom_filter = ModelCustomFilter.objects.filter(model=model).get()
+        fields = custom_filter.fields()
+        body = json.loads(request.body)
+
+        mod = getattr(importlib.import_module('control.models'), model)
+
+        for field, method in list(fields.items()):
+            if field in body:
+                rows = getattr(mod.objects, method)(body.get(field)).values()
+
+    elif model:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
         if request.method == 'POST':
@@ -133,14 +147,33 @@ def get_json(request, query=None, model=None):
         else:
             rows = mod.objects.all().values(*mod.ws_values())
 
-        from .webservices import json_generator
+    elif query:
+        rows = None
+
+    from .webservices import json_generator
+
+    response = StreamingHttpResponse(
+        json_generator(rows),
+        content_type="application/json"
+    )
+
+    return response
+
+
+@http_basic_auth
+@login_required
+@csrf_exempt
+def get_tsv(request, query, split=False):
+    if split:
+        pass
+    else:
+        from .webservices import tsv_generator
+
+        q = Query.objects.filter(name=query).get()
 
         response = StreamingHttpResponse(
-            json_generator(rows),
-            content_type="application/json"
+            tsv_generator(sql=q.sql),
+            content_type="text/tsv"
         )
 
         return response
-
-    elif query:
-        pass

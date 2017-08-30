@@ -4,6 +4,31 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+class ProvinciaManager(models.Manager):
+    def get_by_bloques(self, bloques):
+        objs = Bloque.objects.filter(id__in=bloques)
+        ids = [o.provincia_id for o in objs]
+        return super(ProvinciaManager, self).filter(id__in=ids)
+
+
+class Provincia(models.Model):
+    objects = ProvinciaManager()
+    name = models.CharField("Provincia", max_length=120)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+    @staticmethod
+    def ws_values():
+        return ['id', 'name']
+
+    def get_bloques(self):
+        objects = Bloque.objects.filter(provincia=self)
+
+
 class Frente(models.Model):
     name = models.CharField("Frente", max_length=120)
     color = models.CharField("Color Hexadecimal sin #", max_length=6)
@@ -22,20 +47,13 @@ class Frente(models.Model):
 class Bloque(models.Model):
     name = models.CharField("Bloque", max_length=120)
     frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
-
-    @staticmethod
-    def ws_values():
-        return ['id', 'name']
-
-
-class Provincia(models.Model):
-    name = models.CharField("Provincia", max_length=120)
+    provincia = models.ForeignKey(
+        Provincia,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        default=None
+    )
 
     def __str__(self):
         return self.name

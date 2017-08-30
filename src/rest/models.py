@@ -58,6 +58,7 @@ class ModelJoin(models.Model):
     model = models.CharField("Nombre del Modelo", max_length=15)
     field = models.CharField("Campo del Modelo para el Parametro", max_length=15)
     name = models.CharField("Nombre", max_length=15)
+    webservice = models.CharField("WebService de Destino (CSV)", max_length=15)
     param = models.CharField("Parametro en la Query", max_length=15)
     sql = models.TextField("SQL")
     syntax = models.CharField("Sintaxis de la respuesta (Aplica en CSV)", max_length=250, blank=True, default='')
@@ -85,6 +86,40 @@ class ModelJoinField(models.Model):
     class Meta:
         verbose_name = "Campo para Devolver"
         verbose_name_plural = "Campos para Devolver"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
+class ModelCustomFilter(models.Model):
+    model = models.CharField("Nombre del Modelo", max_length=15)
+
+    class Meta:
+        verbose_name = "Filtro de Modelo Customizado"
+        verbose_name_plural = "Filtros de Modelo Customizados"
+
+    def __str__(self):
+        return self.model
+
+    def __unicode__(self):
+        return self.model
+
+    def fields(self):
+        objects = ModelCustomFilterField.objects.filter(model=self)
+        return {o.name: o.method for o in objects}
+
+
+class ModelCustomFilterField(models.Model):
+    model = models.ForeignKey(ModelCustomFilter)
+    name = models.CharField("Nombre del Parametro", max_length=15)
+    method = models.CharField("Metodo Customizado del Modelo", max_length=15)
+
+    class Meta:
+        verbose_name = "Campo"
+        verbose_name_plural = "Campos"
 
     def __str__(self):
         return self.name

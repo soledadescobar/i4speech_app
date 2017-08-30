@@ -171,9 +171,9 @@ BOOTSTRAP3 = {
 
 LOGIN_REDIRECT_URL = 'index'
 
-RAVEN_CONFIG = {
-    'dsn': 'https://4b7210f68ae84d1eb0fd9af389f2e643:57c9720a50bd48fba55bff9f82301c03@sentry.io/204330',
-}
+# RAVEN_CONFIG = {
+#     'dsn': 'https://4b7210f68ae84d1eb0fd9af389f2e643:57c9720a50bd48fba55bff9f82301c03@sentry.io/204330',
+# }
 
 SUIT_CONFIG = {
     'ADMIN_NAME': 'i4Media Suit',
@@ -185,5 +185,7 @@ SUIT_CONFIG = {
     },
 }
 
-CELERY_RESULT_BACKEND = 'django-cache'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'django-cache'
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# SEARCH_REDIS_HOST = '10.128.0.11'

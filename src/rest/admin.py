@@ -32,8 +32,21 @@ class ModelJoinFieldInLine(admin.TabularInline):
 
 @admin.register(ModelJoin)
 class ModeljoinAdmin(admin.ModelAdmin):
-    list_display = ('model', 'field', 'name', 'param')
+    list_display = ('model', 'webservice', 'name', 'field', 'param')
 
     inlines = [
         ModelJoinFieldInLine
+    ]
+
+
+class ModelCustomFilterFieldInLine(admin.TabularInline):
+    model = ModelCustomFilterField
+
+
+@admin.register(ModelCustomFilter)
+class ModelCustomFilterAdmin(admin.ModelAdmin):
+    list_display = ('model',)
+
+    inlines = [
+        ModelCustomFilterFieldInLine
     ]
