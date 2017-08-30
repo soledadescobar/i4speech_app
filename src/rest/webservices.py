@@ -111,13 +111,16 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
             else:
                 cursor.execute(sql)
 
-            rows = cursor.fetchall()
+            from .cursor import to_dict
+            rows = to_dict(cursor)
             description = cursor.description
 
     if description:
         for desc in description:
             yield '%s\t' % desc.name
+
         yield '\n'
+
     for row in rows:
         for k, v in list(row.items()):
             if type(v) is float:
@@ -125,4 +128,3 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
             else:
                 yield '%s\t' % v
         yield '\n'
-

@@ -199,7 +199,8 @@ def get_tsv_actividad(request, frente):
         tsv_generator(
             sql=q.sql,
             params={'ids': ids}
-        )
+        ),
+        content_type="text/tsv"
     )
 
     return response
