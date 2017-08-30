@@ -177,3 +177,29 @@ def get_tsv(request, query, split=False):
         )
 
         return response
+
+
+@http_basic_auth
+@login_required
+@csrf_exempt
+def get_tsv_actividad(request, frente):
+    q = Query.objects.filter(name='actividad').get()
+
+    import importlib
+    Frente = getattr(importlib.import_module('control.models'), 'Frente')
+    Candidato = getattr(importlib.import_module('control.models'), 'Candidato')
+
+    obj = Frente.objects.filter(name=frente).get()
+
+    ids = tuple(c.user_id for c in Candidato.objects.filter(frente=obj).all())
+
+    from .webservices import tsv_generator
+
+    response = StreamingHttpResponse(
+        tsv_generator(
+            sql=q.sql,
+            params={'ids': ids}
+        )
+    )
+
+    return response

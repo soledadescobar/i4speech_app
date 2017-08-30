@@ -101,12 +101,15 @@ def csv_join_flare_generator(instance, raw_rows):
         yield '\n'
 
 
-def tsv_generator(sql=None, rows=None, description=None):
+def tsv_generator(sql=None, params=None, rows=None, description=None):
     if sql:
         from django.db import connections
 
         with connections['rest'].cursor() as cursor:
-            cursor.execute(sql)
+            if params:
+                cursor.execute(sql, params)
+            else:
+                cursor.execute(sql)
 
             rows = cursor.fetchall()
             description = cursor.description
@@ -122,3 +125,4 @@ def tsv_generator(sql=None, rows=None, description=None):
             else:
                 yield '%s\t' % v
         yield '\n'
+
