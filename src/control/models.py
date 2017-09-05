@@ -83,6 +83,12 @@ class Posicion(models.Model):
     def __unicode__(self):
         return self.name
 
+    @staticmethod
+    def ws_values():
+        response = ['id', 'name']
+
+        return response
+
 
 class Candidato(models.Model):
     name = models.CharField(
