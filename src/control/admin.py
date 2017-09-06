@@ -65,19 +65,24 @@ class CandidatoAdmin(admin.ModelAdmin):
     list_select_related = (
         'bloque',
         'frente',
+        'provincia',
+        'distrito',
+        'posicion'
     )
 
     related_search_fields = {
         'bloque': ('name',),
         'frente': ('name',),
         'provincia': ('name',),
+        'distrito': ('name',),
+        'posicon': ('name',),
     }
 
     list_display = ('name', 'screen_name_url', 'bloque', 'frente', 'posicion')
 
     search_fields = ['name', 'screen_name']
 
-    list_filter = ('frente', 'bloque', 'provincia')
+    list_filter = ('frente', 'bloque', 'provincia', 'distrito', 'posicion')
 
     readonly_fields = ['screen_name_url']
 
@@ -86,7 +91,7 @@ class CandidatoAdmin(admin.ModelAdmin):
             'fields': ('name', 'screen_name', 'screen_name_url')
         }),
         ('Datos para Gráficos', {
-            'fields': ('frente', 'bloque', 'provincia', 'posicion')
+            'fields': ('frente', 'bloque', 'posicion', 'provincia', 'distrito')
         })
     )
 

@@ -131,6 +131,13 @@ class Candidato(models.Model):
         blank=True,
         default=None
     )
+    distrito = models.ForeignKey(
+        Distrito,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
     posicion = models.ForeignKey(
         Posicion,
         on_delete=models.CASCADE,
