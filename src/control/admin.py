@@ -53,6 +53,13 @@ class ProvinciaAdmin(admin.ModelAdmin):
     search_fields = ['provincia__name']
 
 
+@admin.register(Distrito)
+class DistritoAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    search_fields = ['distrito__name']
+
+
 @admin.register(Candidato)
 class CandidatoAdmin(admin.ModelAdmin):
     list_select_related = (

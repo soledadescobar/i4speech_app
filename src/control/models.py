@@ -29,6 +29,21 @@ class Provincia(models.Model):
         objects = Bloque.objects.filter(provincia=self)
 
 
+class Distrito(models.Model):
+    name = models.CharField("Distrito", max_length=120)
+    provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+    @staticmethod
+    def ws_values():
+        return ['id', 'name']
+
+
 class Frente(models.Model):
     name = models.CharField("Frente", max_length=120)
     color = models.CharField("Color Hexadecimal sin #", max_length=6)
