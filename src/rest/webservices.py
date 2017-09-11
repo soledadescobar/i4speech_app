@@ -60,6 +60,27 @@ def json_generator(rows):
     yield '\n]'
 
 
+def json_join_cascade_generator(instance, raw_rows):
+    from django.db import connections
+    from .cursor import to_dict
+
+    with connections['rest'].cursor() as cursor:
+        args = {
+            instance.param: tuple(
+                i.get(instance.field) for i in raw_rows
+            )
+        }
+
+        cursor.execute(instance.sql, args)
+
+        rows_list = to_dict(cursor)
+
+    def search(field, name, v):
+        for r in rows_list:
+            if r[field] == v:
+                return r[name]
+
+
 def csv_join_flare_generator(instance, raw_rows):
     from django.db import connections
     from .cursor import to_dict

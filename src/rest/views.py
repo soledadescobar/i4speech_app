@@ -62,7 +62,7 @@ def get_server_configuration(request, name):
 @csrf_exempt
 def get_csv(request, query=None, model=None, join=None, webservice=None):
     if query:
-        from .webservices import csv_generator
+        from .webservices import csv_generator as generator
         from django.db import connections
 
         q = Query.objects.filter(name=query).get()
@@ -81,7 +81,7 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
             }
 
             response = StreamingHttpResponse(
-                csv_generator(
+                generator(
                     rows,
                     description=description,
                     params=params,
@@ -105,10 +105,10 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
         else:
             raw_rows = mod.objects.all().values(*instance.ws_fields())
 
-        from .webservices import csv_join_flare_generator
+        from .webservices import csv_join_flare_generator as generator
 
         response = StreamingHttpResponse(
-            csv_join_flare_generator(
+            generator(
                 instance,
                 raw_rows
             ),
@@ -150,10 +150,10 @@ def get_json(request, query=None, model=None, filtered=False):
     elif query:
         rows = None
 
-    from .webservices import json_generator
+    from .webservices import json_generator as generator
 
     response = StreamingHttpResponse(
-        json_generator(rows),
+        generator(rows),
         content_type="application/json"
     )
 
@@ -163,16 +163,49 @@ def get_json(request, query=None, model=None, filtered=False):
 @http_basic_auth
 @login_required
 @csrf_exempt
+def get_json_cascade(request, model, join, webservice):
+    from .models import ModelJoin
+
+    instance = ModelJoin.objects.filter(model=model, name=join, webservice=webservice).all().get()
+
+    import importlib
+    mod = getattr(importlib.import_module('control.models'), model)
+
+    if request.method == 'POST':
+        raw_rows = mod.objects.filter(**json.loads(request.body)).values(*instance.ws_fields())
+    else:
+        raw_rows = mod.objects.all().values(*instance.ws_fields())
+
+    from .webservices import json_join_cascade_generator as generator
+
+    response = StreamingHttpResponse(
+        generator(
+            instance,
+            raw_rows
+        ),
+        content_type="application/json"
+    )
+    response['Content-Disposition'] = 'attachment; filename="%s.json"' % join
+
+    return response
+
+
+@http_basic_auth
+@login_required
+@csrf_exempt
 def get_tsv(request, query, split=False):
     if split:
-        pass
+        if request.method == 'POST':
+            pass
+        else:
+            pass
     else:
-        from .webservices import tsv_generator
+        from .webservices import tsv_generator as generator
 
         q = Query.objects.filter(name=query).get()
 
         response = StreamingHttpResponse(
-            tsv_generator(sql=q.sql),
+            generator(sql=q.sql),
             content_type="text/tsv"
         )
 
@@ -182,23 +215,36 @@ def get_tsv(request, query, split=False):
 @http_basic_auth
 @login_required
 @csrf_exempt
-def get_tsv_actividad(request, frente):
-    q = Query.objects.filter(name='actividad').get()
-
+def get_tsv_actividad(request, frente, split=False):
     import importlib
+
     Frente = getattr(importlib.import_module('control.models'), 'Frente')
     Candidato = getattr(importlib.import_module('control.models'), 'Candidato')
 
-    obj = Frente.objects.filter(name=frente).get()
+    ids = tuple(
+        c.user_id for c in Candidato.objects.filter(
+            frente=Frente.objects.filter(name=frente).get()
+        ).all()
+    )
 
-    ids = tuple(c.user_id for c in Candidato.objects.filter(frente=obj).all())
+    params = {'ids': ids}
 
-    from .webservices import tsv_generator
+    if split:
+        if request.method == 'POST':
+            q = Query.objects.filter(name='actividad-filtered').get()
+            params.update(**json.loads(request.body))
+        else:
+            q = Query.objects.filter(name='actividad-splitted').get()
+
+    else:
+        q = Query.objects.filter(name='actividad').get()
+
+    from .webservices import tsv_generator as generator
 
     response = StreamingHttpResponse(
-        tsv_generator(
+        generator(
             sql=q.sql,
-            params={'ids': ids}
+            params=params
         ),
         content_type="text/tsv"
     )
