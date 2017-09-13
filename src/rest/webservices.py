@@ -136,16 +136,24 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
             rows = to_dict(cursor)
             description = cursor.description
 
-    if description:
-        for desc in description:
-            yield '%s\t' % desc.name
+    for desc in description:
+        yield '%s\t' % desc.name
 
-        yield '\n'
+    yield '\n'
 
     for row in rows:
-        for k, v in list(row.items()):
-            if type(v) is float:
-                yield '%s\t' % '{0:g}'.format(float(v))
+        for d in description:
+            if type(row[d.name]) is float:
+                yield '%s\t' % '{0:g}'.format(float(row[d.name]))
             else:
-                yield '%s\t' % v
+                yield '%s\t' % row[d.name]
         yield '\n'
+
+        # Older version below:
+        # This older version has an order bug in the result
+        # for k, v in list(row.items()):
+        #     if type(v) is float:
+        #         yield '%s\t' % '{0:g}'.format(float(v))
+        #     else:
+        #         yield '%s\t' % v
+        # yield '\n'
