@@ -131,9 +131,8 @@ class Candidato(models.Model):
     provincia = models.ForeignKey(
         Provincia,
         on_delete=models.CASCADE,
-        null=True,
         blank=True,
-        default=None
+        default=-1
     )
     distrito = models.ForeignKey(
         Distrito,
@@ -145,9 +144,8 @@ class Candidato(models.Model):
     posicion = models.ForeignKey(
         Posicion,
         on_delete=models.CASCADE,
-        null=True,
         blank=True,
-        default=None
+        default=-1
     )
     bloque = models.ForeignKey(
         Bloque,
