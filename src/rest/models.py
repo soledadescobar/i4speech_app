@@ -65,8 +65,8 @@ class ModelJoin(models.Model):
     headers = models.CharField("Cabeceras de la respuesta (Aplica en CSV)", max_length=250, blank=True, default='')
 
     class Meta:
-        verbose_name = "Adicion de Datos a Modelo (WS)"
-        verbose_name_plural = "Adicion de Datos a Modelos (WS)"
+        verbose_name = "Modelo WS - Datos"
+        verbose_name_plural = "Modelos WS - Datos"
 
     def __str__(self):
         return '%s - %s' % (self.model, self.name)
@@ -98,8 +98,8 @@ class ModelCustomFilter(models.Model):
     model = models.CharField("Nombre del Modelo", max_length=15)
 
     class Meta:
-        verbose_name = "Filtro de Modelo Customizado"
-        verbose_name_plural = "Filtros de Modelo Customizados"
+        verbose_name = "Modelo WS - Filtro"
+        verbose_name_plural = "Modelos WS - Filtros"
 
     def __str__(self):
         return self.model
@@ -120,6 +120,46 @@ class ModelCustomFilterField(models.Model):
     class Meta:
         verbose_name = "Campo"
         verbose_name_plural = "Campos"
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
+class ModelValue(models.Model):
+    model = models.CharField("Modelo", max_length=15)
+
+    class Meta:
+        verbose_name = "Modelo WS"
+        verbose_name_plural = "Modelos WS"
+
+    def __str__(self):
+        return self.model
+
+    def __unicode__(self):
+        return self.model
+
+    def values(self, extra=False):
+        values = ModelValueField.objects.filter(model=self)
+        if extra is False:
+            values = values.exclude(extra=True)
+        return tuple(v.name for v in values)
+
+
+class ModelValueField(models.Model):
+    model = models.ForeignKey(ModelValue)
+    name = models.CharField("Valor", max_length=15)
+    extra = models.BooleanField(
+        "Extra",
+        default=False,
+        help_text="Si esta activado, este valor solo sera devuelto en WS que soliciten el parametro Extra"
+    )
+
+    class Meta:
+        verbose_name = "Valor"
+        verbose_name_plural = "Valores"
 
     def __str__(self):
         return self.name

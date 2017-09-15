@@ -70,6 +70,10 @@ class Bloque(models.Model):
         default=None
     )
 
+    class Meta:
+        verbose_name = 'Partido/Alianza'
+        verbose_name_plural = 'Partidos/Alianzas'
+
     def __str__(self):
         return self.name
 
@@ -83,14 +87,14 @@ class Bloque(models.Model):
 
 class Posicion(models.Model):
     name = models.CharField(
-        "Posición",
+        "Categoría",
         max_length=120,
-        help_text="Posición o Cargo a Ocupar"
+        help_text="Categoría/Posición/Cargo a Ocupar"
     )
 
     class Meta:
-        verbose_name = "Posición"
-        verbose_name_plural = "Posiciones"
+        verbose_name = "Categoría"
+        verbose_name_plural = "Categorías"
 
     def __str__(self):
         return self.name
@@ -121,7 +125,7 @@ class Candidato(models.Model):
         null=True,
         blank=True,
         default=None,
-        help_text="ID de usuario de Twitter (Se obtiene de forma automatica al guardar)",
+        help_text="ID de usuario de Twitter (Se obtiene de forma automática al guardar)",
         editable=False
     )
     provincia = models.ForeignKey(

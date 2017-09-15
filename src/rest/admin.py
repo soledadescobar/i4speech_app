@@ -50,3 +50,16 @@ class ModelCustomFilterAdmin(admin.ModelAdmin):
     inlines = [
         ModelCustomFilterFieldInLine
     ]
+
+
+class ModelValueFieldInLine(admin.StackedInline):
+    model = ModelValueField
+
+
+@admin.register(ModelValue)
+class ModelCustomFilterAdmin(admin.ModelAdmin):
+    list_display = ('model',)
+
+    inlines = [
+        ModelValueFieldInLine
+    ]

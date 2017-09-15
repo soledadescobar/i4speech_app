@@ -148,12 +148,3 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
             else:
                 yield '%s\t' % row[d.name]
         yield '\n'
-
-        # Older version below:
-        # This older version has an order bug in the result
-        # for k, v in list(row.items()):
-        #     if type(v) is float:
-        #         yield '%s\t' % '{0:g}'.format(float(v))
-        #     else:
-        #         yield '%s\t' % v
-        # yield '\n'
