@@ -87,17 +87,17 @@ def json_join_cascade_generator(instance, raw_rows):
             frentes = []
             if len(dates) > 1:
                 # Closing already inserted object
-                yield ']},'
-            yield '{{\n"date": "{}",\n"name": "Frentes",\n"children": [\n'.format(row['date'])
+                yield ']},\n'
+            yield '{{\n"date": "{}",\n"name": "Frentes",\n"children": [\n'.format(row['date'].strip())
         if row['frente'] not in frentes:
             frentes.append(row['frente'])
             count = 0
             if len(frentes) > 1:
-                yield ']},'
+                yield '\t]},\n'
             yield '\t{{"name": "{}",\n\t"children": [\n'.format(row['frente'].strip())
-        yield '{}\n\t\t{{"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"}}'.format(
+        yield '{}\n\t\t{\n\t\t\t{"name": "{}",\n\t\t\t"size": "{}",\n\t\t\t"color": "{}"}}'.format(
             ',' if count > 0 else '',
-            row['name'].strip(), row['mentions'], row['color']
+            row['name'].strip(), row['mentions'].strip(), row['color'].strip()
         )
         count += 1
 
