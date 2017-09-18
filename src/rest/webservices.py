@@ -94,8 +94,8 @@ def json_join_cascade_generator(instance, raw_rows):
             count = 0
             if len(frentes) > 1:
                 yield ']},'
-            yield '\t{{"name": "{}",\n\t"children": [\n\t'.format(row['frente'].strip())
-        yield '{}\t\t{{"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"}}'.format(
+            yield '\t{{"name": "{}",\n\t"children": [\n'.format(row['frente'].strip())
+        yield '{}\n\t\t{{"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"}}'.format(
             ',' if count > 0 else '',
             row['name'].strip(), row['mentions'], row['color']
         )
