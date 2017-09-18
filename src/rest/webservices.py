@@ -77,7 +77,7 @@ def json_join_cascade_generator(instance, raw_rows):
 
     dates = []
     frentes = []
-    candidatos = []
+    count = 0
 
     # Start the JSON Response #
     yield '[\n'
@@ -91,15 +91,15 @@ def json_join_cascade_generator(instance, raw_rows):
             yield '{{\n"date": "{}",\n"name": "Frentes",\n"children": [\n'.format(row['date'])
         if row['frente'] not in frentes:
             frentes.append(row['frente'])
-            candidatos = []
+            count = 0
             if len(frentes) > 1:
                 yield ']},'
-            yield '\t{{"name": "{}",\n\t"children": [\n\t'.format(row['frente'])
+            yield '\t{{"name": "{}",\n\t"children": [\n\t'.format(row['frente'].strip())
         yield '{}\t\t{{"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"}}'.format(
-            ',' if len(candidatos) > 1 else '',
+            ',' if count > 0 else '',
             row['name'].strip(), row['mentions'], row['color']
         )
-        candidatos.append(row)
+        count += 1
 
 
 def csv_join_flare_generator(instance, raw_rows):
