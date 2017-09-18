@@ -88,16 +88,16 @@ def json_join_cascade_generator(instance, raw_rows):
             if len(dates) > 1:
                 # Closing already inserted object
                 yield ']},'
-            yield '{\n"date": "%s",\n"name": "Frentes",\n"children": [\n' % row['date']
+            yield '{{\n"date": "{}",\n"name": "Frentes",\n"children": [\n'.format(row['date'])
         if row['frente'] not in frentes:
             frentes.append(row['frente'])
             candidatos = []
             if len(frentes) > 1:
                 yield ']},'
-            yield '\t{"name": "%s",\n\t"children": [\n\t' % row['frente']
-        yield '%s\t\t{"name": "%s",\n\t\t"size": "%d",\n\t\t"color": "%s"}' % (
+            yield '\t{{"name": "{}",\n\t"children": [\n\t'.format(row['frente'])
+        yield '{}\t\t{{"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"}}'.format(
             ',' if len(candidatos) > 1 else '',
-            row['name'], row['mentions'], row['color']
+            row['name'].strip(), row['mentions'], row['color']
         )
         candidatos.append(row)
 
