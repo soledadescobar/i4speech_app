@@ -172,9 +172,9 @@ def get_json_cascade(request, model, join, webservice):
     mod = getattr(importlib.import_module('control.models'), model)
 
     if request.method == 'POST':
-        raw_rows = mod.objects.filter(**json.loads(request.body)).values(*instance.ws_fields())
+        raw_rows = mod.objects.filter(**json.loads(request.body)).values('user_id')
     else:
-        raw_rows = mod.objects.all().values(*instance.ws_fields())
+        raw_rows = mod.objects.all().values('user_id')
 
     from .webservices import json_join_cascade_generator as generator
 

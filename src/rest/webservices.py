@@ -73,12 +73,33 @@ def json_join_cascade_generator(instance, raw_rows):
 
         cursor.execute(instance.sql, args)
 
-        rows_list = to_dict(cursor)
+        rows = to_dict(cursor)
 
-    def search(field, name, v):
-        for r in rows_list:
-            if r[field] == v:
-                return r[name]
+    dates = []
+    frentes = []
+    candidatos = []
+
+    # Start the JSON Response #
+    yield '[\n'
+    for row in rows:
+        if row['date'] not in dates:
+            dates.append(row['date'])
+            frentes = []
+            if len(dates) > 1:
+                # Closing already inserted object
+                yield ']},'
+            yield '{\n"date": "%s",\n"name": "Frentes",\n"children": [\n' % row['date']
+        if row['frente'] not in frentes:
+            frentes.append(row['frente'])
+            candidatos = []
+            if len(frentes) > 1:
+                yield ']},'
+            yield '\t{"name": "%s",\n\t"children": [\n\t' % row['frente']
+        yield '%s\t\t{"name": "%s",\n\t\t"size": "%d",\n\t\t"color": "%s"}' % (
+            ',' if len(candidatos) > 1 else '',
+            row['name'], row['mentions'], row['color']
+        )
+        candidatos.append(row)
 
 
 def csv_join_flare_generator(instance, raw_rows):
