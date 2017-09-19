@@ -95,13 +95,13 @@ def json_join_cascade_generator(instance, raw_rows):
             if len(frentes) > 1:
                 yield '\n\t]},\n'
             yield '\t{{"name": "{}",\n\t"children": [\n'.format(row['frente'].strip())
-        yield '{}\n\t\t{{\n\t\t\t"name": "{}",\n\t\t\t"size": "{}",\n\t\t\t"color": "{}"\n\t\t}}'.format(
+        yield '{}\n\t\t{{\n\t\t"name": "{}",\n\t\t"size": "{}",\n\t\t"color": "{}"\n\t\t}}'.format(
             ',' if count > 0 else '',
             row['name'].strip(), row['mentions'], row['color'].strip()
         )
         count += 1
 
-    yield '\n\t]}\n]'
+    yield '\n\t]}\n]}\n]'
 
 
 def csv_join_flare_generator(instance, raw_rows):
