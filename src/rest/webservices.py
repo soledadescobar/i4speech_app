@@ -87,7 +87,7 @@ def json_join_cascade_generator(instance, raw_rows):
             frentes = []
             if len(dates) > 1:
                 # Closing already inserted object
-                yield ']},\n'
+                yield ']}\n]},'
             yield '{{\n"date": "{}",\n"name": "Frentes",\n"children": [\n'.format(row['date'])
         if row['frente'] not in frentes:
             frentes.append(row['frente'])
@@ -101,7 +101,7 @@ def json_join_cascade_generator(instance, raw_rows):
         )
         count += 1
 
-    yield '\t\t}\n\t}\n]'
+    yield '\n\t]}\n]'
 
 
 def csv_join_flare_generator(instance, raw_rows):
