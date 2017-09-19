@@ -101,7 +101,7 @@ def json_join_cascade_generator(instance, raw_rows):
         )
         count += 1
 
-        yield '\t\t}\n\t}\n]'
+    yield '\t\t}\n\t}\n]'
 
 
 def csv_join_flare_generator(instance, raw_rows):
