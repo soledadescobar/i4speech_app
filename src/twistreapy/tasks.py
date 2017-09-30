@@ -1,11 +1,38 @@
 # Create your tasks here
 from __future__ import absolute_import
-from celery.decorators import task
 from .models import Status, User
 from dateutil.parser import parse
+from celery.task import Task
+from django.core.cache import cache
 
 
-@task(name='push_service')
+class PushService(Task):
+    name = 'push.service'
+
+    def run(self, **kwargs):
+        logger = self.get_logger(**kwargs)
+
+        lock_id = "%s-lock" % self.name
+
+        acquire_lock = lambda: cache.add(lock_id, "true", LOCK_EXPIRE)
+
+        release_lock = lambda: cache.delete(lock_id)
+
+        logger.debug("Starting Push Service")
+
+        if acquire_lock():
+            try:
+                push_service()
+            finally:
+                release_lock()
+            return
+
+        logger.debug(
+            "Push Service is Already Running"
+        )
+        return
+
+
 def push_service():
     import redis
     from django.conf import settings
