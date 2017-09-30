@@ -5,6 +5,7 @@ from dateutil.parser import parse
 from celery.task import Task
 from django.core.cache import cache
 
+LOCK_EXPIRE = 60 * 5  # Lock expire 5 minutes
 
 class PushService(Task):
     name = 'push.service'
