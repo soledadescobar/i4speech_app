@@ -5,6 +5,7 @@ from .models import Configuration
 from .tasks import configuration_sync
 
 
-@receiver(post_save, sender=Configuration)
-def update_trigger(instance, **kwargs):
-    configuration_sync.delay(instance)
+# TEMPORAL DISABLE
+# @receiver(post_save, sender=Configuration)
+# def update_trigger(instance, **kwargs):
+#     configuration_sync.delay(instance)

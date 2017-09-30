@@ -86,7 +86,7 @@ class Server(models.Model):
         }
 
     def usage_count(self):
-        return "%d%%" % self.configuration.keywords.count() if hasattr(self, 'configuration') else 0
+        return "%d%%" % self.configuration.keywords.count() / 400 if hasattr(self, 'configuration') else 0
 
     usage_count.short_description = 'Uso'
 
