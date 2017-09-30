@@ -1,11 +1,11 @@
 # Create your tasks here
 from __future__ import absolute_import
-from celery import shared_task
+from celery.decorators import task
 from .models import Status, User
 from dateutil.parser import parse
 
 
-@shared_task
+@task(name='push_service')
 def push_service():
     import redis
     from django.conf import settings
