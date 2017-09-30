@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'dashboard',
     'search',
     'control',
-    'rest'
+    'rest',
+    'twistreapy'
 ]
 
 MIDDLEWARE = [
@@ -81,13 +82,23 @@ DATABASES = {
         'PASSWORD': 'bP9GZY3GXz4ePrPX',
         'HOST': '10.128.0.3',
         'PORT': '5432',
+    },
+    'twistreapy': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'i4media_phase2',
+        'USER': 'pst',
+        'PASSWORD': 'bP9GZY3GXz4ePrPX',
+        'HOST': '10.128.0.3',
+        'PORT': '5432',
     }
 }
+
+DATABASE_ROUTERS = ['twistreapy.routers.TwistreapyDatabaseRouter', ]
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.128.0.11:6379/1",
+        "LOCATION": "redis://10.128.0.3:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -150,10 +161,10 @@ SUIT_CONFIG = {
     },
 }
 
-REDIS_HOST = '10.128.0.11'
+REDIS_HOST = '10.128.0.3'
 REDIS_PORT = 6379
 REDIS_DB = 0
-REDIS_PUSH = 'streamb'
+REDIS_PUSH = 'stream'
 
 CELERY_RESULT_BACKEND = 'django-cache'
 CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
