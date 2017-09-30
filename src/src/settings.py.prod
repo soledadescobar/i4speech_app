@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -171,5 +172,12 @@ CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = ['pickle']
+
+CELERYBEAT_SCHEDULE = {
+    'proc': {
+        "task": "tasks.processing",
+        "schedule": datetime.timedelta(seconds=60),
+        },
+    }
 
 CORS_ORIGIN_ALLOW_ALL = True
