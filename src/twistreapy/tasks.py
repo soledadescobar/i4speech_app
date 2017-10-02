@@ -4,6 +4,7 @@ from .models import Status, User
 from dateutil.parser import parse
 from celery.task import Task
 from django.core.cache import cache
+import sys
 
 LOCK_EXPIRE = 60 * 5  # Lock expire 5 minutes
 
@@ -52,6 +53,8 @@ class ImportService(Task):
         if acquire_lock():
             try:
                 import_service(**kwargs)
+            except:
+                logger.exception(*sys.exc_info())
             finally:
                 release_lock()
             return
