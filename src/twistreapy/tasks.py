@@ -91,6 +91,8 @@ def import_service(query, limit, offset=0):
         if (limit - last.offset + 1000) < limit:
             limit = 1000
             offset = last.offset + 1000
+        else:
+            return False
 
     o = ImportHistory(query=query, limit=limit, offset=offset)
     o.save()
