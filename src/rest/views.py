@@ -174,9 +174,7 @@ def get_json_cascade(request, model, join, webservice):
     if request.method == 'POST':
         raw_rows = mod.objects.filter(**json.loads(request.body)).values('user_id')
     else:
-        raw_rows = mod.objects.filter(
-            frente__id__in=[67, 65, 68, 66]
-        ).values('user_id')
+        raw_rows = mod.objects.all().values('user_id')
 
     from .webservices import json_join_cascade_generator as generator
 
