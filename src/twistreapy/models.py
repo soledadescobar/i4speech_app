@@ -178,7 +178,7 @@ class Status(models.Model):
             elif k == 'created_at':
                 setattr(self, 'created_at', parse(v))
             elif hasattr(self, k):
-                setattr(self, k, str(v) if type(v) is unicode else v)
+                setattr(self, k, v.strip() if type(v) is unicode else v)
 
     def proc_user(self):
         if User.objects.filter(id=self.user_id).exists():
