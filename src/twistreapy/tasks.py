@@ -1,6 +1,6 @@
 # Create your tasks here
 from __future__ import absolute_import
-from .models import Status, User
+from .models import Status, User, UserMention, Hashtag, URL
 from dateutil.parser import parse
 from celery.task import Task
 from django.core.cache import cache
@@ -86,14 +86,16 @@ def import_service(query, limit, offset=0):
     h = ImportHistory.objects.filter(sql=query)
 
     if h.count() == 0:
-        if (limit - offset) > 1000:
-            limit = 1000
+        if (limit - offset) > 100:
+            limit = 100
 
     else:
         last = h.order_by('-created_at')[0]
-        if (limit - last.offset + 1000) < limit:
-            limit = 1000
-            offset = last.offset + 1000
+        if offset > last.offset + 100:
+            limit = 100
+        elif (limit - last.offset + 100) < limit:
+            limit = 100
+            offset = last.offset + 100
         else:
             return False
 
@@ -150,7 +152,52 @@ def import_tweet(obj):
     if Status.objects.filter(id=obj['id_tweet']).count():
         return False
 
-    Status().import_dict(obj)
+    tweet = Status().import_dict(obj)
+
+    from django.db import connections
+    from .cursor import to_dict
+
+    # Importar User Mentions
+    with connections['rest'].cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT * FROM user_mentions
+            WHERE id_tweet = %s
+            """,
+            [tweet.id]
+        )
+        user_mentions = to_dict(cursor)
+
+    for um in user_mentions:
+        UserMention().import_dict(um, tweet)
+
+    # Importar Hashtags
+    with connections['rest'].cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT * FROM hashtags
+            WHERE id_tweet = %s
+            """,
+            [tweet.id]
+        )
+        hashtags = to_dict(cursor)
+
+    for ht in hashtags:
+        Hashtag().import_dict(ht, tweet)
+
+    # Importar URLS
+    with connections['rest'].cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT * FROM urls
+            WHERE id_tweet = %s
+            """,
+            [tweet.id]
+        )
+        urls = to_dict(cursor)
+
+    for ur in urls:
+        URL().import_dict(ht, tweet)
 
     return True
 

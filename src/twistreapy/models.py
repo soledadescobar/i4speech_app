@@ -15,15 +15,14 @@ class UserManager(models.Manager):
             user = self.objects.filter(id=uid).get()
         elif not exists:
             user = User()
+
             from corecontrol.api import get_active_api
-            from datetime import datetime
+            from dateutil.parser import parse
+
             api = get_active_api(endpoint='user')
-            for k, v in list(api.GetUser(user_id=uid).AsDict().items()):
-                if k == 'created_at':
-                    user.created_at = datetime.strptime(v, '%a %b %d %H:%M:%S +0000 %Y')
-                elif hasattr(user, k):
-                    user.u_k = v
-            user.save()
+
+            user.parse_dict(api.GetUser(user_id=uid).AsDict())
+
         return user
 
 
@@ -115,8 +114,8 @@ class Status(models.Model):
     created_at = models.DateTimeField()
     deleted = models.BooleanField(blank=True, default=False)
     entities = JSONField(null=True)
-    favorite_count = models.BigIntegerField(default=0)
-    filter_level = models.CharField(max_length=50, default='none')
+    favorite_count = models.BigIntegerField(null=True, default=0)
+    filter_level = models.CharField(max_length=50, null=True, default=None)
     hashtags = JSONField(null=True)
     id = models.BigIntegerField(primary_key=True)
     id_str = models.CharField(max_length=64)
@@ -131,7 +130,7 @@ class Status(models.Model):
     quoted_status_id = models.BigIntegerField(blank=True, null=True, default=None)
     # = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, default=None)
     scopes = JSONField(null=True, blank=True, default=None)
-    retweet_count = models.BigIntegerField(default=0)
+    retweet_count = models.BigIntegerField(null=True, default=0)
     source = models.TextField(null=True, blank=True, default=None)
     text = models.TextField()
     truncated = models.NullBooleanField(null=True, blank=True, default=False)
@@ -156,7 +155,7 @@ class Status(models.Model):
 
         for k, v in list(obj.items()):
             if k == 'created_at':
-                setattr(self, 'created_at', parse(v))
+                self.created_at = parse(v)
             elif k == 'user':
                 setattr(self, 'user_json', v)
                 setattr(self, 'user_id', v.get('id'))
@@ -171,14 +170,18 @@ class Status(models.Model):
         from dateutil.parser import parse
 
         for k, v in list(obj.items()):
-            if k == 'id_tweet':  # En las importaciones el ID puede venir asi
+            if k == 'id_tweet':
                 setattr(self, 'id', v)
-            elif k == 'id_user':  # En las importaciones el user puede venir asi
+            elif k == 'id_user':
                 setattr(self, 'user_id', v)
             elif k == 'created_at':
-                setattr(self, 'created_at', parse(v))
+                self.created_at = parse(v)
             elif hasattr(self, k):
                 setattr(self, k, v.strip() if type(v) is unicode else v)
+
+        self.save()
+
+        return self
 
     def proc_user(self):
         if User.objects.filter(id=self.user_id).exists():
@@ -262,6 +265,19 @@ class Hashtag(models.Model):
     class Meta:
         app_label = 'twistreapy'
 
+    def import_dict(self, obj, status):
+        for k, v in list(obj.items()):
+            if k == 'indices':
+                setattr(self, 'indices', v)
+            elif k == 'text':
+                setattr(self, 'text', v)
+
+        setattr(self, 'status', status)
+
+        self.save()
+
+        return self
+
 
 # Media
 class MediaEntity(models.Model):
@@ -295,6 +311,23 @@ class URL(models.Model):
     class Meta:
         app_label = 'twistreapy'
 
+    def import_dict(self, obj, status):
+        for k, v in list(obj.items()):
+            if k == 'display_url':
+                setattr(self, 'display_url', v)
+            elif k == 'expanded_url':
+                setattr(self, 'expanded_url', v)
+            elif k == 'indices':
+                setattr(self, 'indices', v)
+            elif k == 'url':
+                setattr(self, 'url', v)
+
+        setattr(self, 'status', status)
+
+        self.save()
+
+        return self
+
 
 # User Mentions
 class UserMention(models.Model):
@@ -307,15 +340,28 @@ class UserMention(models.Model):
     class Meta:
         app_label = 'twistreapy'
 
+    def import_dict(self, obj, status):
+        for k, v in list(obj.items()):
+            if k == 'id_user_mentions':
+                setattr(self, 'user_id', v)
+            elif k == 'indices':
+                setattr(self, 'indices', v)
+            elif k == 'name':
+                setattr(self, 'name', v)
+            elif k == 'screen_name':
+                setattr(self, 'screen_name', v)
+
+        setattr(self, 'status', status)
+
+        self.save()
+
+        return self
+
 
 class ImportHistory(models.Model):
     sql = models.CharField(max_length=250)
     limit = models.IntegerField()
     offset = models.IntegerField()
-    inserts_ids = JSONField(
-        default='[]'
-    )
-    errors_ids = JSONField(
-        default='[]'
-    )
+    inserts_ids = JSONField(default='[]')
+    errors_ids = JSONField(default='[]')
     created_at = models.DateTimeField(auto_now_add=True)
