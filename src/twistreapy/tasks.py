@@ -144,34 +144,39 @@ def insert_user(obj):
 
 # Metodo exclusivo para realizar importacion de tweets desde los modelos de base anteriores
 def import_tweet(obj):
-    instance, created = Status.objects.get_or_create(id=obj['id_tweet'])
-
-    if not created:
+    if Status.objects.filter(id=obj['id_tweet']).count():
         return False
 
-    for k, v in list(obj.items()):
-
-        if k == 'id':
-            pass
-
-        elif k == 'id_tweet':
-            instance.id = v
-
-        elif k == 'id_user':
-            user = User.objects.get_or_retrieve(uid=v)
-
-            instance.user = user
-
-        elif k == 'created_at':
-            instance.created_at = parse(v)
-
-        elif hasattr(instance, k):
-            instance.k = v.strip() if type(v) is unicode else v
-    instance.save()
-
-    import_entities(instance)
+    Status().parse_dict(obj)
 
     return True
+
+    # instance, created = Status.objects.get_or_create(id=obj['id_tweet'])
+    #
+    # if not created:
+    #     return False
+    #
+    # for k, v in list(obj.items()):
+    #
+    #     if k == 'id':
+    #         pass
+    #
+    #     elif k == 'id_tweet':
+    #         instance.id = v
+    #
+    #     elif k == 'id_user':
+    #         user = User.objects.get_or_retrieve(uid=v)
+    #
+    #         instance.user = user
+    #
+    #     elif k == 'created_at':
+    #         instance.created_at = parse(v)
+    #
+    #     elif hasattr(instance, k):
+    #         instance.k = v.strip() if type(v) is unicode else v
+    # instance.save()
+    #
+    # import_entities(instance)
 
 
 def import_entities(status):
