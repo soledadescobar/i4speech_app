@@ -293,3 +293,11 @@ class UserMention(models.Model):
 
     class Meta:
         app_label = 'twistreapy'
+
+
+class ImportHistory(models.Model):
+    query = models.CharField(max_length=250)
+    limit = models.IntegerField()
+    offset = models.IntegerField()
+    results_count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)

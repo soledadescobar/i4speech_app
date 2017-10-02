@@ -7,6 +7,7 @@ from django.core.cache import cache
 
 LOCK_EXPIRE = 60 * 5  # Lock expire 5 minutes
 
+
 class PushService(Task):
     name = 'push.service'
 
@@ -34,6 +35,34 @@ class PushService(Task):
         return
 
 
+class ImportService(Task):
+    name = 'import.service'
+
+
+def run(self, **kwargs):
+    logger = self.get_logger(**kwargs)
+
+    lock_id = "%s-lock" % self.name
+
+    acquire_lock = lambda: cache.add(lock_id, "true", LOCK_EXPIRE)
+
+    release_lock = lambda: cache.delete(lock_id)
+
+    logger.debug("Starting Push Service")
+
+    if acquire_lock():
+        try:
+            import_service(**kwargs)
+        finally:
+            release_lock()
+        return
+
+    logger.debug(
+        "Import Service is Already Running"
+    )
+    return
+
+
 def push_service():
     import redis
     from django.conf import settings
@@ -47,6 +76,44 @@ def push_service():
 
     while True:
         insert_status(json.loads(queue.blpop(settings.REDIS_PUSH)[1]))
+
+
+def import_service(query, limit, offset=0):
+    from .models import ImportHistory
+
+    h = ImportHistory.objects.filter(query=query)
+
+    if h.count() == 0:
+        if (limit - offset) > 1000:
+            limit = 1000
+
+    else:
+        last = h.order_by('-created_at')[0]
+        if (limit - last.offset + 1000) < limit:
+            limit = 1000
+            offset = last.offset + 1000
+
+    o = ImportHistory(query=query, limit=limit, offset=offset)
+    o.save()
+
+    from django.db import connections
+    from .cursor import to_dict
+
+    with connections['rest'].cursor() as cursor:
+        cursor.execute(query, {'limit': limit, 'offset': offset})
+        rows = to_dict(cursor)
+
+    count = 0
+
+    for row in rows:
+        try:
+            if import_tweet(row):
+                count += 1
+        except:
+            pass
+
+    o.results_count = count
+    o.save()
 
 
 def insert_status(obj):
@@ -105,8 +172,8 @@ def import_tweet(obj):
 
 def import_entities(status):
     from django.db import connections
-    from rest.cursor import to_dict
-    from .models import Hashtag, UserMention, Media, URL
+    from .cursor import to_dict
+    from .models import Hashtag, UserMention, URL
 
     # Buscar hashtags
     with connections['rest'].cursor() as cursor:
