@@ -155,11 +155,7 @@ class Status(models.Model):
         from dateutil.parser import parse
 
         for k, v in list(obj.items()):
-            if k == 'id_tweet':  # En las importaciones el ID puede venir asi
-                setattr(self, 'id', v)
-            elif k == 'id_user':  # En las importaciones el user puede venir asi
-                setattr(self, 'user_id', v)
-            elif k == 'created_at':
+            if k == 'created_at':
                 setattr(self, 'created_at', parse(v))
             elif k == 'user':
                 setattr(self, 'user_json', v)
@@ -170,6 +166,19 @@ class Status(models.Model):
         self.save()
 
         return self
+
+    def import_dict(self, obj, *args, **kwargs):
+        from dateutil.parser import parse
+
+        for k, v in list(obj.items()):
+            if k == 'id_tweet':  # En las importaciones el ID puede venir asi
+                setattr(self, 'id', v)
+            elif k == 'id_user':  # En las importaciones el user puede venir asi
+                setattr(self, 'user_id', v)
+            elif k == 'created_at':
+                setattr(self, 'created_at', parse(v))
+            elif hasattr(self, k):
+                setattr(self, k, str(v) if type(v) is unicode else v)
 
     def proc_user(self):
         if User.objects.filter(id=self.user_id).exists():
