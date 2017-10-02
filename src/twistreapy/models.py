@@ -155,8 +155,10 @@ class Status(models.Model):
         from dateutil.parser import parse
 
         for k, v in list(obj.items()):
+            if k == 'id_tweet':  # En las importaciones el ID puede venir asi
+                setattr(self, 'id', v)
             if k == 'created_at':
-                self.created_at = parse(v)
+                setattr(self, 'created_at', parse(v))
             elif k == 'user':
                 setattr(self, 'user_json', v)
                 setattr(self, 'user_id', v.get('id'))
