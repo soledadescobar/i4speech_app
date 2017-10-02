@@ -38,29 +38,28 @@ class PushService(Task):
 class ImportService(Task):
     name = 'import.service'
 
+    def run(self, **kwargs):
+        logger = self.get_logger(**kwargs)
 
-def run(self, **kwargs):
-    logger = self.get_logger(**kwargs)
+        lock_id = "%s-lock" % self.name
 
-    lock_id = "%s-lock" % self.name
+        acquire_lock = lambda: cache.add(lock_id, "true", LOCK_EXPIRE)
 
-    acquire_lock = lambda: cache.add(lock_id, "true", LOCK_EXPIRE)
+        release_lock = lambda: cache.delete(lock_id)
 
-    release_lock = lambda: cache.delete(lock_id)
+        logger.debug("Starting Push Service")
 
-    logger.debug("Starting Push Service")
+        if acquire_lock():
+            try:
+                import_service(**kwargs)
+            finally:
+                release_lock()
+            return
 
-    if acquire_lock():
-        try:
-            import_service(**kwargs)
-        finally:
-            release_lock()
+        logger.debug(
+            "Import Service is Already Running"
+        )
         return
-
-    logger.debug(
-        "Import Service is Already Running"
-    )
-    return
 
 
 def push_service():
