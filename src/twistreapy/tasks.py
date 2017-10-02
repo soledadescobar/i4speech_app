@@ -111,6 +111,7 @@ def import_service(query, limit, offset=0):
     errors = []
 
     for row in rows:
+        row.pop('id')
         try:
             if import_tweet(row):
                 inserts.append(row.get('id_tweet'))
