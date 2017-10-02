@@ -80,7 +80,7 @@ def push_service():
 def import_service(query, limit, offset=0):
     from .models import ImportHistory
 
-    h = ImportHistory.objects.filter(query=query)
+    h = ImportHistory.objects.filter(sql=query)
 
     if h.count() == 0:
         if (limit - offset) > 1000:
@@ -94,7 +94,7 @@ def import_service(query, limit, offset=0):
         else:
             return False
 
-    o = ImportHistory(query=query, limit=limit, offset=offset)
+    o = ImportHistory(sql=query, limit=limit, offset=offset)
     o.save()
 
     from django.db import connections

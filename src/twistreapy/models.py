@@ -296,7 +296,7 @@ class UserMention(models.Model):
 
 
 class ImportHistory(models.Model):
-    query = models.CharField(max_length=250)
+    sql = models.CharField(max_length=250)
     limit = models.IntegerField()
     offset = models.IntegerField()
     results_count = models.IntegerField(default=0)
