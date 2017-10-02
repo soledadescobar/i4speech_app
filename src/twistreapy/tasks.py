@@ -150,7 +150,7 @@ def import_tweet(obj):
     if Status.objects.filter(id=obj['id_tweet']).count():
         return False
 
-    Status().parse_dict(obj)
+    Status().import_dict(obj)
 
     return True
 
