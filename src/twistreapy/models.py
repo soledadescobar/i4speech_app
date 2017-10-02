@@ -127,7 +127,7 @@ class Status(models.Model):
     lang = models.CharField(max_length=20, null=True, blank=True, default=None)
     media = JSONField(null=True)
     place = JSONField(null=True, blank=True, default=None)
-    possibly_sensitive = models.BooleanField(blank=True, default=False)
+    possibly_sensitive = models.NullBooleanField(null=True, blank=True, default=None)
     quoted_status_id = models.BigIntegerField(blank=True, null=True, default=None)
     # = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, default=None)
     scopes = JSONField(null=True, blank=True, default=None)
@@ -301,5 +301,10 @@ class ImportHistory(models.Model):
     sql = models.CharField(max_length=250)
     limit = models.IntegerField()
     offset = models.IntegerField()
-    results_count = models.IntegerField(default=0)
+    inserts_ids = JSONField(
+        default='[]'
+    )
+    errors_ids = JSONField(
+        default='[]'
+    )
     created_at = models.DateTimeField(auto_now_add=True)

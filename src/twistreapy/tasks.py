@@ -107,16 +107,18 @@ def import_service(query, limit, offset=0):
         cursor.execute(query, {'limit': limit, 'offset': offset})
         rows = to_dict(cursor)
 
-    count = 0
+    inserts = []
+    errors = []
 
     for row in rows:
         try:
             if import_tweet(row):
-                count += 1
+                inserts.append(row.get('id_tweet'))
         except:
-            pass
+            errors.append(row.get('id_tweet'))
 
-    o.results_count = count
+    o.inserts_ids = inserts
+    o.errors_ids = errors
     o.save()
 
 
@@ -174,8 +176,7 @@ def import_tweet(obj):
     #
     #     elif hasattr(instance, k):
     #         instance.k = v.strip() if type(v) is unicode else v
-    # instance.save()
-    #
+    # instance.save(    #
     # import_entities(instance)
 
 
