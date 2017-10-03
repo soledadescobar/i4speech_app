@@ -76,7 +76,7 @@ def push_service():
         db=settings.REDIS_DB
     )
 
-    while True:
+    for x in range(0, queue.llen(settings.REDIS_PUSH)):
         insert_status(json.loads(queue.blpop(settings.REDIS_PUSH)[1]))
 
 
