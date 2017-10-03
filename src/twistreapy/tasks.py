@@ -80,7 +80,7 @@ def push_service():
         insert_status(json.loads(queue.blpop(settings.REDIS_PUSH)[1]))
 
 
-def import_service(query, limit, offset=0):
+def import_service(query, limit, offset=0, params=None):
     from .models import ImportHistory
 
     h = ImportHistory.objects.filter(sql=query)
@@ -105,8 +105,16 @@ def import_service(query, limit, offset=0):
     from django.db import connections
     from .cursor import to_dict
 
+    args = {
+        'limit': limit,
+        'offset': offset
+    }
+
+    if type(params) is dict:
+        args.update(**params)
+
     with connections['rest'].cursor() as cursor:
-        cursor.execute(query, {'limit': limit, 'offset': offset})
+        cursor.execute(query, args)
         rows = to_dict(cursor)
 
     inserts = []
