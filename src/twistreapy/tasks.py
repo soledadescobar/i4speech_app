@@ -93,7 +93,7 @@ def import_service(query, limit, offset=0):
         last = h.order_by('-created_at')[0]
         if offset > last.offset + 100:
             limit = 100
-        elif (limit - last.offset + 100) < limit:
+        elif (limit - (last.offset + 100)) < limit:
             limit = 100
             offset = last.offset + 100
         else:
