@@ -77,7 +77,7 @@ def push_service():
     )
 
     for x in range(0, queue.llen(settings.REDIS_PUSH)):
-        insert_status(json.loads(queue.blpop(settings.REDIS_PUSH)[1]))
+        insert_status(json.loads(queue.lpop(settings.REDIS_PUSH)[1]))
 
 
 def import_service(query, limit, offset=0, params=None):
