@@ -250,3 +250,29 @@ def get_tsv_actividad(request, frente, split=False):
     )
 
     return response
+
+
+@http_basic_auth
+@login_required
+@csrf_exempt
+def bubblecharts(request):
+    from control.models import Candidato
+
+    values = ['name', 'screen_name', 'user_id', 'frente__name', 'bloque__name', 'frente__color']
+
+    if request.method == 'POST':
+        rows = Candidato.objects.filter(**json.loads(request.body)).values(*values)
+    else:
+        rows = Candidato.objects.all().values(*values)
+
+    from .webservices import bubblecharts_generator as generator
+
+    response = StreamingHttpResponse(
+        generator(
+            rows
+        ),
+        content_type="text/csv"
+    )
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+
+    return response

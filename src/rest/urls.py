@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^get/tsv/query/(?P<query>[a-zA-Z0-9-_]*)/$', get_tsv),
     url(r'^get/tsv/actividad/(?P<frente>[a-zA-Z0-9-_ ]*)/split/$', get_tsv_actividad, {'split': True}),
     url(r'^get/tsv/actividad/(?P<frente>[a-zA-Z0-9-_ ]*)/$', get_tsv_actividad),
+    url(r'^get/bubbletest/$', bubblecharts)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

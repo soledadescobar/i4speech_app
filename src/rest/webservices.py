@@ -171,3 +171,27 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
             else:
                 yield '%s\t' % row[d.name]
         yield '\n'
+
+
+def bubblecharts_generator(rows, filters=None):
+    from twistreapy.models import UserMention
+
+    sintax = '{frente}.{bloque}.{user_id},{menciones},{screen_name},{name},{frente__color}'
+
+    args = {}
+
+    if type(filters) is dict:
+        args.update(*filters)
+
+    def count(uid):
+        UserMention.objects.filter(
+            user_id=uid,
+            *args
+        ).count()
+
+    yield 'id,value,screenName,nombreCandidato,colorFrente\n'
+
+    for c in rows:
+        row = c.update({'menciones': count(c.user_id)})
+        yield sintax.format(**row)
+        yield '\n'
