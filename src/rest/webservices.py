@@ -184,14 +184,14 @@ def bubblecharts_generator(rows, filters=None):
         args.update(*filters)
 
     def count(uid):
-        UserMention.objects.filter(
+        return UserMention.objects.filter(
             user_id=uid,
             *args
         ).count()
 
     yield 'id,value,screenName,nombreCandidato,colorFrente\n'
 
-    for c in rows:
-        row = c.update({'menciones': count(c.get('user_id'))})
+    for row in rows:
+        row.update({'menciones': count(row.get('user_id'))})
         yield sintax.format(**row)
         yield '\n'
