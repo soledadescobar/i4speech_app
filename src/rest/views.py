@@ -226,7 +226,8 @@ def get_tsv_actividad(request, frente, split=False):
 
     ids = tuple(
         c.user_id for c in Candidato.objects.filter(
-            frente=Frente.objects.filter(name=frente).get()
+            frente=Frente.objects.filter(name=frente).get(),
+            rest_visible=True
         ).all()
     )
 
