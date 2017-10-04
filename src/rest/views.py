@@ -273,6 +273,6 @@ def bubblecharts(request):
         ),
         content_type="text/csv"
     )
-    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % query
+    response['Content-Disposition'] = 'attachment; filename="bubblecharts.csv"'
 
     return response
