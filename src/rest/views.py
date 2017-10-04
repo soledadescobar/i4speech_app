@@ -158,7 +158,7 @@ def get_json(request, query=None, model=None, filtered=False):
             ).values(*mod.ws_values())
         else:
             rows = mod.objects.filter(
-                filters
+                **filters
             ).values(*mod.ws_values())
 
     elif query:
