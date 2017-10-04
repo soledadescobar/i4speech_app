@@ -104,9 +104,9 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
         mod = getattr(importlib.import_module('control.models'), model)
 
         if request.method == 'POST':
-            raw_rows = mod.objects.filter(**json.loads(request.body)).values(*instance.ws_fields())
+            raw_rows = mod.objects.filter(rest_visible=True, **json.loads(request.body)).values(*instance.ws_fields())
         else:
-            raw_rows = mod.objects.all().values(*instance.ws_fields())
+            raw_rows = mod.objects.filter(rest_visible=True).values(*instance.ws_fields())
 
         from .webservices import csv_join_flare_generator as generator
 
@@ -140,15 +140,15 @@ def get_json(request, query=None, model=None, filtered=False):
 
         for field, method in list(fields.items()):
             if field in body:
-                rows = getattr(mod.objects, method)(body.get(field)).values()
+                rows = getattr(mod.objects, method)(body.get(field), rest_visible=True).values()
 
     elif model:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
         if request.method == 'POST':
-            rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values())
+            rows = mod.objects.filter(rest_visible=True, **json.loads(request.body)).values(*mod.ws_values())
         else:
-            rows = mod.objects.all().values(*mod.ws_values())
+            rows = mod.objects.filter(rest_visible=True).values(*mod.ws_values())
 
     elif query:
         rows = None
@@ -175,9 +175,9 @@ def get_json_cascade(request, model, join, webservice):
     mod = getattr(importlib.import_module('control.models'), model)
 
     if request.method == 'POST':
-        raw_rows = mod.objects.filter(**json.loads(request.body)).values('user_id')
+        raw_rows = mod.objects.filter(rest_visible=True, **json.loads(request.body)).values('user_id')
     else:
-        raw_rows = mod.objects.all().values('user_id')
+        raw_rows = mod.objects.filter(rest_visible=True).values('user_id')
 
     from .webservices import json_join_cascade_generator as generator
 
@@ -226,7 +226,8 @@ def get_tsv_actividad(request, frente, split=False):
 
     ids = tuple(
         c.user_id for c in Candidato.objects.filter(
-            frente=Frente.objects.filter(name=frente).get()
+            frente=Frente.objects.filter(name=frente).get(),
+            rest_visible=True
         ).all()
     )
 
@@ -264,9 +265,9 @@ def bubblecharts(request):
     values = ['name', 'screen_name', 'user_id', 'frente__name', 'bloque__name', 'frente__color']
 
     if request.method == 'POST':
-        rows = Candidato.objects.filter(**json.loads(request.body)).values(*values)
+        rows = Candidato.objects.filter(rest_visible=True, **json.loads(request.body)).values(*values)
     else:
-        rows = Candidato.objects.all().values(*values)
+        rows = Candidato.objects.filter(rest_visible=True).values(*values)
 
     from .webservices import bubblecharts_generator as generator
 
