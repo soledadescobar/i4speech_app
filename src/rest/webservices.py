@@ -149,7 +149,7 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
     if sql:
         from django.db import connections
 
-        with connections['rest'].cursor() as cursor:
+        with connections['twistreapy'].cursor() as cursor:
             if params:
                 cursor.execute(sql, params)
             else:
@@ -174,7 +174,9 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
 
 
 def bubblecharts_generator(rows, filters=None):
-    from twistreapy.models import UserMention
+    import importlib
+
+    UserMention = getattr(importlib.import_module('twistreapy.models'), 'UserMention')
 
     sintax = '{frente__name}.{bloque__name}.{user_id},{menciones},{screen_name},{name},{frente__color}'
 
