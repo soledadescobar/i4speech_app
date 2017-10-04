@@ -93,6 +93,9 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
             return response
 
     elif model and join:
+        if model == 'Candidato' and join == 'menciones' and webservice == 'bubblecharts':
+            return bubblecharts(request)
+
         from .models import ModelJoin
 
         instance = ModelJoin.objects.filter(model=model, name=join, webservice=webservice).all().get()
