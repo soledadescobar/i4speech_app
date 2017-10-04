@@ -192,6 +192,6 @@ def bubblecharts_generator(rows, filters=None):
     yield 'id,value,screenName,nombreCandidato,colorFrente\n'
 
     for c in rows:
-        row = c.update({'menciones': count(c.user_id)})
+        row = c.update({'menciones': count(c.get('user_id'))})
         yield sintax.format(**row)
         yield '\n'
