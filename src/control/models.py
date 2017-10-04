@@ -5,7 +5,7 @@ from django.db import models
 
 
 class ProvinciaManager(models.Manager):
-    def get_by_bloques(self, bloques):
+    def get_by_bloques(self, bloques, **kwargs):
         objs = Bloque.objects.filter(id__in=bloques)
         ids = [o.provincia_id for o in objs]
         return super(ProvinciaManager, self).filter(id__in=ids)
