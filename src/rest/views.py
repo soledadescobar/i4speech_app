@@ -259,14 +259,21 @@ def get_tsv_actividad(request, frente, split=False):
 @login_required
 @csrf_exempt
 def bubblecharts(request):
-    from control.models import Candidato
+    import importlib
+
+    Candidato = getattr(importlib.import_module('control.models'), 'Candidato')
 
     values = ['name', 'screen_name', 'user_id', 'frente__name', 'bloque__name', 'frente__color']
 
     if request.method == 'POST':
-        rows = Candidato.objects.filter(**json.loads(request.body)).values(*values)
+        rows = Candidato.objects.filter(
+            rest_visible=True,
+            **json.loads(request.body)
+        ).values(*values)
     else:
-        rows = Candidato.objects.all().values(*values)
+        rows = Candidato.objects.filter(
+            rest_visible=True
+        ).values(*values)
 
     from .webservices import bubblecharts_generator as generator
 
