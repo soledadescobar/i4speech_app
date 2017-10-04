@@ -65,7 +65,7 @@ class User(models.Model):
     is_translator = models.BooleanField(blank=True, default=False)
     lang = models.CharField(max_length=10, default='none')
     listed_count = models.BigIntegerField(null=True, default=0)
-    location = models.CharField(max_length=100, null=True, blank=True, default=None)
+    location = models.CharField(max_length=250, null=True, blank=True, default=None)
     name = models.CharField(max_length=100)
     profile_background_color = models.CharField(max_length=8, null=True, blank=True, default=None)
     profile_background_image_url = models.CharField(max_length=250, null=True, blank=True, default=None)
@@ -82,11 +82,11 @@ class User(models.Model):
     protected = models.BooleanField(blank=True, default=False)
     screen_name = models.CharField(max_length=25)
     statuses_count = models.IntegerField(blank=True, default=0)
-    time_zone = models.CharField(max_length=50, null=True, blank=True, default=None)
-    url = models.CharField(max_length=200, null=True, blank=True, default=None)
+    time_zone = models.CharField(max_length=250, null=True, blank=True, default=None)
+    url = models.CharField(max_length=250, null=True, blank=True, default=None)
     utc_offset = models.IntegerField(null=True, blank=True, default=None)
     verified = models.BooleanField(blank=True, default=False)
-    withheld_in_countries = models.CharField(max_length=50, null=True, blank=True, default=None)
+    withheld_in_countries = models.CharField(max_length=250, null=True, blank=True, default=None)
     withheld_scope = models.CharField(max_length=20, null=True, blank=True, default=None)
 
     def parse_dict(self, obj, *args, **kwargs):
