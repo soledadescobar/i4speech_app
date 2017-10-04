@@ -140,15 +140,20 @@ def get_json(request, query=None, model=None, filtered=False):
 
         for field, method in list(fields.items()):
             if field in body:
-                rows = getattr(mod.objects, method)(body.get(field)).values()
+                rows = getattr(mod.objects, method)(body.get(field), rest_visible=True).values()
 
     elif model:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
         if request.method == 'POST':
-            rows = mod.objects.filter(**json.loads(request.body)).values(*mod.ws_values())
+            rows = mod.objects.filter(
+                rest_visible=True,
+                **json.loads(request.body)
+            ).values(*mod.ws_values())
         else:
-            rows = mod.objects.all().values(*mod.ws_values())
+            rows = mod.objects.filter(
+                rest_visible=True
+            ).values(*mod.ws_values())
 
     elif query:
         rows = None
@@ -175,9 +180,14 @@ def get_json_cascade(request, model, join, webservice):
     mod = getattr(importlib.import_module('control.models'), model)
 
     if request.method == 'POST':
-        raw_rows = mod.objects.filter(**json.loads(request.body)).values('user_id')
+        raw_rows = mod.objects.filter(
+            rest_visible=True,
+            **json.loads(request.body)
+        ).values('user_id')
     else:
-        raw_rows = mod.objects.all().values('user_id')
+        raw_rows = mod.objects.filter(
+            rest_visible=True
+        ).values('user_id')
 
     from .webservices import json_join_cascade_generator as generator
 
