@@ -145,12 +145,20 @@ def get_json(request, query=None, model=None, filtered=False):
     elif model:
         import importlib
         mod = getattr(importlib.import_module('control.models'), model)
+
+        filters = {}
+
+        if hasattr(mod, 'rest_visible'):
+            filters.update({'rest_visible': True})
+
         if request.method == 'POST':
+            filters.update(**json.loads(request.body))
             rows = mod.objects.filter(
-                **json.loads(request.body)
+                **filters
             ).values(*mod.ws_values())
         else:
-            rows = mod.objects.all(
+            rows = mod.objects.filter(
+                filters
             ).values(*mod.ws_values())
 
     elif query:
