@@ -176,7 +176,7 @@ def tsv_generator(sql=None, params=None, rows=None, description=None):
 def bubblecharts_generator(rows, filters=None):
     from twistreapy.models import UserMention
 
-    sintax = '{frente}.{bloque}.{user_id},{menciones},{screen_name},{name},{frente__color}'
+    sintax = '{frente__name}.{bloque__name}.{user_id},{menciones},{screen_name},{name},{frente__color}'
 
     args = {}
 
