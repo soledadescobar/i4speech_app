@@ -47,6 +47,12 @@ class Distrito(models.Model):
 class Frente(models.Model):
     name = models.CharField("Frente", max_length=120)
     color = models.CharField("Color Hexadecimal sin #", max_length=6)
+    rest_visible = models.BooleanField(
+        "REST",
+        blank=True,
+        default=False,
+        help_text="Activa si este objecto puede ser visualizado en un WebService via REST"
+    )
 
     def __str__(self):
         return self.name
@@ -68,6 +74,12 @@ class Bloque(models.Model):
         blank=True,
         null=True,
         default=None
+    )
+    rest_visible = models.BooleanField(
+        "REST",
+        blank=True,
+        default=False,
+        help_text="Activa si este objecto puede ser visualizado en un WebService via REST"
     )
 
     class Meta:
@@ -161,6 +173,12 @@ class Candidato(models.Model):
         blank=True,
         default=None
     )
+    rest_visible = models.BooleanField(
+        "REST",
+        blank=True,
+        default=False,
+        help_text="Activa si este objecto puede ser visualizado en un WebService via REST"
+    )
 
     def __str__(self):
         return self.name
@@ -188,6 +206,12 @@ class Lista(models.Model):
         null=True,
         blank=True,
         default=None
+    )
+    rest_visible = models.BooleanField(
+        "REST",
+        blank=True,
+        default=False,
+        help_text="Activa si este objecto puede ser visualizado en un WebService via REST"
     )
 
     def __str__(self):

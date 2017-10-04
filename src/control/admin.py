@@ -23,11 +23,13 @@ class PosicionAdmin(admin.ModelAdmin):
 
 @admin.register(Frente)
 class FrenteAdmin(admin.ModelAdmin):
-    list_display = ('name', 'display_color')
+    list_display = ('name', 'display_color', 'rest_visible')
 
     search_fields = ['frente__name']
 
     readonly_fields = ['display_color']
+
+    list_filter = ('rest_visible',)
 
     def display_color(self, obj):
         return '<span style="background: #{};">&nbsp;{}&nbsp;</span>'.format(
@@ -39,11 +41,25 @@ class FrenteAdmin(admin.ModelAdmin):
 
 @admin.register(Bloque)
 class BloqueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'frente')
+    list_select_related = ('frente', 'provincia')
 
-    list_filter = ('frente',)
+    related_search_fields = {
+        'frente': ('name',),
+        'provincia': ('name',),
+    }
+
+    list_display = ('name', 'frente', 'display_color', 'rest_visible')
+
+    list_filter = ('frente', 'rest_visible')
 
     search_fields = ['bloque__name', 'frente__name']
+
+    def display_color(self, obj):
+        return '<span style="background: #{};">&nbsp;{}&nbsp;</span>'.format(
+            obj.frente.color, obj.frente.color
+        )
+    display_color.short_description = "Color del Frente"
+    display_color.allow_tags = True
 
 
 @admin.register(Provincia)
@@ -75,23 +91,29 @@ class CandidatoAdmin(admin.ModelAdmin):
         'frente': ('name',),
         'provincia': ('name',),
         'distrito': ('name',),
-        'posicon': ('name',),
+        'posicion': ('name',),
     }
 
-    list_display = ('name', 'screen_name_url', 'bloque', 'frente', 'posicion')
+    list_display = ('name', 'screen_name_url', 'posicion', 'provincia', 'frente', 'bloque', 'rest_visible')
 
     search_fields = ['name', 'screen_name']
 
-    list_filter = ('frente', 'bloque', 'provincia', 'distrito', 'posicion')
+    list_filter = ('rest_visible', 'provincia', 'posicion', 'frente', 'bloque', 'distrito')
 
     readonly_fields = ['screen_name_url']
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'screen_name', 'screen_name_url')
+            'fields': ('name',)
         }),
-        ('Datos para Gráficos', {
+        ('Datos Politicos', {
             'fields': ('frente', 'bloque', 'posicion', 'provincia', 'distrito')
+        }),
+        ('Twitter', {
+            'fields': ('screen_name', 'screen_name_url')
+        }),
+        ('WebServices', {
+            'fields': ('rest_visible',)
         })
     )
 
