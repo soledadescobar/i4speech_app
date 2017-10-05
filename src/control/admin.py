@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from django.core.urlresolvers import reverse
 from django.contrib import admin
+from django.utils.text import force_text
 from .models import *
 
 # from django_extensions.admin import ForeignKeyAutocompleteAdmin
@@ -125,22 +126,46 @@ class CandidatoAdmin(admin.ModelAdmin):
     screen_name_url.allow_tags = True
 
 
+class ListaSeccionInline(admin.StackedInline):
+    model = ListaSeccion
+
+    readonly_fields = ['get_edit_link']
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:  # if object has already been saved and has a primary key, show link to it
+            url = reverse('admin:%s_%s_change' % (obj._meta.app_label, obj._meta.model_name), args=[force_text(obj.pk)])
+            return """<a href="{url}">{text}</a>""".format(
+                url=url,
+                text="Editar esta sección",
+            )
+        return "(Escoja Guardar y Seguir Editando para Cargar datos en esta sección)"
+    get_edit_link.short_description = "Link para Editar"
+    get_edit_link.allow_tags = True
+
+
+class ListaSeccionCandidatoInline(admin.StackedInline):
+    model = ListaSeccionCandidato
+
+
 @admin.register(Lista)
 class ListaAdmin(admin.ModelAdmin):
     list_display = (
+        'number',
         'name',
-        'candidato',
-        'frente',
-        'bloque',
         'provincia')
 
     search_fields = [
-        'lista__name',
-        'candidato__name',
-        'candidato__screen_name',
-        'frente__name',
-        'bloque__name',
-        'provincia__name']
+        'lista__name'
+        ]
 
-    list_filter = ('provincia', 'frente', 'bloque')
+    list_filter = ('provincia',)
 
+    inlines = [
+        ListaSeccionInline
+    ]
+
+
+@admin.register(ListaSeccion)
+class ListaSeccionAdmin(admin.ModelAdmin):
+    save_on_top = True
+    inlines = [ListaSeccionCandidatoInline]

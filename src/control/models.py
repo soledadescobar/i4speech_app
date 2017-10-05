@@ -195,18 +195,10 @@ class Candidato(models.Model):
 
 
 class Lista(models.Model):
-    name = models.CharField("Nombre", max_length=120)
-    frente = models.ForeignKey(Frente, on_delete=models.CASCADE)
-    bloque = models.ForeignKey(Bloque, on_delete=models.CASCADE)
+    name = models.CharField("Nombre", max_length=250)
+    number = models.IntegerField("Número")
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE)
-    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE)
-    posicion = models.ForeignKey(
-        Posicion,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        default=None
-    )
+
     rest_visible = models.BooleanField(
         "REST",
         blank=True,
@@ -214,11 +206,75 @@ class Lista(models.Model):
         help_text="Activa si este objecto puede ser visualizado en un WebService via REST"
     )
 
+    class Meta:
+        verbose_name = 'Lista'
+        verbose_name_plural = 'Listas'
+
     def __str__(self):
         return self.name
 
     def __unicode__(self):
         return self.name
+
+
+class ListaSeccion(models.Model):
+
+    PRESIDENTE = 'PN'
+    DIPUTADOS_NACIONALES = 'DN'
+    DIPUTADOS_PROVINCIALES = 'DP'
+    DIPUTADOS_LEGISLATURA = 'DL'
+    SENADORES_NACIONALES = 'SN'
+    LEGISLADORES = 'LG'
+    PARLAMENTARIOS = 'PM'
+    GOBERNADOR = 'GB'
+
+    TYPES = (
+        (PRESIDENTE, 'Presidente y Vice Presidente'),
+        (DIPUTADOS_NACIONALES, 'Diputados Nacionales'),
+        (DIPUTADOS_PROVINCIALES, 'Diputados Provinciales'),
+        (DIPUTADOS_LEGISLATURA, 'Diputados Legislatura'),
+        (SENADORES_NACIONALES, 'Senadores Nacionales'),
+        (LEGISLADORES, 'Legisladores'),
+        (PARLAMENTARIOS, 'Parlamentarios'),
+        (GOBERNADOR, 'Gobernador')
+    )
+
+    lista = models.ForeignKey(Lista, on_delete=models.CASCADE)
+
+    tipo = models.CharField(
+        max_length=2,
+        choices=TYPES
+    )
+
+    def __unicode__(self):
+        return "%s - %s" % (self.lista, self.tipo)
+
+    class Meta:
+        verbose_name = 'Seccion'
+        verbose_name_plural = 'Secciones'
+
+
+class ListaSeccionCandidato(models.Model):
+
+    TITULAR = 'TI'
+    SUPLENTE = 'SU'
+
+    TYPES = (
+        (TITULAR, 'Titular'),
+        (SUPLENTE, 'Suplente')
+    )
+
+    lista_seccion = models.ForeignKey(ListaSeccion, on_delete=models.CASCADE)
+    tipo = models.CharField(
+        max_length=2,
+        choices=TYPES
+    )
+    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE)
+    orden = models.IntegerField("Posición")
+
+    class Meta:
+        verbose_name = 'Candidato'
+        verbose_name_plural = 'Candidatos'
 
 
 class Keyword(models.Model):
