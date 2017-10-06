@@ -8,9 +8,8 @@ from .models import *
 class ManageCenterAdmin(admin.AdminSite):
     site_header = 'i4Media Suit'
 
-admin_site = ManageCenterAdmin(name='admin')
 
-admin.site.register(Instances)
+admin_site = ManageCenterAdmin(name='admin')
 
 
 def ConfigurationSyncListInLine(obj):
@@ -42,13 +41,6 @@ class ServerAdmin(admin.ModelAdmin):
     search_fields = ['server__name', 'server__ip']
 
     list_filter = ('server_type',)
-
-
-@admin.register(ServerType)
-class ServerTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-
-    search_fields = ['server_type__name']
 
 
 @admin.register(ApiKey)
