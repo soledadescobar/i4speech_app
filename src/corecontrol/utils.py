@@ -2,7 +2,7 @@
 import libtmux
 from time import gmtime, strftime
 import json
-from .models import KnownUsers, Instances, InstanceTypes
+from .models import KnownUsers
 import requests
 
 
@@ -107,11 +107,3 @@ def returnUsersNames(users):
         ret.append('@%s' % str(user['screen_name']))
     ret.sort()
     return ",".join(ret)
-
-
-def getInstances():
-    return list(Instances.objects.filter(it_id=1).values())
-
-
-def getInactives():
-    return list(Instances.objects.filter(it_id=2).values())
