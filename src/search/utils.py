@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-from corecontrol.utils import getInstances
 
 
 def deleteEmpty(deleteme):
@@ -73,7 +72,7 @@ def procFfs(params):
 
 
 def procRequest(url, dat, t=15):
-    instances = getInstances()
+    instances = None
     for i in instances:
         try:
             r = requests.post(
