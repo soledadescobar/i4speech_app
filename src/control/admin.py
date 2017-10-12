@@ -26,7 +26,7 @@ class PosicionAdmin(admin.ModelAdmin):
 class FrenteAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_color', 'rest_visible')
 
-    search_fields = ['frente__name']
+    search_fields = ['name']
 
     readonly_fields = ['display_color']
 
