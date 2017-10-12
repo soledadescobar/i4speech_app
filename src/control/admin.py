@@ -8,6 +8,20 @@ from .models import *
 # from django_extensions.admin import ForeignKeyAutocompleteAdmin
 
 
+def rest_make_visible(modeladmin, request, queryset):
+    queryset.update(rest_visible=True)
+
+
+rest_make_visible.short_description = "[REST] Hacer Visible(s)"
+
+
+def rest_make_invisible(modeladmin, request, queryset):
+    queryset.update(rest_visible=False)
+
+
+rest_make_invisible.short_description = "[REST] Hacer Invisible(s)"
+
+
 @admin.register(Keyword)
 class KeywordAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -32,6 +46,8 @@ class FrenteAdmin(admin.ModelAdmin):
 
     list_filter = ('rest_visible',)
 
+    actions = [rest_make_visible, rest_make_invisible]
+
     def display_color(self, obj):
         return '<span style="background: #{};">&nbsp;{}&nbsp;</span>'.format(
             obj.color, obj.color
@@ -54,6 +70,8 @@ class BloqueAdmin(admin.ModelAdmin):
     list_filter = ('frente', 'rest_visible')
 
     search_fields = ['bloque__name', 'frente__name']
+
+    actions = [rest_make_visible, rest_make_invisible]
 
     def display_color(self, obj):
         return '<span style="background: #{};">&nbsp;{}&nbsp;</span>'.format(
@@ -102,6 +120,8 @@ class CandidatoAdmin(admin.ModelAdmin):
     list_filter = ('rest_visible', 'provincia', 'posicion', 'frente', 'bloque', 'distrito')
 
     readonly_fields = ['screen_name_url']
+
+    actions = [rest_make_visible, rest_make_invisible]
 
     fieldsets = (
         (None, {
@@ -159,6 +179,8 @@ class ListaAdmin(admin.ModelAdmin):
         ]
 
     list_filter = ('provincia',)
+
+    actions = [rest_make_visible, rest_make_invisible]
 
     inlines = [
         ListaSeccionInline
