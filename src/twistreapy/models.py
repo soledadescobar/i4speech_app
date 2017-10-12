@@ -66,7 +66,7 @@ class User(models.Model):
     lang = models.CharField(max_length=10, default='none')
     listed_count = models.BigIntegerField(null=True, default=0)
     location = models.CharField(max_length=250, null=True, blank=True, default=None)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
     profile_background_color = models.CharField(max_length=8, null=True, blank=True, default=None)
     profile_background_image_url = models.CharField(max_length=250, null=True, blank=True, default=None)
     profile_background_image_url_https = models.CharField(max_length=250, null=True, blank=True, default=None)
