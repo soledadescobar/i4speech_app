@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^search/', include('search.urls')),
     url(r'^rest/', include('rest.urls')),
+    url(r'^rest/api-token-auth/', obtain_jwt_token),
     url(r'^admin/', admin.site.urls),
-    url(r'^auth', obtain_jwt_token),
     url(r'^', include('corecontrol.urls'))
 ]
