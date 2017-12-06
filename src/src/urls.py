@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from rest_framework_jwt.views import obtain_jwt_token
 
 
 urlpatterns = [
@@ -56,7 +55,6 @@ urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^search/', include('search.urls')),
     url(r'^rest/', include('rest.urls')),
-    url(r'^rest/api-token-auth/', obtain_jwt_token),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('corecontrol.urls'))
 ]

@@ -9,7 +9,7 @@ sys.path.append(os.path.join(PROJECT_ROOT, 'src'))
 
 SECRET_KEY = 'r4i^suffk0dushnc#h42%&ahxg1a8!y9j$f!pq@p)65o=myk@i'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -22,12 +22,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'raven.contrib.django.raven_compat',
+    'raven.contrib.django.raven_compat',
     'corsheaders',
-    # 'django_celery_results',
-    # 'django_celery_beat',
+    'django_celery_results',
+    'django_celery_beat',
     'django_extensions',
-    'rest_framework',
     'bootstrap3',
     'corecontrol',
     'dashboard',
@@ -72,40 +71,40 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'managecenter',
-        'USER': 'postgres',
-        'PASSWORD': 'gorila38',
-        'HOST': 'localhost',
+        'USER': 'pst',
+        'PASSWORD': 'bP9GZY3GXz4ePrPX',
+        'HOST': '10.128.0.3',
         'PORT': '5432',
     },
     'rest': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'i4media_phase2',
-        'USER': 'postgres',
-        'PASSWORD': 'gorila38',
-        'HOST': 'localhost',
+        'NAME': 'i4media_phase1',
+        'USER': 'pst',
+        'PASSWORD': 'bP9GZY3GXz4ePrPX',
+        'HOST': '10.128.0.3',
         'PORT': '5432',
     },
     'twistreapy': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'i4media_phase2',
-        'USER': 'postgres',
-        'PASSWORD': 'gorila38',
-        'HOST': 'localhost',
+        'USER': 'pst',
+        'PASSWORD': 'bP9GZY3GXz4ePrPX',
+        'HOST': '10.128.0.3',
         'PORT': '5432',
     }
 }
 
 DATABASE_ROUTERS = ['twistreapy.routers.TwistreapyDatabaseRouter', ]
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://10.128.0.3:6379/1",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://10.128.0.3:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -163,27 +162,16 @@ SUIT_CONFIG = {
     },
 }
 
-# REDIS_HOST = '10.128.0.3'
-# REDIS_PORT = 6379
-# REDIS_DB = 0
-# REDIS_PUSH = 'stream'
-#
-# CELERY_RESULT_BACKEND = 'django-cache'
-# CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
-# CELERY_TASK_SERIALIZER = 'pickle'
-# CELERY_RESULT_SERIALIZER = 'pickle'
-# CELERY_ACCEPT_CONTENT = ['pickle']
-# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+REDIS_HOST = '10.128.0.3'
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_PUSH = 'stream'
+
+CELERY_RESULT_BACKEND = 'django-cache'
+CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CORS_ORIGIN_ALLOW_ALL = True
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-}
