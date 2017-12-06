@@ -1,6 +1,5 @@
 import os
 import sys
-import datetime
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,23 +22,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'raven.contrib.django.raven_compat',
-    'corsheaders',
-    'django_celery_results',
-    'django_celery_beat',
-    'django_extensions',
-    'rest_framework',
     'bootstrap3',
     'corecontrol',
     'dashboard',
     'search',
     'control',
-    'rest',
-    'twistreapy'
+    'rest'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,28 +75,20 @@ DATABASES = {
         'PASSWORD': 'bP9GZY3GXz4ePrPX',
         'HOST': '10.128.0.3',
         'PORT': '5432',
-    },
-    'twistreapy': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'i4media_phase2',
-        'USER': 'pst',
-        'PASSWORD': 'bP9GZY3GXz4ePrPX',
-        'HOST': '10.128.0.3',
-        'PORT': '5432',
     }
 }
 
-DATABASE_ROUTERS = ['twistreapy.routers.TwistreapyDatabaseRouter', ]
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.128.0.3:6379/1",
+        "LOCATION": "redis://10.128.0.11:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -163,27 +146,5 @@ SUIT_CONFIG = {
     },
 }
 
-REDIS_HOST = '10.128.0.3'
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_PUSH = 'stream'
-
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
-CELERY_TASK_SERIALIZER = 'pickle'
-CELERY_RESULT_SERIALIZER = 'pickle'
-CELERY_ACCEPT_CONTENT = ['pickle']
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-}
+CELERY_RESULT_BACKEND = 'django-cache'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'

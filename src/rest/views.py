@@ -8,9 +8,7 @@ from functools import wraps
 import json
 from django.contrib.auth.decorators import login_required
 from .models import Query, ModelJoin
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from .cursor import to_dict
 # Create your views here.
 
 
@@ -35,8 +33,8 @@ def http_basic_auth(func):
     return _decorator
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 def get_server_configuration(request, name):
     config = Configuration.objects.filter(server__name=name).get()
 
@@ -59,8 +57,8 @@ def get_server_configuration(request, name):
     return HttpResponse(json.dumps(response), content_type='application/json')
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def get_csv(request, query=None, model=None, join=None, webservice=None):
     if query:
@@ -124,8 +122,8 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
         return response
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def get_json(request, query=None, model=None, filtered=False):
     import json
@@ -176,8 +174,8 @@ def get_json(request, query=None, model=None, filtered=False):
     return response
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def get_json_cascade(request, model, join, webservice):
     from .models import ModelJoin
@@ -211,8 +209,8 @@ def get_json_cascade(request, model, join, webservice):
     return response
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def get_tsv(request, query, split=False):
     if split:
@@ -233,8 +231,8 @@ def get_tsv(request, query, split=False):
         return response
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def get_tsv_actividad(request, frente, split=False):
     import importlib
@@ -274,8 +272,8 @@ def get_tsv_actividad(request, frente, split=False):
     return response
 
 
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+@http_basic_auth
+@login_required
 @csrf_exempt
 def bubblecharts(request):
     import importlib
