@@ -37,6 +37,7 @@ def http_basic_auth(func):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 def get_server_configuration(request, name):
     config = Configuration.objects.filter(server__name=name).get()
 
@@ -61,6 +62,7 @@ def get_server_configuration(request, name):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def get_csv(request, query=None, model=None, join=None, webservice=None):
     if query:
@@ -126,6 +128,7 @@ def get_csv(request, query=None, model=None, join=None, webservice=None):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def get_json(request, query=None, model=None, filtered=False):
     import json
@@ -178,6 +181,7 @@ def get_json(request, query=None, model=None, filtered=False):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def get_json_cascade(request, model, join, webservice):
     from .models import ModelJoin
@@ -213,6 +217,7 @@ def get_json_cascade(request, model, join, webservice):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def get_tsv(request, query, split=False):
     if split:
@@ -235,6 +240,7 @@ def get_tsv(request, query, split=False):
 
 @authentication_classes((SessionAuthentication, BasicAuthentication))
 @permission_classes((IsAuthenticated,))
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def get_tsv_actividad(request, frente, split=False):
     import importlib
