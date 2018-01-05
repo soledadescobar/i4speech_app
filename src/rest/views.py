@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from corecontrol.models import Configuration
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import HttpResponse, StreamingHttpResponse, Http404
 from django.template import loader, Context
 from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
@@ -11,6 +11,7 @@ from .models import Query, ModelJoin
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.views import APIView
 # Create your views here.
 
 
@@ -311,3 +312,62 @@ def bubblecharts(request):
     response['Content-Disposition'] = 'attachment; filename="bubblecharts.csv"'
 
     return response
+
+
+class MentionsMinMax(APIView):
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+
+    permission_classes = (IsAuthenticated, )
+
+    # Modelos Requeridos
+    Frente = ('control.models', 'Frente')
+    Candidato = ('control.models', 'Candidato')
+    UserMention = ('twistreapy.models', 'UserMention')
+
+    # Lista de modelos a importar
+    import_models = [
+        'Frente',
+        'Candidato',
+        'UserMention'
+    ]
+
+    def get_model(self):
+        import importlib
+
+        for mod in self.import_models:
+            setattr(
+                self, mod, getattr(
+                    importlib.import_module(
+                        getattr(self, mod)[0]
+                    ), getattr(self, mod)[1]
+                )
+            )
+
+    def get_object(self, name):
+        try:
+            return self.Candidato.objects.filter(
+                frente=self.Frente.objects.get(name=name)
+            )
+
+        except self.Frente.DoesNotExist:
+            raise Http404
+
+    def get(self, request, name, format=None):
+        from .webservices import mentions_min_max as generator
+        self.get_model()
+
+        ids = tuple(
+            c.user_id for c in self.get_object(name)
+        )
+
+        response = StreamingHttpResponse(
+            generator(
+                ids, self.UserMention
+            ),
+            content_type="application/json"
+        )
+
+        return response
+
+
