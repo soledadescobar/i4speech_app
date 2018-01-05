@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from corecontrol.models import Configuration
 from django.http import HttpResponse, StreamingHttpResponse, Http404
 from django.template import loader, Context
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
 import json
@@ -12,7 +13,12 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
-# Create your views here.
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 
 class Echo(object):
@@ -316,9 +322,9 @@ def bubblecharts(request):
 
 class ActivityMinMax(APIView):
 
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     # Modelos Requeridos
     Frente = ('control.models', 'Frente')
@@ -332,10 +338,16 @@ class ActivityMinMax(APIView):
         'Status'
     ]
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ActivityMinMax, self).dispatch(request, *args, **kwargs)
+
     def get_model(self):
         import importlib
 
         for mod in self.import_models:
+            if type(getattr(self, mod)) is not tuple:
+                continue
             setattr(
                 self, mod, getattr(
                     importlib.import_module(
@@ -345,9 +357,17 @@ class ActivityMinMax(APIView):
             )
 
     def get_object(self, name):
+        self.get_model()
+
+        kwargs = {}
+
+        if type(name) is str or type(name) is unicode:
+            kwargs['name'] = name
+        elif type(name) is list:
+            kwargs['name__in'] = tuple(n for n in name)
         try:
             return self.Candidato.objects.filter(
-                frente=self.Frente.objects.get(name=name)
+                frente__in=self.Frente.objects.filter(**kwargs)
             )
 
         except self.Frente.DoesNotExist:
@@ -355,7 +375,6 @@ class ActivityMinMax(APIView):
 
     def get(self, request, name, format=None):
         from .webservices import activity_min_max as generator
-        self.get_model()
 
         ids = tuple(
             c.user_id for c in self.get_object(name)
@@ -370,4 +389,11 @@ class ActivityMinMax(APIView):
 
         return response
 
+    def post(self, request, format=None):
+        post = json.loads(request.body)
+
+        if not post.get('frentes', False):
+            raise Http404
+
+        return self.get(request, post.get('frentes'))
 
