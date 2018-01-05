@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, division
+from datetime import timedelta
+from django.utils import timezone
 
 
 def csv_generator(rows, description=None, headers=False, params=None, base=''):
@@ -199,10 +201,15 @@ def bubblecharts_generator(rows, filters=None):
         yield '\n'
 
 
-def mentions_min_max(ids, model):
+def activity_min_max(ids, model):
+    some_day_last_week = timezone.now().date() - timedelta(days=7)
+    monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
+    monday_of_this_week = monday_of_last_week + timedelta(days=7)
 
     objs = model.objects.filter(
-        user_id__in=ids
+        user_id__in=ids,
+        created_at__gte=monday_of_last_week,
+        created_at__lt=monday_of_this_week
     )
 
     values = []

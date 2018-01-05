@@ -314,7 +314,7 @@ def bubblecharts(request):
     return response
 
 
-class MentionsMinMax(APIView):
+class ActivityMinMax(APIView):
 
     authentication_classes = (SessionAuthentication, BasicAuthentication)
 
@@ -323,13 +323,13 @@ class MentionsMinMax(APIView):
     # Modelos Requeridos
     Frente = ('control.models', 'Frente')
     Candidato = ('control.models', 'Candidato')
-    UserMention = ('twistreapy.models', 'UserMention')
+    Status = ('twistreapy.models', 'Status')
 
     # Lista de modelos a importar
     import_models = [
         'Frente',
         'Candidato',
-        'UserMention'
+        'Status'
     ]
 
     def get_model(self):
@@ -354,7 +354,7 @@ class MentionsMinMax(APIView):
             raise Http404
 
     def get(self, request, name, format=None):
-        from .webservices import mentions_min_max as generator
+        from .webservices import activity_min_max as generator
         self.get_model()
 
         ids = tuple(
@@ -363,7 +363,7 @@ class MentionsMinMax(APIView):
 
         response = StreamingHttpResponse(
             generator(
-                ids, self.UserMention
+                ids, self.Status
             ),
             content_type="application/json"
         )
