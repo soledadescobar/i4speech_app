@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 
 
 def csv_generator(rows, description=None, headers=False, params=None, base=''):
@@ -197,3 +197,23 @@ def bubblecharts_generator(rows, filters=None):
         row.update({'menciones': count(row.get('user_id'))})
         yield sintax.format(**row)
         yield '\n'
+
+
+def mentions_min_max(ids, model):
+
+    objs = model.objects.filter(
+        user_id__in=ids
+    )
+
+    values = []
+
+    for uid in ids:
+        values.append(objs.filter(user_id=uid).count())
+
+    yield '{\n'
+    yield '\t"max": %d,\n' % max(values)
+    yield '\t"min": %d\n' % min(values)
+    yield '}'
+
+
+
