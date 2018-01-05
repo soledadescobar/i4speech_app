@@ -210,6 +210,10 @@ def mentions_min_max(ids, model):
     for uid in ids:
         values.append(objs.filter(user_id=uid).count())
 
+    if not len(values):
+        yield '{}'
+        return
+
     yield '{\n'
     yield '\t"max": %d,\n' % max(values)
     yield '\t"min": %d\n' % min(values)
