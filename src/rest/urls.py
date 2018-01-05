@@ -2,7 +2,7 @@
 from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.views.decorators.csrf import csrf_exempt
 from .views import *
 
 urlpatterns = [
@@ -22,6 +22,10 @@ urlpatterns = [
     url(r'^get/bubbletest/$', bubblecharts),
     url(
         r'^get/activity/(?P<name>[a-zA-Z0-9-_ ]*)/$',
+        ActivityMinMax.as_view(),
+    ),
+    url(
+        r'^get/activity/$',
         ActivityMinMax.as_view(),
     ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
