@@ -208,8 +208,8 @@ def activity_min_max(ids, model):
 
     objs = model.objects.filter(
         user_id__in=ids,
-        created_at__gte=monday_of_last_week,
-        created_at__lt=monday_of_this_week
+        # created_at__gte=monday_of_last_week,
+        # created_at__lt=monday_of_this_week
     )
 
     values = []
