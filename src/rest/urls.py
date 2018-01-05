@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^get/tsv/actividad/(?P<frente>[a-zA-Z0-9-_ ]*)/$', get_tsv_actividad),
     url(r'^get/bubbletest/$', bubblecharts),
     url(
-        r'^get/mentions/(?P<name>[a-zA-Z0-9-_ ]*)/$',
-        MentionsMinMax.as_view(),
+        r'^get/activity/(?P<name>[a-zA-Z0-9-_ ]*)/$',
+        ActivityMinMax.as_view(),
     ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
