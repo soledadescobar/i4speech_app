@@ -322,7 +322,7 @@ def bubblecharts(request):
 
 class ActivityMinMax(APIView):
 
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    # authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     permission_classes = (IsAuthenticated,)
 
