@@ -104,11 +104,17 @@ def tweet_search_v2(obj):
 def store_search_v2(result, model, obj):
     created = []
     for r in result:
+        status = r.AsDict()
         created.append(
             Status().parse_dict(
-                r.AsDict()
+                status
             )
         )
+        model(
+            tweet=obj,
+            screen_name=status.get('user')['screen_name'],
+            result_id=status.get('id')
+        ).save()
 
     return created
 
