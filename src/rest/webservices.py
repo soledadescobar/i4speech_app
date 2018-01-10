@@ -222,7 +222,7 @@ def activity_min_max(ids, model):
         return
 
     yield '{\n'
-    yield '\t"max": %d,\n' % max(values)
+    yield '\t"max": %d,\n' % sum(values)
     yield '\t"min": %d\n' % min(values)
     yield '}'
 
