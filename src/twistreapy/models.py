@@ -308,6 +308,12 @@ class MediaEntity(models.Model):
     class Meta:
         app_label = 'twistreapy'
 
+    def save(self, **kwargs):
+        if not self.id_str:
+            setattr(self, 'id_str', str(self.id))
+
+        super(MediaEntity, self).save()
+
 
 # URLS
 class URL(models.Model):
