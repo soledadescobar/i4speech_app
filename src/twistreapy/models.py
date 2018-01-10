@@ -89,6 +89,12 @@ class User(models.Model):
     withheld_in_countries = models.CharField(max_length=250, null=True, blank=True, default=None)
     withheld_scope = models.CharField(max_length=20, null=True, blank=True, default=None)
 
+    def save(self, **kwargs):
+        if not self.id_str:
+            setattr(self, 'id_str', str(self.id))
+
+        super(User, self).save(**kwargs)
+
     def parse_dict(self, obj, *args, **kwargs):
         from dateutil.parser import parse
 
@@ -145,6 +151,9 @@ class Status(models.Model):
     def save(self, *args, **kwargs):
         if self.user_id:
             self.proc_user()
+
+        if not self.id_str:
+            setattr(self, 'id_str', str(self.id))
 
         super(Status, self).save(*args, **kwargs)
 
