@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .tasks import tweet_search
+from .tasks import tweet_search_v2 as tweet_search
 from .models import Tweet
 
 
