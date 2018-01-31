@@ -79,7 +79,7 @@ DATABASES = {
     },
     'rest': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'i4media_phase1',
+        'NAME': 'i4media_phase2',
         'USER': 'pst',
         'PASSWORD': 'bP9GZY3GXz4ePrPX',
         'HOST': '10.128.0.3',

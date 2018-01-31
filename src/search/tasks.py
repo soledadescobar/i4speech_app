@@ -87,7 +87,7 @@ def tweet_search_v2(obj):
         )
     except:
         time.sleep(5)
-        tweet_search(obj)
+        tweet_search_v2(obj)
         return None
     if not len(search):
         return False
@@ -98,7 +98,7 @@ def tweet_search_v2(obj):
         obj.since_id = ids[0].id
     obj.save()
     if obj.results_count() < obj.max_results:
-        tweet_search.delay(obj)
+        tweet_search_v2.delay(obj)
 
 
 def store_search_v2(result, model, obj):
