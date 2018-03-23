@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'search',
     'control',
     'rest',
-    'twistreapy'
+    'twistreapy',
+    'i4speech'
 ]
 
 MIDDLEWARE = [
