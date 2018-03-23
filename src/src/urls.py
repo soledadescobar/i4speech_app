@@ -57,7 +57,7 @@ urlpatterns = [
     url(r'^search/', include('search.urls')),
     url(r'^rest/', include('rest.urls')),
     url(r'^rest/api-token-auth/', obtain_jwt_token),
-    url(r'^legal/', include('i4speech.urls')),
+    url(r'^legal/', include('i4speech_app.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('corecontrol.urls'))
 ]
