@@ -24,10 +24,6 @@ class Autores(models.Model):
         null=True
     )
 
-    class Meta:
-        managed = False
-        db_table = 'autores'
-
     def __str__(self):
         return self.nombre
 
@@ -41,10 +37,6 @@ class Cr(models.Model):
         unique=True
     )
     resultado = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'cr'
 
     @staticmethod
     def prom_cr():
@@ -73,10 +65,6 @@ class Escalafh(models.Model):
         null=True
     )
 
-    class Meta:
-        managed = False
-        db_table = 'escalafh'
-
 
 class Escalain(models.Model):
     inf = models.IntegerField(blank=True, null=True)
@@ -84,11 +72,8 @@ class Escalain(models.Model):
     resultado = models.CharField(
         max_length=50,
         blank=True,
-        null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'escalain'
+        null=True
+    )
 
 
 class Escalagu(models.Model):
@@ -105,10 +90,6 @@ class Escalagu(models.Model):
         blank=True,
         null=True
     )
-
-    class Meta:
-        managed = False
-        db_table = 'escalagu'
 
 
 class Escalasp(models.Model):
@@ -136,10 +117,6 @@ class Escalasp(models.Model):
         null=True
     )
 
-    class Meta:
-        managed = False
-        db_table = 'escalasp'
-
 
 class Escalamu(models.Model):
     inf = models.IntegerField(
@@ -156,10 +133,6 @@ class Escalamu(models.Model):
         null=True
     )
 
-    class Meta:
-        managed = False
-        db_table = 'escalamu'
-
 
 class Fh(models.Model):
     idtexto = models.OneToOneField(
@@ -170,10 +143,6 @@ class Fh(models.Model):
         unique=True
     )
     resultado = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'fh'
 
 
 class Gu(models.Model):
@@ -186,10 +155,6 @@ class Gu(models.Model):
     )
     resultado = models.FloatField()
 
-    class Meta:
-        managed = False
-        db_table = 'gu'
-
 
 class Mu(models.Model):
     idtexto = models.OneToOneField(
@@ -200,10 +165,6 @@ class Mu(models.Model):
         unique=True
     )
     resultado = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'mu'
 
 
 class Sp(models.Model):
@@ -216,17 +177,9 @@ class Sp(models.Model):
     )
     resultado = models.FloatField()
 
-    class Meta:
-        managed = False
-        db_table = 'sp'
-
 
 class Ocasiones(models.Model):
     ocasion = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'ocasiones'
 
     def __str__(self):
         return self.ocasion
@@ -249,11 +202,6 @@ class Textos(models.Model):
         models.DO_NOTHING,
         db_column='idocasion'
     )
-
-
-    class Meta:
-        managed = False
-        db_table = 'textos'
 
     def __str__(self):
         return self.texto
