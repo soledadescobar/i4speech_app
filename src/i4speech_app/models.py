@@ -39,15 +39,9 @@ class Cr(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_cr():
-        prom = Cr.objects.values(
-            'idtexto__idautor__nombre'
-        ).annotate(
-            prom_cr=Avg('resultado')
-        ).order_by(
-            'idtexto__idautor__nombre'
-        )
-        return prom
+    def prom_cr(idautor):
+        prom = Cr.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_cr=Avg('resultado'))
+        return prom.get('prom_cr')
 
 
 class Escalafh(models.Model):
@@ -144,6 +138,10 @@ class Fh(models.Model):
     )
     resultado = models.FloatField()
 
+    def prom_fh(idautor):
+        prom = Fh.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_fh=Avg('resultado'))
+        return prom.get('prom_fh')
+
 
 class Gu(models.Model):
     idtexto = models.OneToOneField(
@@ -154,6 +152,10 @@ class Gu(models.Model):
         unique=True
     )
     resultado = models.FloatField()
+
+    def prom_gu(idautor):
+        prom = Gu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_gu=Avg('resultado'))
+        return prom.get('prom_gu')
 
 
 class Mu(models.Model):
@@ -166,6 +168,10 @@ class Mu(models.Model):
     )
     resultado = models.FloatField()
 
+    def prom_mu(idautor):
+        prom = Mu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_mu=Avg('resultado'))
+        return prom.get('prom_mu')
+
 
 class Sp(models.Model):
     idtexto = models.OneToOneField(
@@ -176,6 +182,10 @@ class Sp(models.Model):
         unique=True
     )
     resultado = models.FloatField()
+
+    def prom_sp(idautor):
+        prom = Sp.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_sp=Avg('resultado'))
+        return prom.get('prom_sp')
 
 
 class Ocasiones(models.Model):
