@@ -94,7 +94,7 @@ def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height
     yAxis = {"title": {"text": 'Valor'}}
 
     series = [
-        {"name": 'SP', "data": data['sp'].pop()},
+        {"name": 'SP', "data": data['sp']},
         {"name": 'FH', "data": data['fh']},
         {"name": 'GU', "data": data['gu']},
         {"name": 'MU', "data": data['mu']},
