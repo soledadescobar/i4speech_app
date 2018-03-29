@@ -104,9 +104,9 @@ class Cr(models.Model):
         managed = False
         db_table = 'cr'
 
-    def prom_cr():
-        prom = Cr.objects.values('idtexto__idautor_id').aggregate(prom_cr=Avg('resultado'))
-        return prom
+    def prom_cr(idautor):
+        prom = Cr.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_cr=Avg('resultado'))
+        return prom.get('prom_cr')
 
 
 class DjangoAdminLog(models.Model):
@@ -207,9 +207,9 @@ class Fh(models.Model):
         managed = False
         db_table = 'fh'
 
-    def prom_fh():
-        prom = Fh.objects.values('idtexto__idautor_id').aggregate(prom_fh=Avg('resultado'))
-        return prom
+    def prom_fh(idautor):
+        prom = Fh.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_fh=Avg('resultado'))
+        return prom.get('prom_fh')
 
 class Gu(models.Model):
     idtexto = models.OneToOneField('Textos', models.DO_NOTHING, db_column='idtexto', primary_key=True, unique=True)
@@ -219,9 +219,9 @@ class Gu(models.Model):
         managed = False
         db_table = 'gu'
 
-    def prom_gu():
-        prom = Gu.objects.values('idtexto__idautor_id').aggregate(prom_gu=Avg('resultado'))
-        return prom
+    def prom_gu(idautor):
+        prom = Gu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_gu=Avg('resultado'))
+        return prom.get('prom_gu')
 
 class Mu(models.Model):
     idtexto = models.OneToOneField('Textos', models.DO_NOTHING, db_column='idtexto', primary_key=True, unique=True)
@@ -231,9 +231,9 @@ class Mu(models.Model):
         managed = False
         db_table = 'mu'
 
-    def prom_mu():
-        prom = Mu.objects.values('idtexto__idautor_id').aggregate(prom_mu=Avg('resultado'))
-        return prom
+    def prom_mu(idautor):
+        prom = Mu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_mu=Avg('resultado'))
+        return prom.get('prom_mu')
 
 class Sp(models.Model):
     idtexto = models.OneToOneField('Textos', models.DO_NOTHING, db_column='idtexto', primary_key=True, unique=True)
@@ -243,10 +243,9 @@ class Sp(models.Model):
         managed = False
         db_table = 'sp'
 
-    def prom_sp():
-        prom = Sp.objects.values('idtexto__idautor_id').aggregate(prom_sp=Avg('resultado'))
-        return prom
-
+    def prom_sp(idautor):
+        prom = Sp.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_sp=Avg('resultado'))
+        return prom.get('prom_sp')
 
 
 class Ocasiones(models.Model):
@@ -255,6 +254,7 @@ class Ocasiones(models.Model):
     class Meta:
         managed = False
         db_table = 'ocasiones'
+
     def __str__(self):
         return self.ocasion
 
@@ -263,7 +263,7 @@ class Textos(models.Model):
     idautor = models.ForeignKey('Autores', models.DO_NOTHING, db_column='idautor')
     fecha = models.DateField(blank=True, null=True)
     titulo = models.CharField(max_length=255)
-    idocasion = models.ForeignKey('Ocasiones', models.DO_NOTHING, db_column='idocasion' )
+    idocasion = models.ForeignKey('Ocasiones', models.DO_NOTHING, db_column='idocasion')
 
 
     class Meta:

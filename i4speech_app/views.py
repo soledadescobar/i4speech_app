@@ -85,23 +85,43 @@ def ResultadoasoView (request):
     return render(request, 'i4speech_app/resultadoaso.html')
 
 
-def DashboardView(request, chartID='chart_ID', chart_type='bar', chart_height=500):
+def DashboardView1(request, chartID='chart_ID', chart_type='column', chart_height=500):
     data = ChartData.todos_los_promedios()
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
-    title = {"text": 'Resultados'}
+    title = {"text": 'Promedio por autor y tipo de índice'}
     xAxis = {"title": {"text": 'Autor'}, "categories": data['autor']}
-    yAxis = {"title": {"text": 'data'}}
+    yAxis = {"title": {"text": 'Valor'}}
+
     series = [
-        {"name": 'SP', "data": data['sp']},
+        {"name": 'SP', "data": data['sp'].pop()},
         {"name": 'FH', "data": data['fh']},
         {"name": 'GU', "data": data['gu']},
         {"name": 'MU', "data": data['mu']},
         {"name": 'CR', "data": data['cr']}
-        ]
+    ]
 
     return render(request, 'i4speech_app/dashboard.html', {'chartID': chartID, 'chart': chart,
                                                     'series': series, 'title': title,
                                                     'xAxis': xAxis, 'yAxis': yAxis})
 
+def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height=500):
+    data = ChartData.todos_los_promedios()
+
+    chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
+    title = {"text": 'Promedio por autor y tipo de índice'}
+    xAxis = {"title": {"text": 'Autor'}, "categories": data['autor']}
+    yAxis = {"title": {"text": 'Valor'}}
+
+    series = [
+        {"name": 'SP', "data": data['sp'].pop()},
+        {"name": 'FH', "data": data['fh']},
+        {"name": 'GU', "data": data['gu']},
+        {"name": 'MU', "data": data['mu']},
+        {"name": 'CR', "data": data['cr']}
+    ]
+
+    return render(request, 'i4speech_app/dashboard.html', {'chartID': chartID, 'chart': chart,
+                                                    'series': series, 'title': title,
+                                                    'xAxis': xAxis, 'yAxis': yAxis})
 
