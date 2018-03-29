@@ -1,0 +1,32 @@
+{% extends 'i4speech_app/base.html' %}
+<head>
+{% block extrahead %}
+    <!-- Load in jQuery and HighCharts -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- Maps the Python template context variables from views.py to the Highchart js variables -->
+    <script>
+        var chart = {{ chart|safe }}
+        var title = {{ title|safe }}
+        var xAxis = {{ xAxis|safe }}
+        var yAxis = {{ yAxis|safe }}
+        var series = {{ series|safe }}
+    </script>
+    <!-- Highchart js. Variable map shown above -->
+    <script>
+    $(function () {
+      Highcharts.chart({{ chartID|safe }}, {
+        chart: chart,
+        title: title,
+        xAxis: xAxis,
+        yAxis: yAxis,
+        series: series
+        });
+    });
+    </script>
+{% endblock %}
+</head>
+{% block content %}
+    <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
+{% endblock %}
+
