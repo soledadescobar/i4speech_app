@@ -86,8 +86,8 @@ def ResultadoasoView (request):
 
 
 def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height=500):
-    cd = ChartData
-    data = cd.todos_los_promedios(cd)
+
+    data = ChartData.todos_los_promedios()
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
     title = {"text": 'Promedio por autor y tipo de índice'}
