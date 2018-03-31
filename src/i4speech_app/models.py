@@ -138,6 +138,7 @@ class Fh(models.Model):
     )
     resultado = models.FloatField()
 
+    @staticmethod
     def prom_fh(idautor):
         prom = Fh.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_fh=Avg('resultado'))
         return prom.get('prom_fh')
@@ -153,6 +154,7 @@ class Gu(models.Model):
     )
     resultado = models.FloatField()
 
+    @staticmethod
     def prom_gu(idautor):
         prom = Gu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_gu=Avg('resultado'))
         return prom.get('prom_gu')
@@ -168,6 +170,7 @@ class Mu(models.Model):
     )
     resultado = models.FloatField()
 
+    @staticmethod
     def prom_mu(idautor):
         prom = Mu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_mu=Avg('resultado'))
         return prom.get('prom_mu')
@@ -183,6 +186,7 @@ class Sp(models.Model):
     )
     resultado = models.FloatField()
 
+    @staticmethod
     def prom_sp(idautor):
         prom = Sp.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_sp=Avg('resultado'))
         return prom.get('prom_sp')
