@@ -251,5 +251,3 @@ class Textos(models.Model):
         )
         gu.save()
 
-
-
