@@ -277,7 +277,7 @@ class Textos(models.Model):
         """
         Returns the url to access a particular instance of the model.
         """
-        return reverse('textodetalle', kwargs={'pk': self.id})
+        return reverse('textodetalle', kwargs={'id': self.id})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Call the "real" save() method.
