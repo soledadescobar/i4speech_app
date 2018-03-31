@@ -10,7 +10,7 @@ class ChartData():
 
         autores = Autores.objects.all()
         for autor in autores:
-            au = django.utils.encoding.smart_text(autor.nombre)
+            au = django.utils.encoding.force_text(autor.nombre,'utf-8')
             data['autor'].append(au)
             data['sp'].append(Sp.prom_sp(autor.id))
             data['fh'].append(Fh.prom_fh(autor.id))
@@ -20,3 +20,4 @@ class ChartData():
 
 
         return data
+
