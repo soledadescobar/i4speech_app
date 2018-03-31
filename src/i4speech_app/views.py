@@ -16,7 +16,7 @@ def index(request):
     # Generate counts of some of the main objects
     num_textos = Textos.objects.all().count()
     num_autores = Autores.objects.all().count()
-    prom_cr = Cr.prom_cr()
+
 
     # Render the HTML template index.html with the data in the context variable
     return render(
