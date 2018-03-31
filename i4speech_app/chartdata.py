@@ -11,7 +11,7 @@ class ChartData():
         autores = Autores.objects.all()
 
         for autor in autores:
-            data['autor'].append(autor.nombre)
+            data['autor'].append(autor.nombre.encode('utf-8'))
             data['sp'].append(Sp.prom_sp(autor.id))
             data['fh'].append(Fh.prom_fh(autor.id))
             data['gu'].append(Gu.prom_gu(autor.id))
