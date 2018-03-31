@@ -14,7 +14,7 @@ urlpatterns = [
     url('^autores/$', views.AutoresListView.as_view(), name='autores'),
     url('^resultados/$', views.ResultadosView, name='resultados'),
     url('^resultadoaso/$', views.ResultadoasoView, name='resultadoaso'),
-    url('^textodetalle/(<pk>)/$', views.TextoDetailView.as_view(), name='textodetalle'),
+    url('^textodetalle/(<pk>)', views.TextoDetailView.as_view(), name='textodetalle'),
     url('^dashboard/$', views.DashboardView, name='dashboard'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
