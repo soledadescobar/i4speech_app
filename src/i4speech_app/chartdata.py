@@ -2,9 +2,9 @@ from .models import Textos, Autores, Escalafh, Escalamu, Escalasp, Escalagu, Esc
 import django.utils
 
 
-class ChartData(object):
+class ChartData():
 
-    def todos_los_promedios(self):
+    def todos_los_promedios():
         data = {'autor': [], 'sp': [], 'fh': [], 'gu': [], 'mu': [], 'cr': []}
 
         autores = Autores.objects.all()
