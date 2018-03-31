@@ -4,6 +4,7 @@ import django.utils
 
 class ChartData():
 
+    @staticmethod
     def todos_los_promedios():
         data = {'autor': [], 'sp': [], 'fh': [], 'gu': [], 'mu': [], 'cr': []}
 
