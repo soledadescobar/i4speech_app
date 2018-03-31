@@ -12,7 +12,7 @@ class NuevoTextoForm(forms.ModelForm):
 
     class Meta:
         model = Textos
-        fields = ['idautor','idocasion' ,'titulo', 'fecha', 'texto']
+        fields = ['idautor', 'idocasion' ,'titulo', 'fecha', 'texto']
         localized_fields = ('texto',)
         widgets = {'fecha': DateInput()}
 
