@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import unicode_literals
 from django import forms
-from .models import Textos, Autores
+from i4speech_app.models import Textos, Autores
 
 
 class DateInput(forms.DateInput):
