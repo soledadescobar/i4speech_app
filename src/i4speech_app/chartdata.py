@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .models import Textos, Autores, Escalafh, Escalamu, Escalasp, Escalagu, Escalain, Cr, Fh, Gu, Mu, Sp
-import django.utils
+import django.utils.encoding
 
 
 class ChartData():
@@ -10,9 +10,9 @@ class ChartData():
         data = {'autor': [], 'sp': [], 'fh': [], 'gu': [], 'mu': [], 'cr': []}
 
         autores = Autores.objects.all()
-
         for autor in autores:
-            data['autor'].append(autor.nombre.encode('utf-8'))
+            au = django.utils.encoding.smart_text(autor.nombre)
+            data['autor'].append(au)
             data['sp'].append(Sp.prom_sp(autor.id))
             data['fh'].append(Fh.prom_fh(autor.id))
             data['gu'].append(Gu.prom_gu(autor.id))
@@ -21,3 +21,4 @@ class ChartData():
 
 
         return data
+
