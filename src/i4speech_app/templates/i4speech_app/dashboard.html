@@ -1,7 +1,6 @@
 {% extends 'i4speech_app/base.html' %}
 {% block content %}
 <head>
-{% block extrahead %}
     <!-- Load in jQuery and HighCharts -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -25,7 +24,6 @@
         });
     });
     </script>
-{% endblock %}
 </head>
     <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
 {% endblock %}
