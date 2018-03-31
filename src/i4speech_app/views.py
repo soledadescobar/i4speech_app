@@ -85,7 +85,7 @@ def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height
     data = ChartData.todos_los_promedios()
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
-    title = {"text": 'Promedio por autor y tipo de índice'.encode('utf-8')}
+    title = {"text": 'Promedio por autor y tipo de índice'.encode('utf-8', 'ignore')}
     xAxis = {"title": {"text": 'Autor'}, "categories": data['autor']}
     yAxis = {"title": {"text": 'Valor'}}
 
