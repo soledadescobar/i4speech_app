@@ -5,7 +5,7 @@ from django.db import models
 from django.urls import reverse
 from django.db.models import Avg
 
-import legibilidad
+from . import legibilidad
 
 
 # Copie y pegue los modelos del archivo models.py SACANDO los que eran por defecto de django
