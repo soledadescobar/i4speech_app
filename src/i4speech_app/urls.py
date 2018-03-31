@@ -7,14 +7,14 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='help'),
-    url('^textos/$', views.TextosListView.as_view(), name='textos'),
-    url('^nuevotexto/$', views.TextoNuevoView, name='nuevotexto'),
-    url('^autores/$', views.AutoresListView.as_view(), name='autores'),
-    url('^nuevoautor/$', views.AutorNuevoView, name='nuevoautor'),
-    url('^autores/$', views.AutoresListView.as_view(), name='autores'),
-    url('^resultados/$', views.ResultadosView, name='resultados'),
-    url('^resultadoaso/$', views.ResultadoasoView, name='resultadoaso'),
-    url('^textodetalle/(<pk>)/$', views.TextoDetailView.as_view(), name='textodetalle'),
-    url('^dashboard/$', views.DashboardView, name='dashboard'),
+    url(r'^textos/$', views.TextosListView.as_view(), name='textos'),
+    url(r'^nuevotexto/$', views.TextoNuevoView, name='nuevotexto'),
+    url(r'^autores/$', views.AutoresListView.as_view(), name='autores'),
+    url(r'^nuevoautor/$', views.AutorNuevoView, name='nuevoautor'),
+    url(r'^autores/$', views.AutoresListView.as_view(), name='autores'),
+    url(r'^resultados/$', views.ResultadosView, name='resultados'),
+    url(r'^resultadoaso/$', views.ResultadoasoView, name='resultadoaso'),
+    url(r'textodetalle/?P<pk>', views.TextoDetailView.as_view(), name='textodetalle'),
+    url(r'^dashboard/$', views.DashboardView, name='dashboard'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

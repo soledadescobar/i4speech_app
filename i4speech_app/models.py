@@ -273,11 +273,11 @@ class Textos(models.Model):
     def __str__(self):
         return self.texto
 
-    #def get_absolute_url(self):
+    def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
         """
-     #   return reverse('model-detail-view', args=[str(self.id)])
+        return reverse('textodetalle', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Call the "real" save() method.
