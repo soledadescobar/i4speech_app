@@ -287,5 +287,6 @@ class Textos(models.Model):
         gu = Gu.objects.create(idtexto=self,resultado=legibilidad.gutierrez(self.texto))
         gu.save()
 
-
+    def get_absolute_url(self):
+        return reverse('textodetalle', kwargs={'pk': self.id})
 

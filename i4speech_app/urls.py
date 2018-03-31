@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^resultados/$', views.ResultadosView, name='resultados'),
     url(r'^resultadoaso/$', views.ResultadoasoView, name='resultadoaso'),
     url(r'^dashboard/$', views.DashboardView, name='dashboard'),
+    url(r'^textodetalle/?P<pk>', views.TextoDetailView, name='textodetalle'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
