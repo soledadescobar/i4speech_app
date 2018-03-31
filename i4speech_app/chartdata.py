@@ -4,7 +4,7 @@ import django.utils
 
 class ChartData(object):
 
-    def todos_los_promedios():
+    def todos_los_promedios(this):
         data = {'autor': [], 'sp': [], 'fh': [], 'gu': [], 'mu': [], 'cr': []}
 
         autores = Autores.objects.all()
