@@ -266,10 +266,6 @@ class Textos(models.Model):
     idocasion = models.ForeignKey('Ocasiones', models.DO_NOTHING, db_column='idocasion')
 
 
-    class Meta:
-        managed = False
-        db_table = 'textos'
-
     def __str__(self):
         return self.texto
 
@@ -292,6 +288,5 @@ class Textos(models.Model):
         gu = Gu.objects.create(idtexto=self,resultado=legibilidad.gutierrez(self.texto))
         gu.save()
 
-    def get_absolute_url(self):
-           return reverse('textodetalle', kwargs={'pk': self.id})
+
 
