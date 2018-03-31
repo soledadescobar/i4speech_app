@@ -1,6 +1,6 @@
 {% extends 'i4speech_app/base.html' %}
-<head>
-{% block extrahead %}
+{% load bootstrap3 %}
+{% block bootstrap3_extra_head %}
     <!-- Load in jQuery and HighCharts -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -24,9 +24,7 @@
         });
     });
     </script>
-{% endblock %}
-</head>
-{% block content %}
-    <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
-{% endblock %}
 
+{% endblock %}
+{% block content %}    <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
+{% endblock %}
