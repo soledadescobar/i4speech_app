@@ -11,8 +11,7 @@ class ChartData():
 
         autores = Autores.objects.all()
         for autor in autores:
-            au = django.utils.encoding.force_text(autor.nombre,'utf-8').encode('utf-8')
-            data['autor'].append(au)
+            data['autor'].append(autor.nombre)
             data['sp'].append(Sp.prom_sp(autor.id))
             data['fh'].append(Fh.prom_fh(autor.id))
             data['gu'].append(Gu.prom_gu(autor.id))
