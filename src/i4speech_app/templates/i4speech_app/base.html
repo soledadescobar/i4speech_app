@@ -15,7 +15,7 @@
     <script src="{% static 'i4speech/js/chosen.jquery.min.js' %}"></script>
 {% endblock %}
 {% block bootstrap3_content %}
-{% include 'i4speech/navbar.html' %}
+{% include 'i4speech_app/navbar.html' %}
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container-fluid">
     <div class="row">
@@ -25,5 +25,5 @@
         </div>
     </div>
 </div>
-{% include 'i4speech/footer.html' %}
+{% include 'i4speech_app/footer.html' %}
 {% endblock %}
