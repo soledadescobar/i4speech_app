@@ -266,14 +266,13 @@ class Textos(models.Model):
     idocasion = models.ForeignKey('Ocasiones', models.DO_NOTHING, db_column='idocasion')
 
 
+    class Meta:
+        managed = False
+        db_table = 'textos'
+
     def __str__(self):
         return self.texto
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-        """
-        return reverse('textodetalle', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Call the "real" save() method.
@@ -288,5 +287,6 @@ class Textos(models.Model):
         gu = Gu.objects.create(idtexto=self,resultado=legibilidad.gutierrez(self.texto))
         gu.save()
 
-
+    def get_absolute_url(self):
+           return reverse('textodetalle', kwargs={'pk': self.id})
 
