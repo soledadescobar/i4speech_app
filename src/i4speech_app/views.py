@@ -86,9 +86,8 @@ def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
     title = {"text": 'Promedio por Autor y Tipo de Indice'}
-    xAxis = {"title": {"text": 'Autor'}, "categories": data['autor'.encode('utf-8')]}
+    xAxis = {"title": {"text": 'Autor'}, "categories": data['autor']}
     yAxis = {"title": {"text": 'Valor'}}
-
     series = [
         {"name": 'SP', "data": data['sp']},
         {"name": 'FH', "data": data['fh']},
