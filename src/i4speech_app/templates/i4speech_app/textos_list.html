@@ -8,7 +8,7 @@
 
       {% for texto in textos_list %}
       <li>
-        <a href="{{ texto.get_absolute_url  }}">{{ texto.titulo }}</a> ({{ texto.idautor.nombre }}) ({{ texto.fecha }})
+        <a href="{{% url 'textodetalle' pk=texto.id %}}">{{ texto.titulo }}</a> ({{ texto.idautor.nombre }}) ({{ texto.fecha }})
       </li>
       {% endfor %}
 
