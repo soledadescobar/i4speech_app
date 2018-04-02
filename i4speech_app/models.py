@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+import django_filters
 from i4speech_app import legibilidad
 from django.db import models
 from django.urls import reverse
@@ -290,3 +291,13 @@ class Textos(models.Model):
     def get_absolute_url(self):
         return reverse('textodetalle', kwargs={'pk': self.id})
 
+
+class AutorFilter(django_filters.FilterSet):
+    class Meta:
+        model = Autores
+        fields = ['nombre']
+
+class OcasionFilter(django_filters.FilterSet):
+    class Meta:
+        model = Ocasiones
+        fields = ['ocasion']
