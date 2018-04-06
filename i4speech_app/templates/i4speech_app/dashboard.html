@@ -1,4 +1,5 @@
 {% extends 'i4speech_app/base.html' %}
+{% load widget_tweaks %}
 {% load bootstrap3 %}
 {% block bootstrap3_extra_head %}
     <!-- Load in jQuery and HighCharts -->
@@ -26,5 +27,30 @@
     </script>
 
 {% endblock %}
-{% block content %}    <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
+{% block content %}
+    <form method="get">
+    <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Seleccione los filtros</a>
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+     <div class="well">
+      <div class="row">
+          <div class="form-group col-sm-4 col-md-4">
+          {{ filterindice.form.as_p }}
+          {% render_field filter.form.indice class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-4">
+          {{ filterautor.form.as_p }}
+          {% render_field filter.form.nombre class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-4">
+          {{ filterocasion.form.as_p }}
+          {% render_field filter.form.ocasion class="form-control" %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="glyphicon glyphicon-search"></span> Filtrar
+      </button>
+    </div>
+    </div>
+  </form>
+    <div id={{ chartID|safe }} class="chart" style="height:200px; width:100%"></div>
 {% endblock %}

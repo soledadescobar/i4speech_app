@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Textos, Autores, Escalafh, Escalamu, Escalasp, Escalagu, Escalain, Cr, Fh, Gu, Mu, Sp
+from .models import Textos, Autores, Escalafh, Escalamu, Escalasp, Escalagu, Escalain, Cr, Fh, Gu, Mu, Sp, Ocasiones, Indices
 from django.views import generic
 from django.forms import ModelForm
 from .forms import NuevoTextoForm
@@ -15,7 +15,10 @@ from django.views.generic import FormView
 from django.views.generic.base import TemplateView
 from django.contrib import messages
 from django.db.models import Avg
+from django import forms
 from .chartdata import ChartData
+import django_filters
+
 
 
 def index(request):
@@ -81,13 +84,17 @@ def AutorNuevoView(request):
 def ResultadosView (request):
     return render(request, 'i4speech_app/resultados.html')
 
+
 def ResultadoasoView (request):
     return render(request, 'i4speech_app/resultadoaso.html')
 
 
 def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height=500):
+    filterindice=  IndiceFilter(request.GET, queryset=Indices)
+    filterautor = AutorFilter(request.GET, queryset=Autores)
+    filterocasion = OcasionFilter(request.GET, queryset=Ocasiones)
 
-    data = ChartData.todos_los_promedios()
+    data = ChartData.todos_los_promedios(filterindice, filterautor, filterocasion)
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
     title = {"text": 'Promedio por autor y tipo de índice'}
@@ -104,5 +111,28 @@ def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height
 
     return render(request, 'i4speech_app/dashboard.html', {'chartID': chartID, 'chart': chart,
                                                     'series': series, 'title': title,
-                                                    'xAxis': xAxis, 'yAxis': yAxis})
+                                                    'xAxis': xAxis, 'yAxis': yAxis, 'filterindice':filterindice, 'filterautor': filterautor, 'filterocasion': filterocasion})
 
+
+
+class IndiceFilter(django_filters.FilterSet):
+    indice = django_filters.ModelMultipleChoiceFilter(queryset=Indices.objects.all(), widget=forms.SelectMultiple())
+
+    class Meta:
+        model = Indices
+        fields = ['indice']
+
+
+class AutorFilter(django_filters.FilterSet):
+    nombre = django_filters.ModelMultipleChoiceFilter(queryset=Autores.objects.all(), widget=forms.SelectMultiple())
+
+    class Meta:
+        model = Autores
+        fields = ['nombre']
+
+
+class OcasionFilter(django_filters.FilterSet):
+    ocasion = django_filters.ModelMultipleChoiceFilter(queryset=Ocasiones.objects.all(), widget=forms.SelectMultiple())
+    class Meta:
+        model = Ocasiones
+        fields = ['ocasion']

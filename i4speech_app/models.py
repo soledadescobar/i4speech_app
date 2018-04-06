@@ -105,8 +105,8 @@ class Cr(models.Model):
         managed = False
         db_table = 'cr'
 
-    def prom_cr(idautor):
-        prom = Cr.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_cr=Avg('resultado'))
+    def prom_cr(idautor, oca):
+        prom = Cr.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_cr=Avg('resultado'))
         return prom.get('prom_cr')
 
 
@@ -208,8 +208,8 @@ class Fh(models.Model):
         managed = False
         db_table = 'fh'
 
-    def prom_fh(idautor):
-        prom = Fh.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_fh=Avg('resultado'))
+    def prom_fh(idautor, oca):
+        prom = Fh.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_fh=Avg('resultado'))
         return prom.get('prom_fh')
 
 class Gu(models.Model):
@@ -220,8 +220,8 @@ class Gu(models.Model):
         managed = False
         db_table = 'gu'
 
-    def prom_gu(idautor):
-        prom = Gu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_gu=Avg('resultado'))
+    def prom_gu(idautor, oca):
+        prom = Gu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_gu=Avg('resultado'))
         return prom.get('prom_gu')
 
 class Mu(models.Model):
@@ -232,8 +232,8 @@ class Mu(models.Model):
         managed = False
         db_table = 'mu'
 
-    def prom_mu(idautor):
-        prom = Mu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_mu=Avg('resultado'))
+    def prom_mu(idautor, oca):
+        prom = Mu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_mu=Avg('resultado'))
         return prom.get('prom_mu')
 
 class Sp(models.Model):
@@ -244,8 +244,8 @@ class Sp(models.Model):
         managed = False
         db_table = 'sp'
 
-    def prom_sp(idautor):
-        prom = Sp.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_sp=Avg('resultado'))
+    def prom_sp(idautor, oca):
+        prom = Sp.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_sp=Avg('resultado'))
         return prom.get('prom_sp')
 
 
@@ -292,12 +292,10 @@ class Textos(models.Model):
         return reverse('textodetalle', kwargs={'pk': self.id})
 
 
-class AutorFilter(django_filters.FilterSet):
-    class Meta:
-        model = Autores
-        fields = ['nombre']
+class Indices (models.Model):
+    indice = models.TextField()
+    sigla = models.TextField()
 
-class OcasionFilter(django_filters.FilterSet):
     class Meta:
-        model = Ocasiones
-        fields = ['ocasion']
+        managed = False
+        db_table = 'indices'

@@ -1,23 +1,26 @@
 from .models import Textos, Autores, Escalafh, Escalamu, Escalasp, Escalagu, Escalain, Cr, Fh, Gu, Mu, Sp
 import django.utils.encoding
+import django.http.request
 
 
 class ChartData():
 
     @staticmethod
-    def todos_los_promedios():
+    def todos_los_promedios(indfil, autfil , ocfil ):
         data = {'autor': [], 'sp': [], 'fh': [], 'gu': [], 'mu': [], 'cr': []}
-        autores = Autores.objects.all()
+        if  autfil.data == {}: lista_autores= Autores.objects.all().values('id')
+        else: lista_autores= autfil.data.getlist('nombre')
+        if ocfil.data == {}: lista_ocasiones= Textos.objects.all().values('idocasion')
+        else: lista_ocasiones= ocfil.data.getlist('ocasion')
+        autores= Autores.objects.filter(pk__in=lista_autores)
         for autor in autores:
             au = django.utils.encoding.force_text(autor.nombre,'utf-8')
             data['autor'].append(au)
-            data['sp'].append(Sp.prom_sp(autor.id))
-            data['fh'].append(Fh.prom_fh(autor.id))
-            data['gu'].append(Gu.prom_gu(autor.id))
-            data['mu'].append(Mu.prom_mu(autor.id))
-            data['cr'].append(Cr.prom_cr(autor.id))
-            data['drilldown'].append(au)
-
+            data['sp'].append(Sp.prom_sp(autor.id,lista_ocasiones))
+            data['fh'].append(Fh.prom_fh(autor.id,lista_ocasiones))
+            data['gu'].append(Gu.prom_gu(autor.id,lista_ocasiones))
+            data['mu'].append(Mu.prom_mu(autor.id,lista_ocasiones))
+            data['cr'].append(Cr.prom_cr(autor.id,lista_ocasiones))
 
         return data
 
