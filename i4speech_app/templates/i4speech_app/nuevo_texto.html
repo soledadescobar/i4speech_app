@@ -12,7 +12,7 @@ $(document).ready(function() {
     <form role="form" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-            {% bootstrap_form_errors form type='all' %}
+        {% bootstrap_form_errors form type='all' %}
         {% buttons submit='Analizar y Guardar' reset="Cancelar" %}{% endbuttons %}
     </form>
 {% endblock %}

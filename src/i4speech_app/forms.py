@@ -12,7 +12,7 @@ class NuevoTextoForm(forms.ModelForm):
 
     class Meta:
         model = Textos
-        fields = ['idautor', 'idocasion' ,'titulo', 'fecha', 'texto']
+        fields = ['idautor', 'idocasion' ,'ideje','titulo', 'fecha', 'texto']
         localized_fields = ('texto',)
         widgets = {'fecha': DateInput()}
 
@@ -20,6 +20,7 @@ class NuevoTextoForm(forms.ModelForm):
         super(NuevoTextoForm, self).__init__(*args, **kwargs)
         self.fields['idocasion'].label = 'Ocasión'
         self.fields['idautor'].label = 'Autor'
+        self.fields['ideje'].label = 'Eje Temático'
 
 
 class NuevoAutorForm(forms.ModelForm):

@@ -105,8 +105,9 @@ class Cr(models.Model):
         managed = False
         db_table = 'cr'
 
-    def prom_cr(idautor, oca):
-        prom = Cr.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_cr=Avg('resultado'))
+    def prom_cr(idautor, oca, ejes):
+        prom = Cr.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_cr=Avg('resultado'))
         return prom.get('prom_cr')
 
 
@@ -208,8 +209,9 @@ class Fh(models.Model):
         managed = False
         db_table = 'fh'
 
-    def prom_fh(idautor, oca):
-        prom = Fh.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_fh=Avg('resultado'))
+    def prom_fh(idautor, oca, ejes):
+        prom = Fh.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_fh=Avg('resultado'))
         return prom.get('prom_fh')
 
 class Gu(models.Model):
@@ -220,8 +222,9 @@ class Gu(models.Model):
         managed = False
         db_table = 'gu'
 
-    def prom_gu(idautor, oca):
-        prom = Gu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_gu=Avg('resultado'))
+    def prom_gu(idautor, oca, ejes):
+        prom = Gu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_gu=Avg('resultado'))
         return prom.get('prom_gu')
 
 class Mu(models.Model):
@@ -232,8 +235,9 @@ class Mu(models.Model):
         managed = False
         db_table = 'mu'
 
-    def prom_mu(idautor, oca):
-        prom = Mu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_mu=Avg('resultado'))
+    def prom_mu(idautor, oca, ejes):
+        prom = Mu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_mu=Avg('resultado'))
         return prom.get('prom_mu')
 
 class Sp(models.Model):
@@ -244,9 +248,21 @@ class Sp(models.Model):
         managed = False
         db_table = 'sp'
 
-    def prom_sp(idautor, oca):
-        prom = Sp.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca).aggregate(prom_sp=Avg('resultado'))
+    def prom_sp(idautor, oca, ejes):
+        prom = Sp.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_sp=Avg('resultado'))
         return prom.get('prom_sp')
+
+
+class Ejes(models.Model):
+    eje = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'ejes'
+
+    def __str__(self):
+        return self.eje
 
 
 class Ocasiones(models.Model):
@@ -259,12 +275,14 @@ class Ocasiones(models.Model):
     def __str__(self):
         return self.ocasion
 
+
 class Textos(models.Model):
     texto = models.TextField()
     idautor = models.ForeignKey('Autores', models.DO_NOTHING, db_column='idautor')
     fecha = models.DateField(blank=True, null=True)
     titulo = models.CharField(max_length=255)
     idocasion = models.ForeignKey('Ocasiones', models.DO_NOTHING, db_column='idocasion')
+    ideje = models.ForeignKey(Ejes, models.DO_NOTHING, db_column='ideje', blank=True, null=True)
 
 
     class Meta:
@@ -291,11 +309,18 @@ class Textos(models.Model):
     def get_absolute_url(self):
         return reverse('textodetalle', kwargs={'pk': self.id})
 
+    def savefromcsv(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+
 
 class Indices (models.Model):
-    indice = models.TextField()
+    indice = models.TextField(default='1')
     sigla = models.TextField()
 
     class Meta:
         managed = False
         db_table = 'indices'
+
+
+    def __str__(self):
+        return self.indice

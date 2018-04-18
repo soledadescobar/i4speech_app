@@ -1,12 +1,28 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from django.db.models import Avg
+
+# Create your views here.
+from django.http import HttpResponse
+from .models import Textos, Autores, Cr, Fh, Gu, Mu, Sp, Ocasiones, Indices, Ejes
 from django.views import generic
+from django.forms import ModelForm
+from .forms import NuevoTextoForm
+from .forms import NuevoAutorForm
+from django.core.files.storage import default_storage
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models.fields.files import FieldFile
+from django.views.generic import FormView
+from django.views.generic.base import TemplateView
+from django.contrib import messages
+from django.db.models import Avg
+from django import forms
 from .chartdata import ChartData
+import django_filters
+from .cargacsv import CargaCSV
+from django.core.files.storage import FileSystemStorage
+from io import TextIOWrapper
 
-from .models import Textos, Autores, Cr
-
-from .forms import NuevoTextoForm, NuevoAutorForm
 
 
 def index(request):
@@ -16,7 +32,7 @@ def index(request):
     # Generate counts of some of the main objects
     num_textos = Textos.objects.all().count()
     num_autores = Autores.objects.all().count()
-
+    #   c = CargaCSV.cargacsv()
 
     # Render the HTML template index.html with the data in the context variable
     return render(
@@ -24,7 +40,6 @@ def index(request):
         'i4speech_app/index.html',
         context={'num_textos': num_textos, 'num_autores': num_autores,},
     )
-
 
 class TextosListView(generic.ListView):
     model = Textos
@@ -34,7 +49,6 @@ class AutoresListView(generic.ListView):
     model = Autores
     num_textos = Textos.objects.all().count()
     prom_cr = Cr.objects.values('idtexto__idautor__nombre').annotate(prom_cr=Avg('resultado')).order_by('idtexto__idautor__nombre')
-
 
 class TextoDetailView(generic.DetailView):
     model = Textos
@@ -79,24 +93,95 @@ def ResultadoasoView (request):
     return render(request, 'i4speech_app/resultadoaso.html')
 
 
-
 def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height=500):
-
-    data = ChartData.todos_los_promedios()
+    filterindice=  IndiceFilter(request.GET, queryset=Indices.objects.values('indice'))
+    filterautor = AutorFilter(request.GET, queryset=Autores)
+    filterocasion = OcasionFilter(request.GET, queryset=Ocasiones)
+    filtereje = EjeFilter(request.GET, queryset=Ejes)
+    dataraw = ChartData.chart_data(filterindice, filterautor, filterocasion, filtereje)
+    drilldown = ChartData.drilldowns (dataraw, filterindice, filterocasion, filtereje)
 
     chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
-    title = {"text": 'Promedio por Autor y Tipo de Indice'}
-    xAxis = {"title": {"text": 'Autor'}, "categories": data['autor']}
+    title = {"text": 'Promedio por autor y tipo de índice'}
+    xAxis = {"title": {"text": 'Autor'}, "type": 'category', 'labels': {
+            'rotation': -45,
+            'style': {
+                'fontSize': '9px',
+                'fontFamily': 'Verdana, sans-serif'
+            }
+        }}
     yAxis = {"title": {"text": 'Valor'}}
-    series = [
-        {"name": 'SP', "data": data['sp']},
-        {"name": 'FH', "data": data['fh']},
-        {"name": 'GU', "data": data['gu']},
-        {"name": 'MU', "data": data['mu']},
-        {"name": 'CR', "data": data['cr']}
-    ]
+    series = {'name':[],'data':[]}
+    for  index, autor in enumerate(dataraw['autor']):
+        if 'indice' not in filterindice.data:
+            data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['cr'][index]}
+            indice = 'CR'
+        else:
+            if 'cr' in dataraw:
+                data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['cr'][index]}
+                indice = 'CR'
+            if 'gu' in dataraw:
+                data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['gu'][index]}
+                indice = 'GU'
+            if 'fh' in dataraw:
+                data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['fh'][index]}
+                indice = 'FH'
+            if 'mu' in dataraw:
+                data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['mu'][index]}
+                indice = 'MU'
+            if 'sp' in dataraw:
+                data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['sp'][index]}
+                indice = 'SP'
+        series['data'].append(data)
+    series['name']=indice
 
     return render(request, 'i4speech_app/dashboard.html', {'chartID': chartID, 'chart': chart,
-                                                    'series': series, 'title': title,
-                                                    'xAxis': xAxis, 'yAxis': yAxis})
+                                                    'series': [series], 'title': title,
+                                                    'xAxis': xAxis, 'yAxis': yAxis, 'filterindice':filterindice,
+                                                    'filterautor': filterautor, 'filtereje': filtereje, 'filterocasion': filterocasion,
+                                                    'drilldown': drilldown})
 
+
+class IndiceFilter(django_filters.FilterSet):
+    indice = django_filters.ModelMultipleChoiceFilter(queryset=Indices.objects.all(), label="Indice",
+                                                      widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Indices
+        fields = ['indice']
+
+
+class AutorFilter(django_filters.FilterSet):
+    nombre = django_filters.ModelMultipleChoiceFilter(queryset=Autores.objects.all(), label='Autor',
+                                                      widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Autores
+        fields = ['nombre']
+
+
+class OcasionFilter(django_filters.FilterSet):
+    ocasion = django_filters.ModelMultipleChoiceFilter(queryset=Ocasiones.objects.all(), label ='Ocasión',
+                                                       widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Ocasiones
+        fields = ['ocasion']
+
+
+class EjeFilter(django_filters.FilterSet):
+    eje = django_filters.ModelMultipleChoiceFilter(queryset=Ejes.objects.all(), label = 'Eje Temático',
+                                                   widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Ejes
+        fields = ['eje']
+
+
+def CargaCSVView(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        #myfile = request.FILES['myfile']
+        myfile = TextIOWrapper(request.FILES['myfile'].file, encoding=request.encoding)
+        res = CargaCSV.cargacsv(myfile)
+        return render(request, 'i4speech_app/cargacsv.html')
+    return render(request, 'i4speech_app/cargacsv.html')

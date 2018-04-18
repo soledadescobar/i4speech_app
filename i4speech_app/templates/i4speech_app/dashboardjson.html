@@ -13,17 +13,8 @@
         var title = {{ title|safe }}
         var xAxis = {{ xAxis|safe }}
         var yAxis = {{ yAxis|safe }}
-        var series = {{series|safe }}
+        var series = {{ series|safe }}
         var drilldown = {{ drilldown|safe }}
-        var legend = {
-              enabled: true
-            }
-        var  tooltip = {
-              headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-              pointFormat: '<span style="color:{point.color}">{point.name}<br>{point.fecha}</br></span><br>Índice: {point.y:.2f}<br/>'
-            }
-        var  scrollbar = {enabled: true}
-
     </script>
     <!-- Highchart js. Variable map shown above -->
     <script>
@@ -34,10 +25,7 @@
           xAxis: xAxis,
           yAxis: yAxis,
           series: series,
-          drilldown: drilldown,
-          legend: legend,
-          tooltip:tooltip,
-          scrollbar:scrollbar
+          drilldown: drilldown
    })});
     </script>
 {% endblock %}

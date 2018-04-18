@@ -191,6 +191,16 @@ class Sp(models.Model):
         return prom.get('prom_sp')
 
 
+class Ejes(models.Model):
+    eje = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'ejes'
+
+    def __str__(self):
+        return self.eje
+
 class Ocasiones(models.Model):
     ocasion = models.CharField(max_length=255, blank=True, null=True)
 

@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^resultados/$', views.ResultadosView, name='resultados'),
     url(r'^resultadoaso/$', views.ResultadoasoView, name='resultadoaso'),
     url(r'^dashboard/$', views.DashboardView, name='dashboard'),
+    url(r'^cargacsv/$', views.CargaCSVView, name='cargacsv'),
     url(r'^textodetalle/(?P<pk>[0-9]*)', views.TextoDetailView.as_view(), name='textodetalle'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

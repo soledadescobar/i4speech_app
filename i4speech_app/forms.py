@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django import forms
-from i4speech_app.models import Textos, Autores
+from i4speech_app.models import Textos, Autores, Indices
 
 
 class DateInput(forms.DateInput):
@@ -12,7 +12,7 @@ class NuevoTextoForm(forms.ModelForm):
 
     class Meta:
         model = Textos
-        fields = ['idautor', 'idocasion' ,'titulo', 'fecha', 'texto']
+        fields = ['idautor', 'idocasion' ,'ideje','titulo', 'fecha', 'texto']
         localized_fields = ('texto',)
         widgets = {'fecha': DateInput()}
 
@@ -20,10 +20,12 @@ class NuevoTextoForm(forms.ModelForm):
         super(NuevoTextoForm, self).__init__(*args, **kwargs)
         self.fields['idocasion'].label = 'Ocasión'
         self.fields['idautor'].label = 'Autor'
-
+        self.fields['ideje'].label = 'Eje Temático'
 
 class NuevoAutorForm(forms.ModelForm):
 
     class Meta:
         model = Autores
         fields = ['nombre', 'twitter']
+
+
