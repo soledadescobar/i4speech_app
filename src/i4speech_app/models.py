@@ -38,8 +38,9 @@ class Cr(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_cr(idautor):
-        prom = Cr.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_cr=Avg('resultado'))
+    def prom_cr(idautor, oca, ejes):
+        prom = Cr.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_cr=Avg('resultado'))
         return prom.get('prom_cr')
 
 
@@ -138,8 +139,9 @@ class Fh(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_fh(idautor):
-        prom = Fh.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_fh=Avg('resultado'))
+    def prom_fh(idautor, oca, ejes):
+        prom = Fh.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_fh=Avg('resultado'))
         return prom.get('prom_fh')
 
 
@@ -154,8 +156,9 @@ class Gu(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_gu(idautor):
-        prom = Gu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_gu=Avg('resultado'))
+    def prom_gu(idautor, oca, ejes):
+        prom = Gu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_gu=Avg('resultado'))
         return prom.get('prom_gu')
 
 
@@ -170,8 +173,9 @@ class Mu(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_mu(idautor):
-        prom = Mu.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_mu=Avg('resultado'))
+    def prom_mu(idautor, oca, ejes):
+        prom = Mu.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_mu=Avg('resultado'))
         return prom.get('prom_mu')
 
 
@@ -186,8 +190,9 @@ class Sp(models.Model):
     resultado = models.FloatField()
 
     @staticmethod
-    def prom_sp(idautor):
-        prom = Sp.objects.filter(idtexto__idautor_id=idautor).aggregate(prom_sp=Avg('resultado'))
+    def prom_sp(idautor, oca, ejes):
+        prom = Sp.objects.filter(idtexto__idautor_id=idautor, idtexto__idocasion__in=oca,
+                                 idtexto__ideje__in=ejes).aggregate(prom_sp=Avg('resultado'))
         return prom.get('prom_sp')
 
 
@@ -224,6 +229,13 @@ class Textos(models.Model):
         'Ocasiones',
         models.DO_NOTHING,
         db_column='idocasion'
+    )
+    ideje = models.ForeignKey(
+        'Ejes',
+        models.DO_NOTHING,
+        db_column='ideje',
+        blank=True,
+        null=True
     )
 
     def __str__(self):
