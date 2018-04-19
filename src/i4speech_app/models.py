@@ -45,19 +45,12 @@ class Cr(models.Model):
 
 
 class Escalafh(models.Model):
-    inf = models.IntegerField(
-        blank=True,
-        null=True
-    )
-    sup = models.IntegerField(
-        blank=True,
-        null=True
-    )
-    resultado = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True
-    )
+    id = models.AutoField(unique=True)
+    inf = models.IntegerField(blank=True, null=True)
+    sup = models.IntegerField(blank=True, null=True)
+    resultado = models.CharField(max_length=50, blank=True, null=True)
+    color = models.CharField(max_length=7, blank=True, null=True)
+
 
 
 class Escalain(models.Model):
@@ -68,6 +61,7 @@ class Escalain(models.Model):
         blank=True,
         null=True
     )
+    color = models.CharField(max_length=7, blank=True, null=True)
 
 
 class Escalagu(models.Model):
@@ -84,6 +78,7 @@ class Escalagu(models.Model):
         blank=True,
         null=True
     )
+    color = models.CharField(max_length=7, blank=True, null=True)
 
 
 class Escalasp(models.Model):
@@ -110,6 +105,7 @@ class Escalasp(models.Model):
         blank=True,
         null=True
     )
+    color = models.CharField(max_length=7, blank=True, null=True)
 
 
 class Escalamu(models.Model):
@@ -126,6 +122,7 @@ class Escalamu(models.Model):
         blank=True,
         null=True
     )
+    color = models.CharField(max_length=7, blank=True, null=True)
 
 
 class Fh(models.Model):
