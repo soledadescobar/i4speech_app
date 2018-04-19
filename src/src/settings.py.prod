@@ -34,12 +34,7 @@ INSTALLED_APPS = [
     'search',
     'control',
     'rest',
-    'twistreapy',
-    'i4speech_app',
-    'django_filters',
-    'widget_tweaks',
-    'django_select2'
-
+    'twistreapy'
 ]
 
 MIDDLEWARE = [
