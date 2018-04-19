@@ -206,6 +206,19 @@ class Ejes(models.Model):
     def __str__(self):
         return self.eje
 
+
+class Indices(models.Model):
+    indice = models.TextField(default='1')
+    sigla = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'indices'
+
+    def __str__(self):
+        return self.indice
+
+
 class Ocasiones(models.Model):
     ocasion = models.CharField(max_length=255, blank=True, null=True)
 
