@@ -114,8 +114,8 @@ def DashboardView(request, chartID='chart_ID', chart_type='column', chart_height
     series = {'name':[],'data':[]}
     for  index, autor in enumerate(dataraw['autor']):
         if 'indice' not in filterindice.data:
-            data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['cr'][index]}
-            indice = 'CR'
+            data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['fh'][index]}
+            indice = 'FH'
         else:
             if 'cr' in dataraw:
                 data = {'name': dataraw['autor'][index],'drilldown': dataraw['autor'][index], 'y':dataraw['cr'][index]}
