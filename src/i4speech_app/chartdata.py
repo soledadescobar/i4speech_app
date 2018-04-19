@@ -10,7 +10,7 @@ class ChartData():
     @staticmethod
     def chart_data(indfil, autfil, ocfil, ejefil):
         if 'indice' not in indfil.data == {}:
-            data = {'autor': [], 'cr': [], 'drilldown': []}
+            data = {'autor': [], 'fh': [], 'drilldown': []}
         else:
             data = {'autor': [], 'drilldown': []}
             if '1' in indfil.data.getlist('indice'): data.update({'cr': []})
@@ -50,7 +50,7 @@ class ChartData():
             serie = {'id': [], 'name': [], 'type': [], 'data': []}
             serie['id'] = autor
             if 'indice' not in indfil.data == {}:
-                serie['name'] = 'CR'
+                serie['name'] = 'FH'
             else:
                 if '1' in indfil.data.getlist('indice'):  serie['name'] = 'CR'
                 if '2' in indfil.data.getlist('indice'):  serie['name'] = 'GU'
@@ -74,7 +74,7 @@ class ChartData():
             if len(lista_textos) > 0:
                 for texto in lista_textos:
                     if 'indice' not in indfil.data == {}:
-                        textodata = {'fecha': texto.fecha.__str__(), 'y': texto.cr.resultado, 'name': texto.titulo}
+                        textodata = {'fecha': texto.fecha.__str__(), 'y': texto.fh.resultado, 'name': texto.titulo}
                     else:
                         if '1' in indfil.data.getlist('indice'):  textodata = {'fecha': texto.fecha.__str__(),
                                                                                'y': texto.cr.resultado,
